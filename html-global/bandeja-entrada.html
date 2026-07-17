@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avistock - Bandeja de Entrada</title>
+    <!-- Mismo archivo CSS global que estiliza todo el panel -->
+    <link rel="stylesheet" href="../css-global/dueno.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <!-- BARRA LATERAL IZQUIERDA (NAVEGACIÓN) -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="../assets-global/LOGO_Avistock 3.png" alt="Logo Avistock">
+            </div>
+            
+            <nav class="menu">
+                <a href="bandeja-entrada.html" class="active">
+                    <img src="../assets-global/icono bandeja de entrada.png" alt="Inicio" width="18" style="margin-right: 8px; vertical-align: middle;">
+                    Bandeja de entrada
+                </a>
+                <a href="caja_reporte.html">
+                    <img src="../assets-global/reporte-de-negocios.png" alt="Reportes" width="18" style="margin-right: 8px; vertical-align: middle;">
+                    Reportes / Caja
+                </a>
+                <a href="estadisticas.html">
+                    <img src="../assets-global/infografia.png" alt="Estadísticas" width="18" style="margin-right: 8px; vertical-align: middle;">
+                    Estadísticas
+                </a>
+            </nav>
+            
+            <div class="logout-container">
+                <a href="login.html" class="btn-logout">
+                    <img src="../assets-global/salida.png" alt="Cerrar" width="16" style="margin-right: 8px; vertical-align: middle;">
+                    Cerrar sesión
+                </a>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="main-content">
+            <header class="page-header">
+                <div class="header-text">
+                    <div class="breadcrumb">Resumen general</div>
+                    <h1>Bandeja de entrada</h1>
+                    <p>Monitoreo del estado actual de tu negocio en tiempo real</p>
+                </div>
+                
+                <!-- Campanita para abrir alertas rápidas -->
+                <button id="btn-campana" class="notification-bell-btn" style="background: none; border: none; cursor: pointer;">
+                    <img src="../assets-global/campana.png" alt="Notificaciones" width="24" height="24" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                    <span class="icon-placeholder" style="display: none; width: 24px; height: 24px; background-color: #ccc; border-radius: 50%;"></span>
+                </button>
+            </header>
+
+            <!-- Tarjetas de indicadores en Grid -->
+            <div class="cards-wrapper" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-bottom: 32px;">
+                
+                <div class="report-card card" style="display: flex; flex-direction: column; justify-content: space-between; min-height: 140px;">
+                    <div>
+                        <span style="font-size: 0.8rem; color: var(--color-text-muted); font-weight: 600; text-transform: uppercase;">Pedidos pendientes</span>
+                        <div class="card-value" style="font-size: 2rem; font-weight: 800; margin-top: 8px; color: var(--color-primary-orange);">5</div>
+                    </div>
+                    <span style="font-size: 0.75rem; color: var(--color-text-muted);">Haz clic para simular procesar un pedido</span>
+                </div>
+
+                <div class="report-card">
+                    <span style="font-size: 0.8rem; color: var(--color-text-muted); font-weight: 600; text-transform: uppercase;">Ventas del día</span>
+                    <div style="font-size: 2rem; font-weight: 800; margin-top: 8px; color: var(--color-success);">$18,450</div>
+                    <span style="font-size: 0.75rem; color: var(--color-text-muted);">Corte parcial actualizado hace 5 min</span>
+                </div>
+
+                <div class="report-card">
+                    <span style="font-size: 0.8rem; color: var(--color-text-muted); font-weight: 600; text-transform: uppercase;">Mermas registradas</span>
+                    <div style="font-size: 2rem; font-weight: 800; margin-top: 8px; color: var(--color-text-dark);">$120</div>
+                    <span style="font-size: 0.75rem; color: var(--color-text-muted);">Equivalente a merma controlada del corral</span>
+                </div>
+
+            </div>
+
+            <!-- Tabla de últimos movimientos registrados -->
+            <div class="report-card recent-closures-card">
+                <h2 style="margin-bottom: 16px;">Últimos movimientos del sistema</h2>
+                <table class="closures-table">
+                    <thead>
+                        <tr>
+                            <th>TIPO</th>
+                            <th>DESCRIPCIÓN</th>
+                            <th>ENCARGADO</th>
+                            <th>IMPORTE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Venta</strong></td>
+                            <td>Pedido mostrador #1042</td>
+                            <td>María López</td>
+                            <td style="color: var(--color-success); font-weight: 600;">+$450.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Merma</strong></td>
+                            <td>Pollo ahogado (Corral 3)</td>
+                            <td>Cajero Turno</td>
+                            <td style="color: #ef4444; font-weight: 600;">-$35.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Venta</strong></td>
+                            <td>Pedido mayorista #1041</td>
+                            <td>María López</td>
+                            <td style="color: var(--color-success); font-weight: 600;">+$3,200.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <!-- PANEL LATERAL DERECHO (DESLIZABLE) - ALERTAS DEL SISTEMA -->
+        <div id="panel-historial-reportes" class="right-drawer">
+            <div class="drawer-header">
+                <h2>Alertas del Sistema</h2>
+                <button id="btn-cerrar-drawer" class="btn-close-drawer">&times;</button>
+            </div>
+            <p class="drawer-subtitle">Notificaciones automáticas del corral y administración</p>
+            <div class="drawer-body">
+                <div class="solicitud-item">
+                    <div class="solicitud-info">
+                        <span class="solicitud-fecha">Hace 10 min</span>
+                        <span class="solicitud-usuario">Alerta de Temperatura</span>
+                    </div>
+                    <span class="badge-status pending">Revisar</span>
+                </div>
+                <div class="solicitud-item">
+                    <div class="solicitud-info">
+                        <span class="solicitud-fecha">Hoy, 12:40 hrs</span>
+                        <span class="solicitud-usuario">Corte de Caja Exitoso</span>
+                    </div>
+                    <span class="badge-status approved">Listo</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Cargar interactividad -->
+    <script src="../js-global/dueno.js"></script>
+</body>
+</html>

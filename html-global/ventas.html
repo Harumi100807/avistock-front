@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avistock - Ventas</title>
+    <!-- Vinculamos tu CSS global unificado -->
+    <link rel="stylesheet" href="../css-global/admi.css">
+</head>
+<body class="app-body">
+
+    <div class="app-container">
+        
+        <!-- ==========================================
+             BARRA LATERAL (SIDEBAR) UNIFICADA
+             ========================================== -->
+        <aside class="sidebar">
+            <div class="brand">
+                <img src="../assets-global/LogoAvi 1.png" alt="Avistock" class="brand-logo" onerror="this.src='https://placehold.co/100x100?text=Avistock';">
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="ventas.html" class="nav-item active">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/carrito-de-compras.png" alt="Ventas" class="icon-nav">
+                    </div> 
+                    Ventas
+                </a>
+                <a href="pedidos.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/acuerdo-de-contrato.png" alt="Pedidos" class="icon-nav">
+                    </div> 
+                    Pedidos
+                </a>
+                <a href="historial.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/historial-de-pedidos.png" alt="Historial" class="icon-nav">
+                    </div> 
+                    Historial
+                </a>
+                <a href="inventario.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/lista-de-verificacion.png" alt="Inventario" class="icon-nav">
+                    </div> 
+                    Inventario
+                </a>
+                <a href="cierre_caja.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/caja-registradora.png" alt="Cierre de caja" class="icon-nav">
+                    </div> 
+                    Cierre de caja
+                </a>
+            </nav>
+
+            <!-- Botón de Cerrar Sesión corregido -->
+            <a href="#" onclick="cerrarSesion(event)" class="logout-btn">
+                <div class="nav-icon-wrapper">
+                    <img src="../assets-global/salida.png" alt="Cerrar sesión" class="icon-nav">
+                </div> 
+                Cerrar sesión
+            </a>
+        </aside>
+
+        <!-- ==========================================
+             CONTENIDO PRINCIPAL
+             ========================================== -->
+        <main class="main-content">
+            <header class="content-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <div class="header-titles">
+                    <p class="breadcrumbs" style="font-size: 0.85rem; color: #64748b; margin-bottom: 4px;">Administrador > Ventas</p>
+                    <h1 style="font-size: 1.8rem; font-weight: 700; color: #1e293b; margin: 0;">Ventas</h1>
+                    <p class="subtitle" style="font-size: 0.95rem; color: #64748b; margin-top: 4px;">Registro manual de ventas del día</p>
+                </div>
+                <button class="btn-registrar-venta" onclick="abrirModalRegistrarVenta()" style="background-color: #f97316; color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: background 0.2s;">Registrar Venta</button>
+            </header>
+
+            <!-- TARJETA CONTENEDORA DE LA TABLA -->
+            <div class="ventas-card" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); overflow: hidden; border: 1px solid #e2e8f0;">
+                <div class="card-header" style="display: flex; justify-content: space-between; padding: 20px 24px; border-bottom: 1px solid #f1f5f9; align-items: center;">
+                    <span class="card-title" style="font-size: 1.05rem; font-weight: 700; color: #1e293b;">Ventas de hoy</span>
+                    <span class="card-subtitle" style="font-weight: 700; font-size: 1.05rem; color: #1e293b;">Local</span>
+                </div>
+
+                <div class="table-wrapper">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Producto</th>
+                                <th>Cant.</th>
+                                <th>Peso (Kg)</th>
+                                <th>Precio/Kg</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-ventas-rows">
+                            <!-- Los datos se inyectan dinámicamente desde admi.js -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- FRANJA NARANJA INFERIOR UNIFICADA (CONTADOR Y MONTO TOTAL) -->
+                <div class="card-footer">
+                    <span id="ventas-contador-texto" class="footer-count">0 VENTAS REGISTRADAS</span>
+                    <span id="total-ventas-monto" class="footer-total">$ 0.00</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ==========================================
+         MODAL REGISTRAR VENTA (ESTILO FIGMA)
+         ========================================== -->
+    <div class="modal-overlay" id="modal-registrar-venta">
+        <div class="modal-content-figma">
+            <div class="modal-header-figma">
+                <span class="plus-orange">+</span>
+                <h3>Nueva venta</h3>
+            </div>
+            <form class="modal-form-figma" id="form-nueva-venta">
+                <div class="form-group-figma">
+                    <label for="venta-cliente">Cliente</label>
+                    <input type="text" id="venta-cliente" placeholder="Ej: Don Ramón" required>
+                </div>
+                <div class="form-group-figma">
+                    <label for="venta-fecha">Fecha</label>
+                    <input type="text" id="venta-fecha" placeholder="Ej: 16/07/2026" required>
+                </div>
+                <div class="form-group-figma">
+                    <label for="venta-hora">Hora</label>
+                    <input type="text" id="venta-hora" placeholder="Ej: 10:30" required>
+                </div>
+                <div class="form-group-figma">
+                    <label for="venta-producto">Producto</label>
+                    <select id="venta-producto">
+                        <option value="Pollo vivo">Pollo vivo</option>
+                        <option value="Pollo en camara">Pollo en camara</option>
+                    </select>
+                </div>
+                <div class="form-group-figma">
+                    <label for="venta-cantidad">Cantidad</label>
+                    <input type="number" id="venta-cantidad" placeholder="Ej: 5" min="1" required>
+                </div>
+                <div class="form-group-figma">
+                    <label for="venta-peso">Peso (Kg)</label>
+                    <input type="number" id="venta-peso" step="0.1" placeholder="Ej: 11.0" min="0.1" required>
+                </div>
+                <div class="form-group-figma">
+                    <label for="venta-precio">Precio/Kg</label>
+                    <input type="number" id="venta-precio" step="0.01" placeholder="Ej: 12.50" min="0.1" required>
+                </div>
+                <div class="form-actions-figma">
+                    <button type="submit" class="btn-agregar">Agregar venta</button>
+                    <button type="button" class="btn-cancelar" onclick="cerrarModalVenta(true)">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CONTENEDOR PARA LAS ALERTAS FLOTANTES (TOASTS) -->
+    <div class="notification-container" id="notification-container"></div>
+
+    <!-- Vinculamos tu JavaScript global unificado -->
+    <script src="../js-global/admi.js"></script>
+    <script>
+        // Lógica local para capturar fecha y hora actual automáticamente al presionar el botón
+        function abrirModalRegistrarVenta() {
+            const ahora = new Date();
+            const fechaActual = `${ahora.getDate().toString().padStart(2, '0')}/${(ahora.getMonth() + 1).toString().padStart(2, '0')}/${ahora.getFullYear()}`;
+            const horaActual = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+
+            document.getElementById('venta-fecha').value = fechaActual;
+            document.getElementById('venta-hora').value = horaActual;
+            document.getElementById('modal-registrar-venta').style.display = 'flex';
+        }
+
+        // Función para cerrar el modal de ventas si se presiona cancelar
+        function cerrarModalVenta(limpiar) {
+            document.getElementById('modal-registrar-venta').style.display = 'none';
+            if (limpiar) {
+                document.getElementById('form-nueva-venta').reset();
+            }
+        }
+
+        // Función de cerrar sesión integrada
+        function cerrarSesion(event) {
+            event.preventDefault();
+            if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avistock - Reportes / Caja</title>
+    
+    <link rel="stylesheet" href="../css-global/dueno.css">
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <!-- BARRA LATERAL IZQUIERDA (NAVEGACIÓN) -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="../assets-global/LOGO_Avistock 3.png" alt="Logo Avistock">
+            </div>
+            
+            <nav class="menu">
+                <a href="bandeja-entrada.html">
+                    <img src="../assets-global/icono bandeja de entrada.png" alt="Inicio" width="18" style="margin-right: 8px; vertical-align: middle;">
+                    Bandeja de entrada
+                </a>
+                <a href="caja_reporte.html" class="active">
+                    <img src="../assets-global/reporte-de-negocios.png" alt="Reportes" width="18" style="margin-right: 8px; vertical-align: middle;">
+                    Reportes / Caja
+                </a>
+                <a href="estadisticas.html">
+                    <img src="../assets-global/infografia.png" alt="Estadísticas" width="18" style="margin-right: 8px; vertical-align: middle;">
+                    Estadísticas
+                </a>
+            </nav>
+            
+            <div class="logout-container">
+                <a href="login.html" class="btn-logout">
+                    <img src="../assets-global/salida.png" alt="Cerrar" width="16" style="margin-right: 8px; vertical-align: middle;">
+                    Cerrar sesión
+                </a>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main class="main-content">
+            <header class="page-header">
+                <div class="header-text">
+                    <div class="breadcrumb">Reportes / Caja</div>
+                    <h1>Reportes / Cierre de caja</h1>
+                    <p>Historial de closures y consulta en tiempo real</p>
+                </div>
+                
+                <!-- CAMPANITA DE NOTIFICACIONES (Abre el panel derecho) -->
+                <button id="btn-campana" class="notification-bell-btn" style="background: none; border: none; cursor: pointer;">
+                    <!-- Espacio reservado para tu imagen de la campana sin emojis -->
+                    <img src="../assets-global/campana.png" alt="Notificaciones" width="24" height="24" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                    <span class="icon-placeholder" style="display: none; width: 24px; height: 24px; background-color: #ccc; border-radius: 50%;"></span>
+                </button>
+            </header>
+
+            <div class="cards-wrapper">
+                
+                <!-- SECCIÓN 1: CONSULTAR CAJA ACTUAL -->
+                <section class="report-card primary-action-card">
+                    <h2>Consultar caja actual</h2>
+                    <p class="card-subtitle">Solicita al administrador el reporte en tiempo real sin cerrar caja.</p>
+                    <div class="action-buttons">
+                        <button id="btn-solicitar-reporte" class="btn-orange-solid">
+                            Solicitar reporte
+                        </button>
+                        <!-- Cambiado a clase genérica o puedes removerlo si la campanita ahora hace todo el trabajo -->
+                        <button id="btn-ver-todos-reportes" class="btn-orange-outline">
+                            Ver todos los reportes
+                        </button>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN 2: RESUMEN DE LA SEMANA -->
+                <section class="report-card weekly-summary-card">
+                    <h2>Resumen de la semana</h2>
+                    <div class="kpi-row">
+                        <div class="kpi-item">
+                            <span>Total vendido</span>
+                            <strong>$34,570</strong>
+                        </div>
+                        <div class="kpi-item">
+                            <span>Días activos</span>
+                            <strong>6</strong>
+                        </div>
+                        <div class="kpi-item">
+                            <span>Total mermas</span>
+                            <strong>$235</strong>
+                        </div>
+                    </div>
+                    <div class="bar-chart">
+                        <div class="bar-col"><div class="bar" style="height: 30%;"></div><span class="bar-label">Lun</span></div>
+                        <div class="bar-col"><div class="bar" style="height: 45%;"></div><span class="bar-label">Mar</span></div>
+                        <div class="bar-col"><div class="bar" style="height: 20%;"></div><span class="bar-label">Mié</span></div>
+                        <div class="bar-col"><div class="bar" style="height: 35%;"></div><span class="bar-label">Jue</span></div>
+                        <div class="bar-col"><div class="bar" style="height: 25%;"></div><span class="bar-label">Vie</span></div>
+                        <div class="bar-col active"><div class="bar" style="height: 60%;"></div><span class="bar-label">Sáb</span></div>
+                        <div class="bar-col"><div class="bar" style="height: 10%;"></div><span class="bar-label">Dom</span></div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN 3: CIERRES DE CAJA RECIENTES -->
+                <section class="report-card recent-closures-card">
+                    <h2>Cierres de caja recientes</h2>
+                    <table class="closures-table">
+                        <thead>
+                            <tr>
+                                <th>FECHA/HORA</th>
+                                <th>CERRADO POR</th>
+                                <th>TOTAL</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>06/06/2026 - 19:45 hrs</td>
+                                <td>María López</td>
+                                <td><strong>$6,840</strong></td>
+                                <td><a href="#" class="link-orange-detail link-historial-cierre">ver detalle</a></td>
+                            </tr>
+                            <tr>
+                                <td>05/06/2026 - 19:30 hrs</td>
+                                <td>María López</td>
+                                <td><strong>$3,210</strong></td>
+                                <td><a href="#" class="link-orange-detail link-historial-cierre">ver detalle</a></td>
+                            </tr>
+                            <tr>
+                                <td>04/06/2026 - 20:00 hrs</td>
+                                <td>María López</td>
+                                <td><strong>$7,100</strong></td>
+                                <td><a href="#" class="link-orange-detail link-historial-cierre">ver detalle</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </main>
+
+        <!-- PANEL LATERAL DERECHO (DESLIZABLE) - HISTORIAL DE REPORTES SOLICITADOS -->
+        <div id="panel-historial-reportes" class="right-drawer">
+            <div class="drawer-header">
+                <h2>Historial de solicitudes</h2>
+                <button id="btn-cerrar-drawer" class="btn-close-drawer">&times;</button>
+            </div>
+            <p class="drawer-subtitle">Estado de solicitudes de corte parcial a los cajeros</p>
+            <div class="drawer-body">
+                <div class="solicitud-item">
+                    <div class="solicitud-info">
+                        <span class="solicitud-fecha">Hoy, 21:56 hrs</span>
+                        <span class="solicitud-usuario">Administradora</span>
+                    </div>
+                    <span class="badge-status pending">Pendiente</span>
+                </div>
+                <div class="solicitud-item clickable link-ver-reporte-recibido">
+                    <div class="solicitud-info">
+                        <span class="solicitud-fecha">Ayer, 15:30 hrs</span>
+                        <span class="solicitud-usuario">Administradora</span>
+                    </div>
+                    <span class="badge-status approved">Recibido</span>
+                </div>
+                <div class="solicitud-item clickable link-ver-reporte-recibido">
+                    <div class="solicitud-info">
+                        <span class="solicitud-fecha">09/07/2026 - 18:20 hrs</span>
+                        <span class="solicitud-usuario">Administradora</span>
+                    </div>
+                    <span class="badge-status approved">Recibido</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL DE DETALLE DE CIERRE -->
+    <div id="modal-detalle-cierre" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <h2>Detalle de Cierre</h2>
+                    <p>Folio: #CR-4029</p>
+                </div>
+                <button id="btn-cerrar-x-cierre" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Cerrado por</span>
+                        <span class="info-value">María López</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha y hora</span>
+                        <span class="info-value">06/06/2026 - 19:45 PM</span>
+                    </div>
+                </div>
+                <div class="section-title">
+                    <span>DESCRIPCIÓN</span>
+                    <span>IMPORTE</span>
+                </div>
+                <div class="concept-list">
+                    <div class="concept-row">
+                        <div class="concept-desc">
+                            <strong>Fondo Inicial</strong>
+                            <small>Monto de apertura en caja</small>
+                        </div>
+                        <div class="concept-amount">$ 500.00</div>
+                    </div>
+                    <div class="concept-row">
+                        <div class="concept-desc">
+                            <strong>Ventas en Efectivo</strong>
+                            <small>Cobros realizados en mostrador</small>
+                        </div>
+                        <div class="concept-amount">$ 6,340.00</div>
+                    </div>
+                </div>
+                <div class="subtotals-box">
+                    <div class="sub-row">
+                        <span>Subtotal de ingresos:</span>
+                        <strong>$ 6,840.00</strong>
+                    </div>
+                    <div class="sub-row">
+                        <span>Retiros parciales:</span>
+                        <strong>$ 0.00</strong>
+                    </div>
+                    <div class="sub-row green-text">
+                        <span>Gastos / Mermas:</span>
+                        <strong>- $ 0.00</strong>
+                    </div>
+                </div>
+                <div class="total-dashed-box">
+                    <span class="total-dashed-label">TOTAL DECLARADO EN CAJA</span>
+                    <span class="total-dashed-amount">$ 6,840.00</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-cerrar-modal-cierre" class="btn-solid-modal">Cerrar Detalles</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE CONFIRMACIÓN AL ENVIAR LA SOLICITUD -->
+    <div id="modal-reporte-actual" class="modal-overlay">
+        <div class="modal-card" style="max-width: 420px;">
+            <div class="modal-header">
+                <div>
+                    <h2>Solicitar Reporte</h2>
+                    <p>Pide el corte de caja parcial al cajero en turno</p>
+                </div>
+                <button id="btn-cerrar-x-reporte" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body" style="padding-top: 10px;">
+                <form id="form-solicitar-reporte">
+                    <div class="form-group">
+                        <label class="form-label">Empleado en turno</label>
+                        <input type="text" class="form-input" value="Administradora" readonly style="background-color: #f9fafb; color: #4b5563; font-weight: 600;">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label class="form-label">Mensaje o Nota (Opcional)</label>
+                        <textarea class="form-input" rows="3" placeholder="Ej. Por favor, autoriza el envío del corte parcial de tu turno..." style="resize: none;"></textarea>
+                    </div>
+                    <div class="yellow-note">
+                        <strong>Nota:</strong> Se enviará una notificación a la pantalla del administrador para que autorice y envíe el reporte en tiempo real.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn-cerrar-modal-reporte" class="btn-outline-modal">Cancelar</button>
+                <button type="submit" form="form-solicitar-reporte" class="btn-solid-modal">Enviar Solicitud</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE DETALLE DE REPORTE EN VIVO -->
+    <div id="modal-ver-reporte-dia" class="modal-overlay">
+        <div class="modal-card" style="max-width: 500px;">
+            <div class="modal-header">
+                <div>
+                    <h2>Reporte en vivo y en directo</h2>
+                    <p>Ganancias y mermas calculadas al instante</p>
+                </div>
+                <button id="btn-cerrar-x-reporte-dia" class="btn-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Cajero en turno</span>
+                        <span class="info-value">Administradora</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha de corte</span>
+                        <span class="info-value">10/07/2026</span>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <span>VENTAS: POLLOS EN CÁMARA</span>
+                    <span>MONTO</span>
+                </div>
+                <div class="concept-list">
+                    <div class="concept-row">
+                        <div class="concept-desc">
+                            <strong>Pollo Limpio / Procesado</strong>
+                            <small>Peso total vendido: 150 Kg</small>
+                        </div>
+                        <div class="concept-amount">$ 13,500.00</div>
+                    </div>
+                </div>
+
+                <div class="section-title">
+                    <span>VENTAS: POLLOS EN PIE</span>
+                    <span>MONTO</span>
+                </div>
+                <div class="concept-list">
+                    <div class="concept-row">
+                        <div class="concept-desc">
+                            <strong>Pollo Vivo</strong>
+                            <small>Peso total vendido: 210 Kg</small>
+                        </div>
+                        <div class="concept-amount">$ 10,500.00</div>
+                    </div>
+                </div>
+
+                <div class="section-title" style="margin-top: 20px;">
+                    <span style="color: #e65f2b;">MERMAS Y GASTOS</span>
+                    <span>MONTO</span>
+                </div>
+                <div class="concept-list">
+                    <div class="concept-row">
+                        <div class="concept-desc">
+                            <strong>Pollo Ahogado / Desperdicio</strong>
+                            <small>Peso de producto perdido: 5 Kg</small>
+                        </div>
+                        <div class="concept-amount" style="color: #e65f2b;">- $ 350.00</div>
+                    </div>
+                </div>
+
+                <div class="total-dashed-box-green">
+                    <span class="total-dashed-label-green">GANANCIAS NETAS DEL TURNO</span>
+                    <span class="total-dashed-amount-green">$ 23,650.00</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-descargar-pdf" class="btn-solid-modal">Descargar PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST DE ADVERTENCIA FLOTANTE AL CENTRO -->
+    <div id="aviso-toast" class="toast-center-box">
+        <span class="toast-close-btn">&times;</span>
+        <!-- Contenedor reservado para colocar el icono triste/advertencia mediante imagen -->
+        <div class="toast-icon">
+            <img src="../assets-global/advertencia-alerta.png" alt="Advertencia" width="48" height="48" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+            <span class="icon-placeholder" style="display: none; width: 48px; height: 48px; background-color: #ccc; border-radius: 50%;"></span>
+        </div>
+        <div class="toast-content">
+            <h3>¿El cajero no ha contestado?</h3>
+            <p>Por favor, espera unos minutos antes de volver a enviar la solicitud.</p>
+        </div>
+    </div>
+
+    <script src="../js-global/dueno.js"></script>
+</body>
+</html>

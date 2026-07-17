@@ -1,0 +1,853 @@
+/* ==========================================================================
+   VARIABLES Y CONFIGURACIÓN GLOBAL
+   ========================================================================== */
+:root {
+    --primary: #f97316;          /* Naranja principal */
+    --primary-hover: #ea580c;    /* Naranja oscuro para hovers */
+    --primary-light: #ffebd8;    /* Naranja muy claro para fondos activos */
+    --primary-muted: #fff7ed;    /* Naranja ultra claro para footers */
+    
+    --bg-app: #f1f5f9;           /* Fondo gris claro de la aplicación */
+    --bg-card: #ffffff;          /* Fondo de tarjetas */
+    --border-color: #e2e8f0;     /* Bordes finos suaves */
+    
+    --text-main: #1e293b;        /* Texto oscuro principal */
+    --text-sub: #64748b;         /* Texto gris secundario */
+    --text-success: #10b981;     /* Verde para estados positivos/anticipos */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+
+body.app-body {
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    min-height: 100vh;
+}
+
+/* Contenedor con Sidebar Fijo a la izquierda */
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex-grow: 1;
+    margin-left: 250px; /* Deja espacio exacto para la sidebar fija */
+    padding: 40px;
+    background-color: var(--bg-app);
+}
+
+/* ==========================================================================
+   BARRA LATERAL (SIDEBAR) UNIFICADA
+   ========================================================================== */
+.sidebar {
+    width: 250px;
+    background-color: var(--bg-card);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    position: fixed;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 100;
+}
+
+.brand {
+    text-align: center;
+    margin-bottom: 36px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.brand-logo {
+    max-width: 105px;
+    height: auto;
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: var(--text-sub);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.nav-item:hover {
+    background-color: #f8fafc;
+    color: var(--text-main);
+}
+
+.nav-item.active {
+    background-color: var(--primary-light);
+    color: var(--primary-hover);
+}
+
+/* Contenedor estricto para iconos (previene que el menú brinque) */
+.nav-icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.nav-icon-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Botón Cerrar Sesión fijo al fondo */
+.logout-btn {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    color: #ea580c;
+    background-color: var(--primary-light);
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: background 0.2s ease;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.logout-btn:hover {
+    background-color: #ffd8b3;
+}
+
+/* ==========================================================================
+   TARJETAS, TABLAS Y PIES DE PÁGINA (FONDOS DE MARCO)
+   ========================================================================== */
+.card, .ventas-card {
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+/* Estilo estándar para todas las tablas */
+.table-wrapper, .table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th {
+    background-color: #fafafa;
+    color: var(--text-sub);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+td {
+    padding: 16px 24px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+tr:hover td {
+    background-color: #f8fafc;
+}
+
+/* Pie de página unificado estilo Figma (Franja Naranja) */
+.card-footer, .resumen-ventas-footer {
+    background-color: var(--primary-muted);
+    border-top: 1px solid #ffedd5;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-count, #cant-pedidos-footer {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #a27b5c;
+    letter-spacing: 0.5px;
+}
+
+.footer-total, .total-monto, #por-cobrar-footer {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--primary-hover);
+}
+
+/* ==========================================================================
+   DISEÑO DE MODALES (FIGMA STYLE)
+   ========================================================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.4); /* Backdrop oscurecido */
+    display: none; /* Controlado dinámicamente */
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.modal-content-figma, .modal-content {
+    background-color: var(--bg-card);
+    width: 100%;
+    max-width: 440px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: scaleUp 0.25s ease-out;
+}
+
+@keyframes scaleUp {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header-figma, .modal-header {
+    background-color: #fafafa;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-header-figma h3, .modal-header h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.plus-orange {
+    color: var(--primary);
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.modal-form-figma, .modal-form {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group-figma, .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group-figma label, .form-group label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-sub);
+    text-transform: uppercase;
+}
+
+.form-group-figma input, .form-group input,
+.form-group-figma select, .form-group select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    transition: border-color 0.15s ease;
+}
+
+.form-group-figma input:focus, .form-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* Botones de acción del Formulario */
+.form-actions-figma, .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.btn-agregar, .btn-submit {
+    flex: 1;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-agregar:hover, .btn-submit:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-cancelar, .btn-cancel {
+    flex: 1;
+    background-color: #f1f5f9;
+    color: var(--text-sub);
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.btn-cancelar:hover, .btn-cancel:hover {
+    background-color: #e2e8f0;
+    color: var(--text-main);
+}
+
+/* ==========================================================================
+   NOTIFICACIONES FLOTANTES (TOASTS)
+   ========================================================================== */
+.notification-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.toast {
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+/* ==========================================================================
+   ESTILOS DE TABS Y TARJETAS DE PEDIDO (FIGMA STYLE)
+   ========================================================================== */
+
+/* Contenedor de Pestañas */
+.tabs-container {
+    display: flex;
+    gap: 28px;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 28px;
+    padding-bottom: 2px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 8px 4px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #64748b;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    outline: none;
+    transition: color 0.2s;
+}
+
+.tab-btn.active {
+    color: #ea580c;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #ea580c;
+    border-radius: 2px;
+}
+
+.tab-badge {
+    background-color: #ffedd5;
+    color: #ea580c;
+    font-size: 0.75rem;
+    padding: 1px 8px;
+    border-radius: 12px;
+    font-weight: 700;
+}
+
+/* Alimentador de Tarjetas */
+.pedidos-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 1100px;
+}
+
+/* Tarjeta de Pedido Individual */
+.pedido-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Encabezado de la Tarjeta */
+.pedido-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #e2e8f0;
+    padding-bottom: 12px;
+}
+
+.client-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pedido-id {
+    font-weight: 700;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.cliente-nombre {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1rem;
+}
+
+.cliente-tel {
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+
+.pedido-time {
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Cuerpo del Pedido (Items de compra) */
+.pedido-card-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.pedido-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+}
+
+.pedido-item {
+    display: flex;
+    justify-content: space-between;
+    max-width: 500px;
+    font-size: 0.95rem;
+}
+
+.item-qty {
+    font-weight: 800;
+    color: #f97316;
+    margin-right: 8px;
+}
+
+.item-name {
+    color: #1e293b;
+    font-weight: 500;
+    flex-grow: 1;
+}
+
+.item-price {
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* Lado Derecho: Totales y Acciones */
+.pedido-card-action {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    min-width: 150px;
+}
+
+.pedido-total-val {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #1e293b;
+}
+
+/* Estilos de botones de estado exactos de Figma */
+.btn-status-action {
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+/* Estado 1: Botón Aceptar (Naranja con borde/sutil) */
+.status-aceptar {
+    background-color: #ffffff;
+    color: #ea580c;
+    border: 1px solid #ea580c;
+}
+
+.status-aceptar:hover {
+    background-color: #fff7ed;
+}
+
+/* Estado 2: Botón Procesando (Naranja Sólido) */
+.status-procesando {
+    background-color: #f97316;
+    color: #ffffff;
+    border: none;
+}
+
+.status-procesando:hover {
+    background-color: #ea580c;
+}
+
+/* Estado 3: Badge Listo (Verde sutil) */
+.status-listo {
+    background-color: #ecfdf5;
+    color: #10b981;
+    border: 1.5px solid #a7f3d0;
+    cursor: default;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+/* ==========================================================================
+   AJUSTES EXCLUSIVOS DE HISTORIAL (FIGMA STYLE)
+   ========================================================================== */
+
+/* Contenedor que alinea pestañas a la izq y buscador a la der en una sola fila */
+.historial-controls-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+/* Buscador alineado en la cabecera */
+.search-box-wrapper input {
+    background-color: #ffffff;
+    border: 1px solid #cbd5e1;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #1e293b;
+    width: 240px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-box-wrapper input:focus {
+    border-color: #ea580c;
+}
+
+/* Badge de Estado Pagado */
+.badge-pagado {
+    background-color: #ecfdf5;
+    color: #10b981;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 12px;
+    display: inline-block;
+    text-align: center;
+}
+
+/* Estructura Ticket / Hora apilados */
+.ticket-time-stack {
+    display: flex;
+    flex-direction: column;
+}
+
+.ticket-id {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 0.9rem;
+}
+
+.ticket-hour {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-top: 2px;
+}
+/* ==========================================================================
+   ESTILOS DE INVENTARIO Y MERMAS (FIGMA STYLE)
+   ========================================================================== */
+
+/* Asegurar que no haya imágenes flotantes extrañas o desbordadas */
+.app-container::after, .main-content::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* Botones de acción dentro de las tablas */
+.btn-action-outline {
+    background-color: #ffffff;
+    border: 1.5px solid #cbd5e1;
+    color: #64748b;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 6px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-action-outline:hover {
+    border-color: #ea580c;
+    color: #ea580c;
+    background-color: #fff7ed;
+}
+
+/* Badge de merma negativa (Rojo sutil) */
+.merma-qty-negative {
+    color: #ef4444;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.merma-loss-value {
+    color: #ef4444;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+/* ==========================================================================
+   ESTILOS DE CIERRE DE CAJA (FIGMA STYLE)
+   ========================================================================== */
+
+/* Bloquear cualquier fuga visual de carritos u otros elementos absolutos */
+.app-container::before, 
+.app-container::after,
+.main-content::before,
+.main-content::after {
+    display: none !important;
+    content: none !important;
+}
+
+/* Layout vertical de las dos tarjetas */
+.cierre-layout-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 1000px;
+    width: 100%;
+}
+
+/* Lista de transacciones en el resumen */
+.resumen-items-container {
+    padding: 16px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cierre-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+}
+
+.cierre-item-left {
+    display: flex;
+    gap: 12px;
+}
+
+.cierre-item-ticket {
+    font-weight: 700;
+    color: #94a3b8;
+    width: 60px;
+}
+
+.cierre-item-cliente {
+    font-weight: 600;
+    color: #64748b;
+}
+
+.cierre-item-monto {
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* Footer del Resumen de Caja */
+.resumen-totales-footer {
+    background-color: #fafafa;
+    border-top: 1px solid #f1f5f9;
+    padding: 24px 32px;
+    border-radius: 0 0 12px 12px;
+}
+
+.totales-row-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.totales-row-main .lbl-main {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1rem;
+}
+
+.totales-row-main .val-main {
+    font-weight: 800;
+    color: #ea580c;
+    font-size: 1.25rem;
+}
+
+.totales-row-sub {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+    font-size: 0.9rem;
+}
+
+.totales-row-sub .lbl-sub {
+    color: #64748b;
+    font-weight: 500;
+}
+
+.totales-row-sub .val-sub {
+    font-weight: 700;
+    color: #64748b;
+}
+
+.color-danger {
+    color: #ef4444 !important;
+}
+
+/* Formulario de Declarar Efectivo */
+.cierre-form-row {
+    display: flex;
+    gap: 24px;
+}
+
+.form-group-cierre {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+}
+
+.form-group-cierre label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.form-group-cierre input,
+.form-group-cierre textarea {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    color: #1e293b;
+    outline: none;
+    transition: all 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.form-group-cierre input:focus,
+.form-group-cierre textarea:focus {
+    border-color: #ea580c;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.08);
+}
+
+/* Botón "Cerrar caja" estilo Figma */
+.btn-cierre-submit {
+    width: 100%;
+    background-color: #fdba74; /* Tonalidad deshabilitada clara inicial */
+    color: #ffffff;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-cierre-submit.active {
+    background-color: #ea580c;
+}
+
+.btn-cierre-submit.active:hover {
+    background-color: #c2410c;
+}

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avistock - Recuperar Contraseña</title>
+    <link rel="stylesheet" href="../css-global/login.css">
+    
+    <style>
+        /* Configuración unificada con tu pantalla de Registro */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden !important;
+            background-color: #8b8c8e; /* Mismo gris exacto */
+            font-family: system-ui, -apple-system, sans-serif; /* Misma fuente */
+        }
+
+        .login-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        /* Tarjeta idéntica en bordes y sombras al registro */
+        .login-card {
+            position: relative !important;
+            width: 100%;
+            max-width: 440px; 
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px 32px 30px 32px !important; 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        /* El Logo de Avistock en la esquina (idéntico al registro) */
+        .login-logo {
+            position: absolute !important;
+            top: -46px !important;  
+            left: -36px !important; 
+            z-index: 10 !important; 
+        }
+
+        .login-logo img {
+            width: 105px !important; 
+            height: auto !important;
+            display: block !important;
+        }
+
+        /* Cabecera */
+        .login-header {
+            text-align: center;
+            margin-bottom: 24px !important;
+        }
+
+        .login-header img {
+            width: 52px !important; /* Icono de llave o candado de recuperación */
+            height: auto;
+            margin-bottom: 8px;
+        }
+
+        .login-header h2 {
+            font-size: 1.3rem !important;
+            line-height: 1.3;
+            margin: 0 0 8px 0;
+            color: #1f2937;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 0.88rem !important;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        /* Formulario y Inputs alineados */
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px !important; 
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px !important;
+        }
+
+        .input-group label {
+            font-size: 0.82rem !important;
+            font-weight: 500;
+            color: #4b5563;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 11px 12px 11px 40px !important; /* Ligeramente más alto para mejor UX de un solo campo */
+            font-size: 0.9rem !important;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-wrapper input.input-error {
+            border-color: #dc2626 !important;
+            background-color: #fef2f2;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .error-text {
+            font-size: 0.75rem;
+            color: #dc2626;
+            margin-top: 1px;
+            min-height: 12px; 
+            display: block;
+        }
+
+        /* Botón Naranja */
+        .btn-login {
+            width: 100%;
+            background-color: #f27438;
+            color: white;
+            padding: 12px !important;
+            font-size: 0.95rem !important;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            margin-top: 8px !important;
+            transition: background-color 0.2s;
+        }
+
+        .btn-login:hover {
+            background-color: #df5e23;
+        }
+
+        /* Footer */
+        .login-footer {
+            text-align: center;
+            margin-top: 20px !important;
+            font-size: 0.85rem !important;
+        }
+
+        .login-footer p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        .login-footer a {
+            color: #f27438;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            
+            <!-- Logo de la esquina idéntico al registro -->
+            <div class="login-logo">
+                <img src="../assets-global/LOGO_Avistock 3.png" alt="Avistock Logo" onerror="this.src='https://placehold.co/105x105?text=Avistock';">
+            </div>
+
+            <!-- Cabecera de recuperación -->
+            <div class="login-header">
+                <!-- Usamos tu icono de login o uno de ayuda -->
+                <img src="../assets-global/icono para el login.png" alt="Recuperar cuenta" onerror="this.src='https://placehold.co/52x52?text=🔑';">
+                <h2>Recuperar contraseña</h2>
+                <p class="subtitle">Ingresa tu correo electrónico y te enviaremos un enlace seguro para restablecer tu contraseña.</p>
+            </div>
+
+            <!-- Formulario interactivo -->
+            <form class="login-form" id="recoveryForm" novalidate>
+                
+                <div class="input-group">
+                    <label for="recovery-email">Correo electrónico</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <!-- Icono de correo unificado -->
+                            <img src="../assets-global/icono correo.png" alt="icono correo" width="16" onerror="this.src='https://placehold.co/16x16?text=✉️';">
+                        </span>
+                        <input type="email" id="recovery-email" placeholder="ejemplo@gmail.com">
+                    </div>
+                    <small class="error-text" id="err-email"></small>
+                </div>
+
+                <button type="submit" class="btn-login">Enviar instrucciones</button>
+
+            </form>
+
+            <!-- Enlace de regreso -->
+            <div class="login-footer">
+                <p>¿Recordaste tu contraseña? <a href="login.html">Inicia sesión aquí</a></p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('recoveryForm');
+        const emailInput = document.getElementById('recovery-email');
+        const errorText = document.getElementById('err-email');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Limpiar errores visuales previos
+            errorText.innerText = '';
+            emailInput.classList.remove('input-error');
+
+            const emailValue = emailInput.value.trim();
+            const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailValue) {
+                mostrarError(emailInput, 'El campo es obligatorio *');
+            } else if (!regexEmail.test(emailValue)) {
+                mostrarError(emailInput, 'Por favor, introduce un correo electrónico válido.');
+            } else {
+                // Éxito: Simulación de envío
+                alert(`Te hemos enviado un correo de recuperación a: ${emailValue}`);
+                window.location.href = 'login.html';
+            }
+        });
+
+        function mostrarError(inputElement, mensaje) {
+            inputElement.classList.add('input-error');
+            errorText.innerText = mensaje;
+        }
+    </script>
+
+</body>
+</html>

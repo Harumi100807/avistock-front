@@ -1,0 +1,603 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+    background-color: #e9ecef;
+    color: #2d3748;
+}
+
+/* CONTENEDOR GENERAL SIN BARRAS LATERALES */
+.main-wrapper {
+    min-height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 60px; /* Espacio inferior para evitar superposiciones con botones */
+}
+
+/* ENCABEZADO */
+.main-header {
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-title {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #1a202c;
+    display: block;
+}
+
+.brand-subtitle {
+    font-size: 0.8rem;
+    color: #718096;
+}
+
+.header-controls { 
+    display: flex; 
+    align-items: center; 
+    gap: 20px; 
+}
+
+.inline-icon { 
+    width: 14px; 
+    height: 14px; 
+    vertical-align: middle; 
+    margin-right: 4px; 
+}
+
+.location-badge { 
+    font-size: 0.85rem; 
+    background: #fff; 
+    padding: 8px 16px; 
+    border-radius: 20px; 
+    font-weight: 500; 
+    display: flex; 
+    align-items: center; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.cart-badge {
+    background-color: #fff;
+    color: #e06c2b;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.badge-count {
+    background-color: #f48c42;
+    color: white;
+    padding: 1px 6px;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    margin-left: 6px;
+}
+
+/* DISTRIBUCIÓN DE LAS DOS COLUMNAS */
+.checkout-layout {
+    display: flex;
+    flex-grow: 1;
+    width: 100%;
+}
+
+/* COLUMNA IZQUIERDA: CATALOGO DE PRODUCTOS */
+.catalog-container {
+    flex: 2;
+    padding: 10px 40px 30px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.alert-banner {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.alert-tag {
+    font-size: 0.75rem;
+    color: #f48c42;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.alert-banner h2 { 
+    font-size: 1.4rem; 
+    color: #f48c42; 
+    margin-bottom: 5px; 
+}
+
+.alert-banner p { 
+    color: #718096; 
+    font-size: 0.95rem; 
+    line-height: 1.5; 
+}
+
+/* TARJETAS DE PRODUCTOS */
+.products-grid {
+    display: flex;
+    gap: 24px;
+}
+
+.product-card {
+    flex: 1;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 360px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.card-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-dot { 
+    width: 8px; 
+    height: 8px; 
+    border-radius: 50%; 
+    display: inline-block; 
+}
+
+.status-dot.green { background-color: #00a878; }
+.status-dot.blue { background-color: #0066cc; }
+
+.stock-info { 
+    margin-left: auto; 
+    font-weight: 400; 
+    color: #718096; 
+}
+
+.stock-info strong { 
+    color: #f48c42; 
+}
+
+.card-body { 
+    margin-top: 15px; 
+    position: relative; 
+}
+
+.weight-label { 
+    font-size: 0.8rem; 
+    color: #718096; 
+    display: block; 
+}
+
+.price-tag { 
+    font-size: 1.6rem; 
+    font-weight: 700; 
+    color: #f48c42; 
+    margin-bottom: 2px; 
+}
+
+.price-tag small { 
+    font-size: 0.9rem; 
+    color: #718096; 
+    font-weight: 400; 
+}
+
+.unit-price-subtext { 
+    font-size: 0.85rem; 
+    color: #718096; 
+    font-weight: 500; 
+    margin-bottom: 12px; 
+}
+
+.price-right { 
+    text-align: right; 
+}
+
+.product-card h3 { 
+    font-size: 1.15rem; 
+    margin-bottom: 6px; 
+}
+
+.product-desc { 
+    font-size: 0.85rem; 
+    color: #718096; 
+    line-height: 1.4; 
+}
+
+.card-action-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.quantity-counter {
+    display: flex;
+    align-items: center;
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 4px;
+}
+
+.quantity-counter button {
+    background: none; 
+    border: none; 
+    width: 28px; 
+    height: 28px; 
+    cursor: pointer; 
+    font-size: 1.1rem; 
+    color: #718096;
+    transition: background 0.1s; 
+    border-radius: 50%;
+}
+
+.quantity-counter button:hover { 
+    background-color: #edf2f7; 
+    color: #2d3748; 
+}
+
+.quantity-counter span { 
+    font-size: 0.9rem; 
+    font-weight: 600; 
+    padding: 0 10px; 
+}
+
+.btn-add-product {
+    background-color: #f48c42; 
+    color: #fff; 
+    border: none; 
+    padding: 10px 24px; 
+    border-radius: 20px; 
+    font-weight: 600; 
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-add-product:hover { 
+    background-color: #d97326; 
+}
+
+.bottom-notice {
+    background-color: #fffbeb;
+    border: 1px solid #fef3c7;
+    padding: 15px 20px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: auto;
+}
+
+.notice-icon-img { 
+    width: 18px; 
+    height: 18px; 
+    object-fit: contain; 
+}
+
+.bottom-notice p { 
+    font-size: 0.85rem; 
+    color: #b45309; 
+}
+
+/* COLUMNA DERECHA: APARTADO / REGISTRO */
+.sidebar-panel {
+    flex: 1.1;
+    background-color: #fff;
+    padding: 40px 30px;
+    border-radius: 24px 0 0 24px;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.02);
+}
+
+.panel-state { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 20px; 
+}
+
+.panel-title-area h2 { 
+    font-size: 1.3rem; 
+    font-weight: 700; 
+}
+
+.panel-title-area p { 
+    font-size: 0.85rem; 
+    color: #718096; 
+    margin-top: 2px; 
+}
+
+.cart-placeholder {
+    background-color: #e6f7f0; 
+    border: 1px dashed #00966b; 
+    padding: 15px; 
+    border-radius: 14px; 
+    text-align: center; 
+    color: #00966b; 
+    font-size: 0.85rem; 
+    font-weight: 500;
+}
+
+.checkout-form { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px; 
+}
+
+.form-group { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 5px; 
+}
+
+.form-group label { 
+    font-size: 0.85rem; 
+    font-weight: 600; 
+}
+
+.input-container { 
+    position: relative; 
+    display: flex; 
+    align-items: center; 
+}
+
+.field-icon { 
+    position: absolute; 
+    left: 14px; 
+    display: flex; 
+    align-items: center; 
+}
+
+.field-icon-img { 
+    width: 16px; 
+    height: 16px; 
+    object-fit: contain; 
+}
+
+.input-container input {
+    width: 100%; 
+    padding: 12px 12px 12px 42px; 
+    border-radius: 25px; 
+    border: 1px solid #e2e8f0; 
+    font-size: 0.9rem; 
+    outline: none;
+}
+
+.form-group textarea {
+    width: 100%; 
+    padding: 15px; 
+    border-radius: 16px; 
+    border: 1px solid #e2e8f0; 
+    resize: none; 
+    outline: none; 
+    font-size: 0.9rem;
+}
+
+.label-with-icon { 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+}
+
+.inline-icon-label { 
+    width: 14px; 
+    height: 14px; 
+    object-fit: contain; 
+}
+
+.total-checkout-row { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding-top: 10px; 
+    font-weight: 600; 
+}
+
+.price-display { 
+    font-size: 1.4rem; 
+    font-weight: 700; 
+}
+
+.btn-primary-submit {
+    background-color: #72cbb0; 
+    color: white; 
+    border: none; 
+    padding: 14px; 
+    border-radius: 25px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    font-size: 0.95rem; 
+    margin-top: 10px;
+    transition: all 0.2s ease;
+}
+
+.btn-primary-submit:hover { 
+    background-color: #53b397; 
+}
+
+/* TICKET DE EXITO */
+.success-banner {
+    background-color: #e6f7f0; 
+    border-radius: 12px; 
+    padding: 16px; 
+    display: flex; 
+    align-items: center; 
+    gap: 14px;
+}
+
+.success-checkmark {
+    background-color: #00966b; 
+    color: white; 
+    width: 35px; 
+    height: 35px; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-weight: bold;
+}
+
+.success-banner h3 { 
+    font-size: 0.95rem; 
+    color: #00523a; 
+}
+
+.success-banner p { 
+    font-size: 0.75rem; 
+    color: #00966b; 
+}
+
+.success-info-text { 
+    font-size: 0.85rem; 
+    color: #718096; 
+    line-height: 1.5; 
+}
+
+.receipt-box { 
+    border: 1px dashed #e2e8f0; 
+    border-radius: 12px; 
+    padding: 20px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 16px; 
+}
+
+.receipt-row { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+}
+
+.receipt-icon { 
+    background-color: #f7fafc; 
+    width: 32px; 
+    height: 32px; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+.receipt-icon-img { 
+    width: 16px; 
+    height: 16px; 
+    object-fit: contain; 
+}
+
+.receipt-row small { 
+    display: block; 
+    font-size: 0.75rem; 
+    color: #718096; 
+}
+
+.receipt-row strong { 
+    font-size: 0.9rem; 
+}
+
+.alternative-bg { 
+    background-color: #fff5ed; 
+    padding: 15px; 
+    border-radius: 12px; 
+}
+
+.orange-text { 
+    color: #f48c42; 
+}
+
+/* BOTÓN WHATSAPP/ENTREGA */
+.btn-whatsapp-action {
+    background-color: #00966b; 
+    color: white; 
+    border: none; 
+    padding: 14px; 
+    border-radius: 25px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    font-size: 0.95rem; 
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.btn-whatsapp-action:hover {
+    background-color: #007351;
+}
+
+.btn-danger-link { 
+    background: none; 
+    border: none; 
+    color: #e53e3e; 
+    font-weight: 600; 
+    cursor: pointer; 
+    font-size: 0.85rem; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 4px; 
+    margin: 5px auto 0 auto; 
+}
+
+.btn-danger-link:hover { 
+    text-decoration: underline; 
+}
+
+/* BOTÓN DE CERRAR SESIÓN FLOTANTE */
+.floating-logout {
+    position: absolute;
+    bottom: 20px;
+    left: 40px;
+    background: none;
+    border: none;
+    color: #e53e3e;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    transition: transform 0.2s;
+}
+
+.floating-logout:hover {
+    transform: translateX(3px);
+}
+
+/* MANEJO DE ERRORES */
+.error-text { 
+    color: #e53e3e; 
+    font-size: 0.75rem; 
+    font-weight: 500; 
+    margin-top: 4px; 
+    display: none; 
+}
+
+.field-with-error input, 
+.field-with-error textarea { 
+    border-color: #e53e3e !important; 
+    background-color: #fff5f5; 
+}
+
+/* CLASE UTILITARIA OCULTAR */
+.hidden { 
+    display: none !important; 
+}

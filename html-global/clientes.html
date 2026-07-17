@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avistock - Pedidos en Línea</title>
+    <!-- Enlace corregido a la carpeta css externa -->
+  <link rel="stylesheet" href="../css-global/clientes.css">
+</head>
+<body>
+  
+    <div class="main-wrapper">
+        
+        <header class="main-header">
+            <div class="brand-area">
+                <!-- Enlaces corregidos a assets-global subiendo un nivel -->
+                <img src="../assets-global/LOGO_Avistock 3.png" alt="Avistock Logo" class="brand-logo">
+                <div>
+                    <span class="brand-title">Avistock</span>
+                    <span class="brand-subtitle">Pedidos en línea • "La Granja"</span>
+                </div>
+            </div>
+            <div class="header-controls">
+                <span class="location-badge">
+                    <img src="../assets-global/icon ubicacion.png" alt="Ubicación" class="inline-icon">
+                    Sucursal Principal — La Granja
+                </span>
+            </div> 
+        </header>
+
+        <div class="checkout-layout">
+            
+            <main class="catalog-container">
+                <div class="alert-banner">
+                    <span class="alert-tag">SISTEMA DE APARTADO</span>
+                    <h2>Reserva hoy mismo!!!.</h2>
+                    <p>Consulta existencias reales en corral y cámara de refrigeración. Aparta tu pollo, recibe confirmación y <strong>paga contra entrega en mostrador.</strong></p>
+                </div>
+
+                <div class="products-grid">
+                    <article class="product-card">
+                        <div class="card-status">
+                            <span class="status-dot green"></span> Corral Activo
+                            <span class="stock-info"><strong>236</strong>/ud disponibles</span>
+                        </div>
+                        <div class="card-body">
+                            <span class="weight-label">peso aproximado: 3kg/ud</span>
+                            <div class="price-tag">$45.00<small>/kg</small></div>
+                            <div class="unit-price-subtext">($135.00 la unidad)</div>
+                            <h3>Pollo en Pie</h3>
+                            <p class="product-desc">Pollos en pie directo del corral.</p>
+                        </div>
+                        <div class="card-action-row">
+                            <div class="quantity-counter">
+                                <button id="minus-pie">−</button>
+                                <span id="val-pie">3 ud</span>
+                                <button id="plus-pie">+</button>
+                            </div>
+                            <button class="btn-add-product" id="btn-add-pie">Agregar</button>
+                        </div>
+                    </article>
+
+                    <article class="product-card">
+                        <div class="card-status">
+                            <span class="status-dot blue"></span> Listo para Entrega
+                            <span class="stock-info"><strong>184</strong>/ud disponibles</span>
+                        </div>
+                        <div class="card-body">
+                            <span class="weight-label">peso aproximado: 2.5kg/ud</span>
+                            <div class="price-tag price-right">$57.00<small>/kg</small></div>
+                            <div class="unit-price-subtext price-right">($142.50 la unidad)</div>
+                            <h3>Pollo en Cámara</h3>
+                            <p class="product-desc">Procesado y refrigerado. Limpio, eviscerado y listo para cocinar.</p>
+                        </div>
+                        <div class="card-action-row">
+                            <div class="quantity-counter">
+                                <button id="minus-camara">−</button>
+                                <span id="val-camara">2 ud</span>
+                                <button id="plus-camara">+</button>
+                            </div>
+                            <button class="btn-add-product" id="btn-add-camara">Agregar</button>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="bottom-notice">
+                    <img src="../assets-global/advertencia.png" alt="Alerta" class="notice-icon-img">
+                    <p>Las reservas activas se liberan automáticamente tras <strong>4 horas</strong> si no se recogen en mostrador.</p>
+                </div>
+            </main>
+
+            <aside class="sidebar-panel">
+                
+                <div id="panel-form-state" class="panel-state">
+                    <div class="panel-title-area">
+                        <h2>Confirmar Apartado</h2>
+                        <p>Completa tus datos para generar tu código de reserva</p>
+                    </div>
+
+                    <div class="cart-placeholder" id="cart-msg-empty">
+                        Selecciona cantidades y presiona "Agregar" para calcular tu orden.
+                    </div>
+
+                    <form class="checkout-form" id="apartado-form" novalidate>
+                        <div class="form-group">
+                            <label>Nombre Completo</label>
+                            <div class="input-container">
+                                <span class="field-icon">
+                                    <img src="../assets-global/user.png" alt="Nombre" class="field-icon-img">
+                                </span>
+                                <input type="text" id="input-nombre" placeholder="Ej. Carlos Mendoza">
+                            </div>
+                            <span class="error-text" id="error-nombre"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Número Telefónico (WhatsApp)</label>
+                            <div class="input-container">
+                                <span class="field-icon">
+                                    <img src="../assets-global/icono telefono.png" alt="Teléfono" class="field-icon-img">
+                                </span>
+                                <input type="tel" id="input-telefono" placeholder="Ej. 961 123 4567">
+                            </div>
+                            <span class="error-text" id="error-telefono"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Correo Electrónico <small>• Opcional</small></label>
+                            <div class="input-container">
+                                <span class="field-icon">
+                                    <img src="../assets-global/icono correo.png" alt="Correo" class="field-icon-img">
+                                </span>
+                                <input type="email" id="input-correo" placeholder="opcional@correo.com">
+                            </div>
+                            <span class="error-text" id="error-correo"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label-with-icon">
+                                <img src="../assets-global/calendar.png" alt="Reloj" class="inline-icon-label">
+                                Horario de Recogida
+                            </label>
+                            <textarea id="input-horario" rows="3" placeholder="Escribe el horario sugerido o detalles adicionales..."></textarea>
+                            <span class="error-text" id="error-horario"></span>
+                        </div>
+
+                        <div class="total-checkout-row">
+                            <span>Total estimado a pagar:</span>
+                            <span class="price-display" id="form-total-cost">$0.00</span>
+                        </div>
+
+                        <button type="button" id="btn-submit-apartado" class="btn-primary-submit">Generar Código de Reserva</button>
+                    </form>
+                </div>
+
+                <div id="panel-success-state" class="panel-state hidden">
+                    <div class="success-banner">
+                        <div class="success-checkmark">✓</div>
+                        <div>
+                            <h3>¡Listo! Recoge Sin Papeles</h3>
+                            <p>Apartado #0003 registrado • 21 jun 2026</p>
+                        </div>
+                    </div>
+
+                    <p class="success-info-text">
+                        No necesitas traer un código QR. Al llegar a la sucursal, proporciona estos datos en mostrador:
+                    </p>
+
+                    <div class="receipt-box">
+                        <div class="receipt-row">
+                            <span class="receipt-icon">
+                                <img src="../assets-global/user.png" alt="Usuario" class="receipt-icon-img">
+                            </span>
+                            <div>
+                                <small>Nombre del Beneficiario</small>
+                                <strong id="lbl-reserva-nombre">-</strong>
+                            </div>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-icon">
+                                <img src="../assets-global/icono telefono.png" alt="Celular" class="receipt-icon-img">
+                            </span>
+                            <div>
+                                <small>Número Celular</small>
+                                <strong id="lbl-reserva-telefono">-</strong>
+                            </div>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-icon">
+                                <img src="../assets-global/shopping-cart.png" alt="Compra" class="receipt-icon-img">
+                            </span>
+                            <div>
+                                <small>Compra Realizada</small>
+                                <strong id="lbl-reserva-compra">-</strong>
+                            </div>
+                        </div>
+                        <div class="receipt-row">
+                            <span class="receipt-icon">
+                                <img src="../assets-global/calendar.png" alt="Horario" class="receipt-icon-img">
+                            </span>
+                            <div>
+                                <small>Horario Programado</small>
+                                <strong id="lbl-reserva-horario">-</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="total-checkout-row alternative-bg">
+                        <span>Total estimado a pagar:</span>
+                        <span class="price-display orange-text" id="success-total-cost">$0.00</span>
+                    </div>
+
+                    <button type="button" id="btn-another-order" class="btn-whatsapp-action">
+                        ¿Quieres hacer otro pedido?
+                    </button>
+
+                    <button type="button" id="btn-cancel-reservation" class="btn-danger-link">
+                        <img src="../assets-global/trash.png" alt="Cancelar" class="inline-icon">
+                        Cancelar Apartado
+                    </button>
+                </div>
+
+            </aside>
+
+        </div>
+
+        <button type="button" id="btn-logout" class="floating-logout">
+            <img src="../assets-global/salida.png" alt="Salir" class="inline-icon">
+            Cerrar sesión
+        </button>
+    </div>
+
+    <!-- Enlace corregido a la carpeta js externa -->
+   <script src="../js-global/clientes.js"></script>     
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avistock - Inventario</title>
+    <link rel="stylesheet" href="../css-global/admi.css">
+</head>
+<body class="app-body">
+
+    <div class="app-container">
+        
+        <!-- ==========================================
+             BARRA LATERAL (SIDEBAR) UNIFICADA
+             ========================================== -->
+        <aside class="sidebar">
+            <div class="brand">
+                <img src="../assets-global/LogoAvi 1.png" alt="Avistock" class="brand-logo" onerror="this.src='https://placehold.co/100x100?text=Avistock';">
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="ventas.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/carrito-de-compras.png" alt="Ventas" class="icon-nav">
+                    </div> 
+                    Ventas
+                </a>
+                <a href="pedidos.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/acuerdo-de-contrato.png" alt="Pedidos" class="icon-nav">
+                    </div> 
+                    Pedidos
+                </a>
+                <a href="historial.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/historial-de-pedidos.png" alt="Historial" class="icon-nav">
+                    </div> 
+                    Historial
+                </a>
+                <a href="inventario.html" class="nav-item active">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/lista-de-verificacion.png" alt="Inventario" class="icon-nav">
+                    </div> 
+                    Inventario
+                </a>
+                <a href="cierre_caja.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/caja-registradora.png" alt="Cierre de caja" class="icon-nav">
+                    </div> 
+                    Cierre de caja
+                </a>
+            </nav>
+
+            <a href="#" onclick="cerrarSesion(event)" class="logout-btn">
+                <div class="nav-icon-wrapper">
+                    <img src="../assets-global/salida.png" alt="Cerrar sesión" class="icon-nav">
+                </div> 
+                Cerrar sesión
+            </a>
+        </aside>
+
+        <!-- ==========================================
+             CONTENIDO PRINCIPAL: INVENTARIO
+             ========================================== -->
+        <main class="main-content">
+            <header class="content-header" style="margin-bottom: 28px;">
+                <div class="header-titles">
+                    <p class="breadcrumbs" style="font-size: 0.85rem; color: #64748b; margin-bottom: 4px;">Administrador > Inventario</p>
+                    <h1 style="font-size: 1.8rem; font-weight: 700; color: #1e293b; margin: 0;">Inventario</h1>
+                    <p class="subtitle" style="font-size: 0.95rem; color: #64748b; margin-top: 4px;">Stock actual y registro de mermas</p>
+                </div>
+            </header>
+
+            <!-- SECCIÓN 1: STOCK ACTUAL -->
+            <div class="inventario-section-title" style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 12px; margin-top: 16px;">
+                Stock
+            </div>
+            <div class="ventas-card" style="margin-bottom: 32px;">
+                <div class="table-wrapper">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Stock</th>
+                                <th>Mín.</th>
+                                <th>Precio</th>
+                                <th style="text-align: right; padding-right: 32px; width: 150px;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-stock-rows">
+                            <!-- Inyección dinámica -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: REGISTRO DE MERMAS -->
+            <div class="inventario-section-title" style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 12px;">
+                Mermas
+            </div>
+            <div class="ventas-card">
+                <div class="table-wrapper">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad / UD</th>
+                                <th>$ Perdido</th>
+                                <th style="text-align: right; padding-right: 32px; width: 180px;">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-mermas-rows">
+                            <!-- Inyección dinámica -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- CONTENEDOR PARA LAS ALERTAS FLOTANTES (TOASTS) -->
+    <div class="notification-container" id="notification-container"></div>
+
+    <script src="../js-global/admi.js"></script>
+    <script>
+        function cerrarSesion(event) {
+            event.preventDefault();
+            if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>

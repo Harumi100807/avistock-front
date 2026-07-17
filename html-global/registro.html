@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avistock - Crea tu cuenta</title>
+    <!-- Vinculamos tu archivo css unificado -->
+    <link rel="stylesheet" href="../css-global/login.css">
+    
+    <style>
+        /* Mantenemos tus excelentes optimizaciones de espacio aquí o puedes moverlas al login.css */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden !important;
+            background-color: #8b8c8e; /* Ajustado al gris oscuro de tu paleta original */
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        .login-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            padding: 20px;
+        }
+
+        .login-card {
+            position: relative !important;
+            width: 100%;
+            max-width: 440px; 
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px 32px 20px 32px !important; 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 12px !important;
+        }
+
+        .login-header img {
+            width: 42px !important; 
+            height: auto;
+            margin-bottom: 4px;
+        }
+
+        .login-header h2 {
+            font-size: 1.15rem !important;
+            line-height: 1.3;
+            margin: 0;
+            color: #1f2937;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px !important; 
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 3px !important;
+        }
+
+        .input-group label {
+            font-size: 0.82rem !important;
+            font-weight: 500;
+            color: #4b5563;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 9px 12px 9px 40px !important; 
+            font-size: 0.88rem !important;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-wrapper input.input-error {
+            border-color: #dc2626 !important;
+            background-color: #fef2f2;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        .error-text {
+            font-size: 0.75rem;
+            color: #dc2626;
+            margin-top: 1px;
+            min-height: 12px; 
+            display: block;
+        }
+
+        .btn-login {
+            width: 100%;
+            background-color: #f27438;
+            color: white;
+            padding: 11px !important;
+            font-size: 0.95rem !important;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            margin-top: 4px !important;
+            transition: background-color 0.2s;
+        }
+
+        .btn-login:hover {
+            background-color: #df5e23;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 10px !important;
+            font-size: 0.82rem !important;
+        }
+
+        .login-footer p {
+            margin: 0;
+        }
+
+        .login-logo {
+            position: absolute !important;
+            top: -46px !important;  
+            left: -36px !important; 
+            z-index: 10 !important; 
+        }
+
+        .login-logo img {
+            width: 105px !important; 
+            height: auto !important;
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            
+            <!-- Ruta corregida a relativa para evitar imágenes rotas -->
+            <div class="login-logo">
+                <img src="../assets-global/LOGO_Avistock 3.png" alt="Avistock Logo" onerror="this.src='https://placehold.co/105x105?text=Avistock';">
+            </div>
+
+            <div class="login-header">
+                <img src="../assets-global/icono para el login.png" alt="Registro de cuenta" onerror="this.src='https://placehold.co/42x42?text=📝';">
+                <h2>Crea tu cuenta de manera segura y eficiente</h2>
+            </div>
+
+            <form class="login-form" id="registerForm" novalidate>
+                
+                <div class="input-group">
+                    <label for="reg-firstname">Nombre</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <img src="../assets-global/icono de usuario login.png" alt="icono usuario" width="16" onerror="this.src='https://placehold.co/16x16?text=👤';">
+                        </span>
+                        <input type="text" id="reg-firstname" placeholder="Ejemplo: Henri Miguel">
+                    </div>
+                    <small class="error-text" id="err-firstname"></small>
+                </div>
+
+                <div class="input-group">
+                    <label for="reg-lastname">Apellido</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <img src="../assets-global/icono de usuario login.png" alt="icono usuario" width="16" onerror="this.src='https://placehold.co/16x16?text=👤';">
+                        </span>
+                        <input type="text" id="reg-lastname" placeholder="Ejemplo: Nuricumbo Trejo">
+                    </div>
+                    <small class="error-text" id="err-lastname"></small>
+                </div>
+
+                <div class="input-group">
+                    <label for="reg-phone">Número telefónico</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <img src="../assets-global/icono telefono.png" alt="icono telefono" width="16" onerror="this.src='https://placehold.co/16x16?text=📞';">
+                        </span>
+                        <input type="tel" id="reg-phone" placeholder="Ejemplo: 9651742525" maxlength="10">
+                    </div>
+                    <small class="error-text" id="err-phone"></small>
+                </div>
+
+                <div class="input-group">
+                    <label for="reg-email">Correo electrónico</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <img src="../assets-global/icono correo.png" alt="icono correo" width="16" onerror="this.src='https://placehold.co/16x16?text=✉️';">
+                        </span>
+                        <input type="email" id="reg-email" placeholder="ejemplo@gmail.com">
+                    </div>
+                    <small class="error-text" id="err-email"></small>
+                </div>
+
+                <div class="input-group">
+                    <label for="reg-password">Crea una contraseña</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <img src="../assets-global/icono candado.png" alt="icono candado" width="16" onerror="this.src='https://placehold.co/16x16?text=🔒';">
+                        </span>
+                        <input type="password" id="reg-password" placeholder="Mínimo 8 caracteres">
+                    </div>
+                    <small class="error-text" id="err-password"></small>
+                </div>
+
+                <div class="input-group">
+                    <label for="reg-confirm-password">Confirma tu contraseña</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <img src="../assets-global/icono candado.png" alt="icono candado" width="16" onerror="this.src='https://placehold.co/16x16?text=🔒';">
+                        </span>
+                        <input type="password" id="reg-confirm-password" placeholder="Repite tu contraseña">
+                    </div>
+                    <small class="error-text" id="err-confirm"></small>
+                </div>
+
+                <button type="submit" class="btn-login">Crear cuenta</button>
+
+            </form>
+
+            <div class="login-footer">
+                <p>¿Ya tienes una cuenta? <a href="login.html" style="color: #f27438; text-decoration: none; font-weight: 600;">Inicia sesión aquí</a></p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const firstName = document.getElementById('reg-firstname');
+        const lastName = document.getElementById('reg-lastname');
+        const phone = document.getElementById('reg-phone');
+        const email = document.getElementById('reg-email');
+        const password = document.getElementById('reg-password');
+        const confirmPassword = document.getElementById('reg-confirm-password');
+
+        // Filtro para permitir únicamente letras en Nombre y Apellido (con tildes y ñ)
+        [firstName, lastName].forEach(input => {
+            input.addEventListener('input', function() {
+                this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ ]/g, '');
+            });
+        });
+
+        // Filtro para permitir únicamente números en Teléfono
+        phone.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let tieneErrores = false;
+
+            // Limpiar errores visuales previos
+            document.querySelectorAll('.error-text').forEach(el => el.innerText = '');
+            document.querySelectorAll('input').forEach(input => input.classList.remove('input-error'));
+
+            // Validar Nombre
+            if (!firstName.value.trim()) {
+                mostrarError(firstName, 'err-firstname', 'El campo es obligatorio *');
+                tieneErrores = true;
+            }
+
+            // Validar Apellido
+            if (!lastName.value.trim()) {
+                mostrarError(lastName, 'err-lastname', 'El campo es obligatorio *');
+                tieneErrores = true;
+            }
+
+            // Validar Teléfono
+            if (!phone.value.trim()) {
+                mostrarError(phone, 'err-phone', 'El campo es obligatorio *');
+                tieneErrores = true;
+            } else if (phone.value.length < 10) {
+                mostrarError(phone, 'err-phone', 'El número debe tener 10 dígitos.');
+                tieneErrores = true;
+            }
+
+            // Validar Correo Electrónico (Presencia y Formato)
+            const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email.value.trim()) {
+                mostrarError(email, 'err-email', 'El campo es obligatorio *');
+                tieneErrores = true;
+            } else if (!regexEmail.test(email.value.trim())) {
+                mostrarError(email, 'err-email', 'Por favor, introduce un correo electrónico válido.');
+                tieneErrores = true;
+            }
+
+            // Validar Contraseña
+            if (!password.value.trim()) {
+                mostrarError(password, 'err-password', 'El campo es obligatorio *');
+                tieneErrores = true;
+            } else if (password.value.length < 8) {
+                mostrarError(password, 'err-password', 'Mínimo debe contener 8 caracteres.');
+                tieneErrores = true;
+            }
+
+            // Validar Confirmación de Contraseña
+            if (!confirmPassword.value.trim()) {
+                mostrarError(confirmPassword, 'err-confirm', 'El campo es obligatorio *');
+                tieneErrores = true;
+            } else if (password.value !== confirmPassword.value) {
+                mostrarError(confirmPassword, 'err-confirm', 'Las contraseñas no coinciden.');
+                tieneErrores = true;
+            }
+
+            // Si pasa todas las validaciones, redirige al login
+            if (!tieneErrores) {
+                alert("Cuenta creada de manera exitosa.");
+                window.location.href = 'login.html';
+            }
+        });
+
+        function mostrarError(inputElement, idErrorSpan, mensaje) {
+            inputElement.classList.add('input-error');
+            document.getElementById(idErrorSpan).innerText = mensaje;
+        }
+    </script>
+
+</body>
+</html>

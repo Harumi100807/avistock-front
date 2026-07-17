@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avistock - Pedidos</title>
+    <link rel="stylesheet" href="../css-global/admi.css">
+</head>
+<body class="app-body">
+
+    <div class="app-container">
+        
+        <!-- ==========================================
+             BARRA LATERAL (SIDEBAR) UNIFICADA
+             ========================================== -->
+        <aside class="sidebar">
+            <div class="brand">
+                <img src="../assets-global/LogoAvi 1.png" alt="Avistock" class="brand-logo" onerror="this.src='https://placehold.co/100x100?text=Avistock';">
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="ventas.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/carrito-de-compras.png" alt="Ventas" class="icon-nav">
+                    </div> 
+                    Ventas
+                </a>
+                <a href="pedidos.html" class="nav-item active">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/acuerdo-de-contrato.png" alt="Pedidos" class="icon-nav">
+                    </div> 
+                    Pedidos
+                </a>
+                <a href="historial.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/historial-de-pedidos.png" alt="Historial" class="icon-nav">
+                    </div> 
+                    Historial
+                </a>
+                <a href="inventario.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/lista-de-verificacion.png" alt="Inventario" class="icon-nav">
+                    </div> 
+                    Inventario
+                </a>
+                <a href="cierre_caja.html" class="nav-item">
+                    <div class="nav-icon-wrapper">
+                        <img src="../assets-global/caja-registradora.png" alt="Cierre de caja" class="icon-nav">
+                    </div> 
+                    Cierre de caja
+                </a>
+            </nav>
+
+            <a href="#" onclick="cerrarSesion(event)" class="logout-btn">
+                <div class="nav-icon-wrapper">
+                    <img src="../assets-global/salida.png" alt="Cerrar sesión" class="icon-nav">
+                </div> 
+                Cerrar sesión
+            </a>
+        </aside>
+
+        <!-- ==========================================
+             CONTENIDO PRINCIPAL: PEDIDOS ESTILO FIGMA
+             ========================================== -->
+        <main class="main-content">
+            <header class="content-header" style="margin-bottom: 24px;">
+                <div class="header-titles">
+                    <h1 style="font-size: 1.8rem; font-weight: 700; color: #1e293b; margin: 0;">Pedidos</h1>
+                    <p class="subtitle" style="font-size: 0.9rem; color: #64748b; margin-top: 4px;">Gestión de pedidos del día — domingo 7 de junio</p>
+                </div>
+            </header>
+
+            <!-- PESTAÑAS DE FILTRADO (TABS) -->
+            <div class="tabs-container">
+                <button class="tab-btn active" onclick="filtrarPedidos('todos', this)">
+                    Todos <span class="tab-badge" id="badge-todos">0</span>
+                </button>
+                <button class="tab-btn" onclick="filtrarPedidos('en-curso', this)">
+                    En curso <span class="tab-badge" id="badge-en-curso">0</span>
+                </button>
+                <button class="tab-btn" onclick="filtrarPedidos('listos', this)">
+                    Listos <span class="tab-badge" id="badge-listos">0</span>
+                </button>
+            </div>
+
+            <!-- CONTENEDOR DE TARJETAS (FEED) -->
+            <div class="pedidos-feed" id="pedidos-feed">
+                <!-- Las tarjetas se inyectan dinámicamente desde admi.js -->
+            </div>
+        </main>
+    </div>
+
+    <script src="../js-global/admi.js"></script>
+    <script>
+        function cerrarSesion(event) {
+            event.preventDefault();
+            if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
+                window.location.href = "login.html";
+            }
+        }
+    </script>
+</body>
+</html>
