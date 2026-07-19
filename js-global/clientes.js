@@ -179,6 +179,7 @@ if (btnSubmit) {
         }
 
         // Si todo está correcto, procesar el envío y pasar al estado de éxito
+        // Si todo está correcto, procesar el envío y pasar al estado de éxito
         if (formularioValido) {
             if (lblReservaNombre && inputNombre) lblReservaNombre.textContent = inputNombre.value.trim();
             if (lblReservaTelefono && inputTelefono) lblReservaTelefono.textContent = inputTelefono.value.trim();
@@ -191,6 +192,18 @@ if (btnSubmit) {
             if (lblReservaCompra) {
                 lblReservaCompra.textContent = textoResumenCompra.length > 0 ? textoResumenCompra.join(' y ') : "Ninguno";
             }
+            // Crea un código aleatorio de 4 dígitos
+            const codigoAleatorio = '#' + Math.floor(1000 + Math.random() * 9000);
+            const lblCodigo = document.getElementById('lbl-codigo-reserva');
+            if (lblCodigo) lblCodigo.innerText = codigoAleatorio;
+
+            // Obtiene la fecha de hoy con el formato correcto
+            const fechaActual = new Date();
+            const opciones = { day: 'numeric', month: 'short', year: 'numeric' };
+            const fechaFormateada = fechaActual.toLocaleDateString('es-ES', opciones);
+            const lblFecha = document.getElementById('lbl-fecha-reserva');
+            if (lblFecha) lblFecha.innerText = fechaFormateada;
+            // ---------------------------------------
 
             if (panelFormState) panelFormState.classList.add('hidden');
             if (panelSuccessState) panelSuccessState.classList.remove('hidden');
