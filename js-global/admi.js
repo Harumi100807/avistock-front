@@ -1,7 +1,6 @@
 /**
  * Avistock - admi.js
- * Sistema de Control Unificado: Ventas, Pedidos, Historial, Inventario y Cierre de Caja
- * Persistencia de datos integrada en LocalStorage.
+ * Sistema de Control Unificado: Ventas, Pedidos, Historial, Inventario, Cierre de Caja y Corte Parcial
  */
 
 // ==========================================================================
@@ -40,14 +39,19 @@ const MERMAS_SEMILLA = [
     { producto: "Pollo en camara", cant: -3, perdido: 513 }
 ];
 
+const CORTES_PARCIALES_INICIALES = [
+    { hora: "13:00", monto: "$ 2,150.00", notas: "Corte parcial solicitado por el dueño", fecha: "Hoy" }
+];
+
 // Inyección inicial segura en LocalStorage
 if (!localStorage.getItem("ventas_db")) localStorage.setItem("ventas_db", JSON.stringify(VENTAS_INICIALES));
 if (!localStorage.getItem("pedidos_figma_db")) localStorage.setItem("pedidos_figma_db", JSON.stringify(PEDIDOS_INICIALES));
 if (!localStorage.getItem("historial_db")) localStorage.setItem("historial_db", JSON.stringify(HISTORIAL_SEMILLA));
 if (!localStorage.getItem("stock_db")) localStorage.setItem("stock_db", JSON.stringify(STOCK_SEMILLA));
 if (!localStorage.getItem("mermas_db")) localStorage.setItem("mermas_db", JSON.stringify(MERMAS_SEMILLA));
+if (!localStorage.getItem("cortes_parciales_db")) localStorage.setItem("cortes_parciales_db", JSON.stringify(CORTES_PARCIALES_INICIALES));
 
-// Variables de estado de filtrado
+// Variables de estado
 let filtroPedidoActual = "todos";
 let filtroHistorialActual = "mostrador";
 
@@ -362,13 +366,14 @@ function renderizarInventario() {
 }
 
 // ==========================================================================
-// 💰 MÓDULO 5: CIERRE DE CAJA Y NOTIFICACIONES
+// 💰 MÓDULO 5: CIERRE DE CAJA & CORTES PARCIALES (SOLICITADOS POR EL DUEÑO)
 // ==========================================================================
 function inicializarCierreCaja() {
     const contenedorResumen = document.getElementById("resumen-cierre-items");
     if (!contenedorResumen) return;
 
     renderizarCierreDeCaja();
+    renderizarCortesParciales();
 
     const inputEf = document.getElementById("cierre-efectivo");
     if (inputEf) {
@@ -418,7 +423,92 @@ function renderizarCierreDeCaja() {
     if (elemMermas) elemMermas.textContent = `-$ ${mermasPerdidaTotal.toLocaleString('es-MX')}`;
 }
 
-// FUNCIONES DE NOTIFICACIONES Y REPORTE DEL DÍA
+// LÓGICA DE CORTES PARCIALES PARA EL DUEÑO
+window.abrirModalCorteParcial = function() {
+    const modal = document.getElementById('modal-corte-parcial');
+    if (!modal) return;
+    
+    // Asignar hora actual por defecto al input de hora
+    const ahora = new Date();
+    const horas = String(ahora.getHours()).padStart(2, '0');
+    const minutos = String(ahora.getMinutes()).padStart(2, '0');
+    document.getElementById('corte-parcial-hora').value = `${horas}:${minutos}`;
+    
+    document.getElementById('corte-parcial-monto').value = '';
+    document.getElementById('corte-parcial-notas').value = '';
+
+    modal.style.display = 'flex';
+    document.getElementById('corte-parcial-monto').focus();
+};
+
+window.guardarCorteParcial = function(event) {
+    event.preventDefault();
+    const hora = document.getElementById('corte-parcial-hora').value;
+    const monto = document.getElementById('corte-parcial-monto').value.trim();
+    const notas = document.getElementById('corte-parcial-notas').value.trim();
+
+    if (!monto || monto === "$ ") {
+        lanzarNotificacion("⚠️ Por favor ingresa el monto en caja.");
+        return;
+    }
+
+    const cortes = JSON.parse(localStorage.getItem("cortes_parciales_db")) || [];
+    cortes.unshift({
+        hora: hora || "13:00",
+        monto: monto,
+        notas: notas || "Sin observaciones adicionales",
+        fecha: "Hoy"
+    });
+
+    localStorage.setItem("cortes_parciales_db", JSON.stringify(cortes));
+
+    lanzarNotificacion(`📩 ¡Corte de la(s) ${hora} (${monto}) enviado exitosamente al dueño!`);
+    cerrarModal('modal-corte-parcial');
+    renderizarCortesParciales();
+    marcarComoLeida();
+};
+
+function renderizarCortesParciales() {
+    const contenedor = document.getElementById("contenedor-cortes-parciales");
+    const contador = document.getElementById("contador-cortes-parciales");
+    if (!contenedor) return;
+
+    const cortes = JSON.parse(localStorage.getItem("cortes_parciales_db")) || [];
+    if (contador) contador.textContent = `${cortes.length} corte(s) registrado(s) hoy`;
+
+    if (cortes.length === 0) {
+        contenedor.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 16px;">No se han realizado declaraciones de corte parcial el día de hoy.</div>`;
+        return;
+    }
+
+    let html = "";
+    cortes.forEach((corte, i) => {
+        html += `
+            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 1.2rem;">🕒</span>
+                    <div>
+                        <div style="font-weight: 700; color: #0f172a; font-size: 0.95rem;">Corte a las ${corte.hora} hrs</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">${corte.notas}</div>
+                    </div>
+                </div>
+                <div style="text-align: right;">
+                    <span style="font-size: 0.75rem; text-transform: uppercase; color: #64748b; display: block; font-weight: 600;">Efectivo Declarado al Dueño</span>
+                    <span style="font-size: 1.1rem; font-weight: 800; color: #16a34a;">${corte.monto}</span>
+                </div>
+            </div>
+        `;
+    });
+
+    contenedor.innerHTML = html;
+}
+
+// FUNCIONES GENERALES Y UTILIDADES
+window.cerrarModal = function(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.style.display = 'none';
+};
+
 window.toggleNotificacionesMenu = function() {
     const dropdown = document.getElementById('dropdown-notificaciones');
     if (dropdown) {
@@ -436,13 +526,12 @@ window.marcarComoLeida = function(event) {
 };
 
 window.enviarReporteDia = function() {
-    if (confirm("¿Deseas generar y enviar el reporte del día con las ventas, mermas y cuentas al administrador?")) {
-        lanzarNotificacion("📊 ¡Reporte del día generado y enviado con éxito!");
+    if (confirm("¿Deseas enviar el reporte completo del día al dueño?")) {
+        lanzarNotificacion("📊 ¡Reporte diario consolidado enviado al dueño!");
         window.marcarComoLeida();
     }
 };
 
-// UTILIDADES GENERALES
 window.formatearMonedaInput = function(input) {
     let val = input.value.replace(/[^0-9.]/g, '');
     if (val) {
@@ -456,10 +545,10 @@ window.procesarCierreCaja = function(event) {
     event.preventDefault();
     const efectivo = document.getElementById("cierre-efectivo").value;
     if (!efectivo || efectivo === "$ ") {
-        lanzarNotificacion("⚠️ Ingresa el monto en efectivo para declarar el cierre.");
+        lanzarNotificacion("⚠️ Ingresa el monto en efectivo final.");
         return;
     }
-    lanzarNotificacion("🔒 ¡Cierre de caja registrado exitosamente!");
+    lanzarNotificacion("🔒 ¡Cierre final de jornada registrado exitosamente!");
     document.getElementById("form-cierre-caja").reset();
 };
 
@@ -471,8 +560,8 @@ window.lanzarNotificacion = function(mensaje) {
     }
     const toast = document.createElement("div");
     toast.className = "toast-notification";
-    toast.style.cssText = "background: #1e293b; color: white; padding: 12px 20px; border-radius: 8px; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 0.9rem;";
+    toast.style.cssText = "background: #0f172a; color: white; padding: 12px 20px; border-radius: 10px; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 0.9rem; font-weight: 500;";
     toast.textContent = mensaje;
     container.appendChild(toast);
-    setTimeout(() => toast.remove(), 3500);
+    setTimeout(() => toast.remove(), 3800);
 };
