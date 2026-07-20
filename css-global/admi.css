@@ -745,10 +745,11 @@ tr:hover td {
     background-color: var(--bg-card);
     width: 100%;
     max-width: 480px;
+    max-height: 90vh; /* Permite que el modal no sobrepase la pantalla */
+    overflow-y: auto;  /* Habilita la barra de desplazamiento si se requiere */
     border-radius: 16px;
     padding: 28px;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
     animation: scaleUp 0.2s ease-out;
 }
 
