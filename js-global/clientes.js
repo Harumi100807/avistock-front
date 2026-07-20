@@ -12,21 +12,27 @@ const plusPie = document.getElementById('plus-pie');
 const minusPie = document.getElementById('minus-pie');
 let cantPie = 3; 
 
-if (plusPie && valPie) {
-    plusPie.addEventListener('click', () => { 
-        cantPie++; 
-        valPie.textContent = `${cantPie} ud`; 
+// ---> NUEVO: Escribir cantidad al dar clic <---
+if (valPie) {
+    valPie.style.cursor = "pointer";
+    valPie.title = "Haz clic para escribir una cantidad";
+    valPie.addEventListener('click', () => {
+        let cantidadManual = prompt("¿Cuántos Pollos en Pie necesitas?", cantPie);
+        if (cantidadManual !== null && cantidadManual.trim() !== "") {
+            let numero = parseInt(cantidadManual);
+            if (!isNaN(numero) && numero >= 0) {
+                cantPie = numero;
+                valPie.textContent = `${cantPie} ud`;
+            } else {
+                alert("Por favor, ingresa un número válido.");
+            }
+        }
     });
 }
+// ----------------------------------------------
 
-if (minusPie && valPie) {
-    minusPie.addEventListener('click', () => { 
-        if (cantPie > 0) { 
-            cantPie--; 
-            valPie.textContent = `${cantPie} ud`; 
-        } 
-    });
-}
+if (plusPie && valPie) {
+// (Aquí sigue tu código normal...)
 
 // ==========================================================
 // 3. CONTADORES - POLLO EN CÁMARA
@@ -36,21 +42,27 @@ const plusCamara = document.getElementById('plus-camara');
 const minusCamara = document.getElementById('minus-camara');
 let cantCamara = 2; 
 
-if (plusCamara && valCamara) {
-    plusCamara.addEventListener('click', () => { 
-        cantCamara++; 
-        valCamara.textContent = `${cantCamara} ud`; 
+// ---> NUEVO: Escribir cantidad al dar clic <---
+if (valCamara) {
+    valCamara.style.cursor = "pointer";
+    valCamara.title = "Haz clic para escribir una cantidad";
+    valCamara.addEventListener('click', () => {
+        let cantidadManual = prompt("¿Cuántos Pollos en Cámara necesitas?", cantCamara);
+        if (cantidadManual !== null && cantidadManual.trim() !== "") {
+            let numero = parseInt(cantidadManual);
+            if (!isNaN(numero) && numero >= 0) {
+                cantCamara = numero;
+                valCamara.textContent = `${cantCamara} ud`;
+            } else {
+                alert("Por favor, ingresa un número válido.");
+            }
+        }
     });
 }
+// ----------------------------------------------
 
-if (minusCamara && valCamara) {
-    minusCamara.addEventListener('click', () => { 
-        if (cantCamara > 0) { 
-            cantCamara--; 
-            valCamara.textContent = `${cantCamara} ud`; 
-        } 
-    });
-}
+if (plusCamara && valCamara) {
+// (Aquí sigue tu código normal...)
 
 // ==========================================================
 // 4. CÁLCULOS Y CONTROL DEL CARRITO
