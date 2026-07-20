@@ -1,5 +1,5 @@
 /**
- * Avistock - admi.js (Actualizado)
+ * Avistock - admi.js (Actualizado Cierre de Caja Vertical)
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     configurarModalReporte();
 });
 
-// DATOS INICIALES SEMILLA SI NO EXISTEN REGISTROS
+// DATOS INICIALES SEMILLA
 const REPORTES_CAJA_SEMILLA = [
     {
         fechaHora: "20/07/2026 13:30",
@@ -24,7 +24,7 @@ if (!localStorage.getItem("reportes_caja_db")) {
     localStorage.setItem("reportes_caja_db", JSON.stringify(REPORTES_CAJA_SEMILLA));
 }
 
-// 1. RENDERIZADO DE LA VISTA PREVIA (ESTILO TABLA DE VENTAS)
+// 1. RENDERIZADO DE LA VISTA PREVIA
 function inicializarVistaPreviaCaja() {
     const tabla = document.getElementById("tabla-reportes-caja-rows");
     const contador = document.getElementById("reportes-contador-texto");
@@ -49,7 +49,7 @@ function inicializarVistaPreviaCaja() {
         `;
     });
 
-    tabla.innerHTML = html || '<tr><td colspan="7" style="text-align:center; color:#94a3b8; padding:24px;">No hay reportes de caja generados.</td></tr>';
+    tabla.innerHTML = html || '<tr><td colspan="7" style="text-align:center; color:#94a3b8; padding:24px;">No hay reportes de caja registrados.</td></tr>';
     
     if (contador) contador.textContent = `${reportes.length} REPORTE(S) REGISTRADOS`;
     
@@ -58,22 +58,23 @@ function inicializarVistaPreviaCaja() {
     }
 }
 
-// 2. CONFIGURACIÓN DEL MODAL Y FORMULARIO DE REPORTE MANUAL
+// 2. CONFIGURACIÓN DEL MODAL VERTICAL
 function configurarModalReporte() {
-    const btnAbrir = document.getElementById("btn-generar-reporte");
+    const btnGenerar = document.getElementById("btn-generar-reporte");
     const modal = document.getElementById("modal-cuestionario-caja");
     const btnCerrar = document.getElementById("btn-cerrar-cuestionario");
     const btnCancelar = document.getElementById("btn-cancelar-cuestionario");
     const form = document.getElementById("form-cuestionario-caja");
 
-    if (!btnAbrir || !modal) return;
+    if (!modal) return;
 
-    // Abrir Modal
-    btnAbrir.addEventListener("click", () => {
+    const abrirModal = () => {
         modal.classList.add("active");
         const inputInicio = document.getElementById("caja-inicio");
         if (inputInicio) inputInicio.focus();
-    });
+    };
+
+    if (btnGenerar) btnGenerar.addEventListener("click", abrirModal);
 
     const cerrar = () => modal.classList.remove("active");
 
@@ -114,7 +115,7 @@ function configurarModalReporte() {
             localStorage.setItem("reportes_caja_db", JSON.stringify(reportes));
 
             inicializarVistaPreviaCaja();
-            lanzarNotificacion("📋 ¡Reporte de caja generado correctamente!");
+            lanzarNotificacion("📋 ¡Reporte de caja registrado correctamente!");
             
             form.reset();
             cerrar();
@@ -123,7 +124,7 @@ function configurarModalReporte() {
     }
 }
 
-// 3. FUNCIONALIDAD DE NOTIFICACIONES Y MASCARAS
+// 3. NOTIFICACIONES Y MÁSCARAS
 window.toggleNotificacionesMenu = function(event) {
     if (event) event.stopPropagation();
     const dropdown = document.getElementById('dropdown-notificaciones');
