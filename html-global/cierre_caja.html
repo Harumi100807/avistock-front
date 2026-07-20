@@ -39,7 +39,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Layout estrictamente vertical para las preguntas */
+        /* Layout vertical para inputs */
         .form-vertical-stack {
             display: flex;
             flex-direction: column;
@@ -70,19 +70,19 @@
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        /* Botones de acción en Header */
+        /* Estilos Botones Header */
         .btn-header-secundario {
             background-color: #ffffff;
             color: #0f172a;
             border: 1px solid #cbd5e1;
-            padding: 10px 16px;
+            padding: 9px 15px;
             border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
+            gap: 6px;
+            font-size: 0.85rem;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             transition: all 0.2s ease;
         }
@@ -94,14 +94,14 @@
             background-color: #0f172a;
             color: #ffffff;
             border: none;
-            padding: 10px 18px;
+            padding: 9px 16px;
             border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
+            gap: 6px;
+            font-size: 0.85rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: all 0.2s ease;
         }
@@ -217,7 +217,7 @@
         <!-- CONTENIDO PRINCIPAL -->
         <main class="main-content">
             
-            <!-- CABECERA -->
+            <!-- CABECERA DE LA PÁGINA -->
             <header class="content-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
                 <div class="header-titles">
                     <p class="breadcrumbs" style="font-size: 0.85rem; color: #64748b; margin-bottom: 4px;">Administrador &gt; Cierre de caja</p>
@@ -225,14 +225,20 @@
                     <p class="subtitle" style="font-size: 0.95rem; color: #64748b; margin-top: 4px;">Registro y reporte manual de caja del día</p>
                 </div>
 
-                <div class="header-actions" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                    <!-- BOTÓN 1: INICIO Y CIERRE DE CAJA -->
-                    <button type="button" id="btn-inicio-cierre" class="btn-header-secundario">
-                        <span>💵</span>
-                        <span>Inicio y Cierre de caja</span>
+                <div class="header-actions" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <!-- BOTÓN 1: INICIAR CAJA -->
+                    <button type="button" id="btn-iniciar-caja" class="btn-header-secundario">
+                        <span>☀️</span>
+                        <span>Iniciar caja</span>
                     </button>
 
-                    <!-- BOTÓN 2: GENERAR REPORTE -->
+                    <!-- BOTÓN 2: CERRAR CAJA -->
+                    <button type="button" id="btn-cerrar-caja" class="btn-header-secundario">
+                        <span>🌙</span>
+                        <span>Cerrar caja</span>
+                    </button>
+
+                    <!-- BOTÓN 3: GENERAR REPORTE -->
                     <button type="button" id="btn-generar-reporte" class="btn-header-primario">
                         <span>📋</span>
                         <span>Generar reporte</span>
@@ -263,7 +269,7 @@
                 </div>
             </header>
 
-            <!-- VISTA PREVIA (ESTILO VENTAS) -->
+            <!-- VISTA PREVIA DE REPORTES -->
             <div class="ventas-card-table">
                 <div style="padding: 20px 24px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
                     <h2 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0;">Reportes del día de hoy</h2>
@@ -284,12 +290,12 @@
                             </tr>
                         </thead>
                         <tbody id="tabla-reportes-caja-rows">
-                            <!-- Filas dinámicas -->
+                            <!-- Filas cargadas con JS -->
                         </tbody>
                     </table>
                 </div>
 
-                <!-- RESUMEN INFERIOR -->
+                <!-- RESUMEN EN PIE DE TABLA -->
                 <div class="table-summary-bar">
                     <span class="summary-count" id="reportes-contador-texto">0 REPORTES REGISTRADOS</span>
                     <span class="summary-total" id="reporte-ultimo-efectivo">$ 0.00</span>
@@ -299,52 +305,79 @@
         </main>
     </div>
 
-    <!-- MODAL 1: REGISTRO DE INICIO Y CIERRE DE CAJA -->
-    <div id="modal-inicio-cierre-caja" class="modal-overlay">
+    <!-- MODAL 1: INICIAR CAJA (INICIO DE DÍA) -->
+    <div id="modal-iniciar-caja" class="modal-overlay">
         <div class="modal-box">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
                 <div>
-                    <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #0f172a;">Inicio y Cierre de Caja</h3>
-                    <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #64748b;">Registre con cuánto dinero inició y cerró el día</p>
+                    <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #0f172a;">☀️ Iniciar Caja</h3>
+                    <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #64748b;">Apertura de turno al inicio del día</p>
                 </div>
-                <button type="button" id="btn-cerrar-inicio-cierre" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8;">&times;</button>
+                <button type="button" class="btn-cerrar-modal-gen" data-target="modal-iniciar-caja" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8;">&times;</button>
             </div>
 
-            <form id="form-inicio-cierre">
+            <form id="form-iniciar-caja">
                 <div class="form-vertical-stack">
                     <div class="form-question">
-                        <label for="reg-monto-inicio">Dinero inicial del día ($)</label>
-                        <input type="text" id="reg-monto-inicio" placeholder="$ 0.00" required oninput="formatearMonedaInput(this)">
+                        <label for="monto-inicio-solo">Dinero inicial del día ($)</label>
+                        <input type="text" id="monto-inicio-solo" placeholder="$ 0.00" required oninput="formatearMonedaInput(this)">
                     </div>
 
                     <div class="form-question">
-                        <label for="reg-monto-cierre">Dinero al cierre del día ($)</label>
-                        <input type="text" id="reg-monto-cierre" placeholder="$ 0.00" required oninput="formatearMonedaInput(this)">
-                    </div>
-
-                    <div class="form-question">
-                        <label for="reg-notas-cierre">Notas de apertura / cierre</label>
-                        <textarea id="reg-notas-cierre" rows="2" placeholder="Observaciones sobre los montos de inicio o cierre..."></textarea>
+                        <label for="notas-inicio-solo">Notas de apertura (Opcional)</label>
+                        <textarea id="notas-inicio-solo" rows="2" placeholder="Ej. Cambio guardado de la noche anterior..."></textarea>
                     </div>
                 </div>
 
                 <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
-                    <button type="button" id="btn-cancelar-inicio-cierre" style="padding: 10px 18px; background: #f1f5f9; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancelar</button>
-                    <button type="submit" style="padding: 10px 20px; background: #0f172a; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Guardar registro</button>
+                    <button type="button" class="btn-cerrar-modal-gen" data-target="modal-iniciar-caja" style="padding: 10px 18px; background: #f1f5f9; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 10px 20px; background: #0f172a; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Guardar Inicio</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL 2: CUESTIONARIO COMPLETO (REPORTE GENERAL) -->
+    <!-- MODAL 2: CERRAR CAJA (FIN DE DÍA) -->
+    <div id="modal-cerrar-caja" class="modal-overlay">
+        <div class="modal-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+                <div>
+                    <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #0f172a;">🌙 Cerrar Caja</h3>
+                    <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #64748b;">Registro del dinero al finalizar el turno</p>
+                </div>
+                <button type="button" class="btn-cerrar-modal-gen" data-target="modal-cerrar-caja" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8;">&times;</button>
+            </div>
+
+            <form id="form-cerrar-caja">
+                <div class="form-vertical-stack">
+                    <div class="form-question">
+                        <label for="monto-cierre-solo">Dinero al cierre del día ($)</label>
+                        <input type="text" id="monto-cierre-solo" placeholder="$ 0.00" required oninput="formatearMonedaInput(this)">
+                    </div>
+
+                    <div class="form-question">
+                        <label for="notas-cierre-solo">Notas de cierre (Opcional)</label>
+                        <textarea id="notas-cierre-solo" rows="2" placeholder="Observaciones o diferencias al cierre..."></textarea>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" class="btn-cerrar-modal-gen" data-target="modal-cerrar-caja" style="padding: 10px 18px; background: #f1f5f9; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 10px 20px; background: #0f172a; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Guardar Cierre</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: CUESTIONARIO COMPLETO DETALLADO -->
     <div id="modal-cuestionario-caja" class="modal-overlay">
         <div class="modal-box">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
                 <div>
-                    <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #0f172a;">Generar Reporte de Caja</h3>
+                    <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #0f172a;">📋 Generar Reporte de Caja</h3>
                     <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #64748b;">Ingrese manualmente todos los datos del turno</p>
                 </div>
-                <button type="button" id="btn-cerrar-cuestionario" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8;">&times;</button>
+                <button type="button" class="btn-cerrar-modal-gen" data-target="modal-cuestionario-caja" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8;">&times;</button>
             </div>
 
             <form id="form-cuestionario-caja">
@@ -386,14 +419,14 @@
                 </div>
 
                 <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
-                    <button type="button" id="btn-cancelar-cuestionario" style="padding: 10px 18px; background: #f1f5f9; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancelar</button>
+                    <button type="button" class="btn-cerrar-modal-gen" data-target="modal-cuestionario-caja" style="padding: 10px 18px; background: #f1f5f9; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancelar</button>
                     <button type="submit" style="padding: 10px 20px; background: #0f172a; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Guardar Reporte</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Contenedor de notificaciones -->
+    <!-- Contenedor para Avisos Flotantes (Toasts) -->
     <div id="notification-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 10000;"></div>
 
     <script src="../js-global/admi.js"></script>

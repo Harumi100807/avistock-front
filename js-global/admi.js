@@ -4,11 +4,11 @@
 
 document.addEventListener("DOMContentLoaded", () => {
     inicializarVistaPreviaCaja();
-    configurarModalInicioCierre();
-    configurarModalReporte();
+    configurarBotonesCierre();
+    configurarCierresGenericosModal();
 });
 
-// DATOS INICIALES SEMILLA
+// DATOS INICIALES DE EJEMPLO
 const REPORTES_CAJA_SEMILLA = [
     {
         fechaHora: "20/07/2026 13:30",
@@ -25,7 +25,7 @@ if (!localStorage.getItem("reportes_caja_db")) {
     localStorage.setItem("reportes_caja_db", JSON.stringify(REPORTES_CAJA_SEMILLA));
 }
 
-// 1. RENDERIZADO DE LA VISTA PREVIA
+// 1. DIBUJAR TABLA DE VISTA PREVIA
 function inicializarVistaPreviaCaja() {
     const tabla = document.getElementById("tabla-reportes-caja-rows");
     const contador = document.getElementById("reportes-contador-texto");
@@ -40,12 +40,12 @@ function inicializarVistaPreviaCaja() {
         html += `
             <tr>
                 <td style="font-weight: 600; color: #1e293b;">${r.fechaHora}</td>
-                <td>${r.inicioCaja}</td>
-                <td style="color: #16a34a; font-weight: 600;">${r.ventaPie}</td>
-                <td style="color: #16a34a; font-weight: 600;">${r.ventaCamara}</td>
-                <td style="text-align: center; font-weight: 700;">${r.apartadosWeb} entregados</td>
-                <td style="color: #ef4444; font-weight: 600;">${r.mermas}</td>
-                <td style="font-weight: 800; color: #1e293b; font-size: 0.95rem;">${r.efectivoActual}</td>
+                <td>${r.inicioCaja || '$ 0.00'}</td>
+                <td style="color: #16a34a; font-weight: 600;">${r.ventaPie || '$ 0.00'}</td>
+                <td style="color: #16a34a; font-weight: 600;">${r.ventaCamara || '$ 0.00'}</td>
+                <td style="text-align: center; font-weight: 700;">${r.apartadosWeb !== undefined ? r.apartadosWeb + ' entregados' : '-'}</td>
+                <td style="color: #ef4444; font-weight: 600;">${r.mermas || '$ 0.00'}</td>
+                <td style="font-weight: 800; color: #1e293b; font-size: 0.95rem;">${r.efectivoActual || '$ 0.00'}</td>
             </tr>
         `;
     });
@@ -55,96 +55,97 @@ function inicializarVistaPreviaCaja() {
     if (contador) contador.textContent = `${reportes.length} REPORTE(S) REGISTRADOS`;
     
     if (labelUltimo && reportes.length > 0) {
-        labelUltimo.textContent = reportes[reportes.length - 1].efectivoActual;
+        labelUltimo.textContent = reportes[reportes.length - 1].efectivoActual || "$ 0.00";
     }
 }
 
-// 2. CONFIGURACIÓN MODAL 1: INICIO Y CIERRE RAPIDO
-function configurarModalInicioCierre() {
-    const btnAbrir = document.getElementById("btn-inicio-cierre");
-    const modal = document.getElementById("modal-inicio-cierre-caja");
-    const btnCerrar = document.getElementById("btn-cerrar-inicio-cierre");
-    const btnCancelar = document.getElementById("btn-cancelar-inicio-cierre");
-    const form = document.getElementById("form-inicio-cierre");
+// 2. LÓGICA DE CADA BOTÓN Y CADA FORMULARIO
+function configurarBotonesCierre() {
+    // A) INICIAR CAJA (SOLO APERTURA)
+    const btnIniciar = document.getElementById("btn-iniciar-caja");
+    const modalIniciar = document.getElementById("modal-iniciar-caja");
+    const formIniciar = document.getElementById("form-iniciar-caja");
 
-    if (!modal) return;
-
-    if (btnAbrir) {
-        btnAbrir.addEventListener("click", () => {
-            modal.classList.add("active");
-            const inInicio = document.getElementById("reg-monto-inicio");
-            if (inInicio) inInicio.focus();
+    if (btnIniciar && modalIniciar) {
+        btnIniciar.addEventListener("click", () => {
+            modalIniciar.classList.add("active");
+            document.getElementById("monto-inicio-solo").focus();
         });
     }
 
-    const cerrar = () => modal.classList.remove("active");
-
-    if (btnCerrar) btnCerrar.addEventListener("click", cerrar);
-    if (btnCancelar) btnCancelar.addEventListener("click", cerrar);
-
-    if (form) {
-        form.addEventListener("submit", (e) => {
+    if (formIniciar) {
+        formIniciar.addEventListener("submit", (e) => {
             e.preventDefault();
+            const montoInicio = document.getElementById("monto-inicio-solo").value.trim() || "$ 0.00";
 
-            const ahora = new Date();
-            const fechaStr = `${String(ahora.getDate()).padStart(2, '0')}/${String(ahora.getMonth()+1).padStart(2, '0')}/${ahora.getFullYear()} ${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
-
-            const inicioCaja = document.getElementById("reg-monto-inicio").value.trim() || "$ 0.00";
-            const efectivoActual = document.getElementById("reg-monto-cierre").value.trim() || "$ 0.00";
-
-            const nuevoRegistro = {
-                fechaHora: fechaStr,
-                inicioCaja,
+            guardarRegistroEnBD({
+                inicioCaja: montoInicio,
                 ventaPie: "$ 0.00",
                 ventaCamara: "$ 0.00",
                 apartadosWeb: 0,
                 mermas: "$ 0.00",
-                efectivoActual
-            };
+                efectivoActual: montoInicio // Al iniciar, el dinero actual es con el que se abrió
+            });
 
-            const reportes = JSON.parse(localStorage.getItem("reportes_caja_db")) || [];
-            reportes.push(nuevoRegistro);
-            localStorage.setItem("reportes_caja_db", JSON.stringify(reportes));
-
-            inicializarVistaPreviaCaja();
-            lanzarNotificacion("💵 ¡Inicio y Cierre de caja guardados!");
-            
-            form.reset();
-            cerrar();
+            lanzarNotificacion("☀️ ¡Caja iniciada correctamente!");
+            formIniciar.reset();
+            modalIniciar.classList.remove("active");
             marcarComoLeida();
         });
     }
-}
 
-// 3. CONFIGURACIÓN MODAL 2: CUESTIONARIO COMPLETO
-function configurarModalReporte() {
-    const btnGenerar = document.getElementById("btn-generar-reporte");
-    const modal = document.getElementById("modal-cuestionario-caja");
-    const btnCerrar = document.getElementById("btn-cerrar-cuestionario");
-    const btnCancelar = document.getElementById("btn-cancelar-cuestionario");
-    const form = document.getElementById("form-cuestionario-caja");
+    // B) CERRAR CAJA (SOLO CIERRE)
+    const btnCerrar = document.getElementById("btn-cerrar-caja");
+    const modalCerrar = document.getElementById("modal-cerrar-caja");
+    const formCerrar = document.getElementById("form-cerrar-caja");
 
-    if (!modal) return;
-
-    if (btnGenerar) {
-        btnGenerar.addEventListener("click", () => {
-            modal.classList.add("active");
-            const inputInicio = document.getElementById("caja-inicio");
-            if (inputInicio) inputInicio.focus();
+    if (btnCerrar && modalCerrar) {
+        btnCerrar.addEventListener("click", () => {
+            modalCerrar.classList.add("active");
+            document.getElementById("monto-cierre-solo").focus();
         });
     }
 
-    const cerrar = () => modal.classList.remove("active");
-
-    if (btnCerrar) btnCerrar.addEventListener("click", cerrar);
-    if (btnCancelar) btnCancelar.addEventListener("click", cerrar);
-
-    if (form) {
-        form.addEventListener("submit", (e) => {
+    if (formCerrar) {
+        formCerrar.addEventListener("submit", (e) => {
             e.preventDefault();
+            const montoCierre = document.getElementById("monto-cierre-solo").value.trim() || "$ 0.00";
 
-            const ahora = new Date();
-            const fechaStr = `${String(ahora.getDate()).padStart(2, '0')}/${String(ahora.getMonth()+1).padStart(2, '0')}/${ahora.getFullYear()} ${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
+            // Tomamos el último inicio si existe
+            const reportes = JSON.parse(localStorage.getItem("reportes_caja_db")) || [];
+            const ultimoInicio = reportes.length > 0 ? reportes[reportes.length - 1].inicioCaja : "$ 0.00";
+
+            guardarRegistroEnBD({
+                inicioCaja: ultimoInicio,
+                ventaPie: "$ 0.00",
+                ventaCamara: "$ 0.00",
+                apartadosWeb: 0,
+                mermas: "$ 0.00",
+                efectivoActual: montoCierre
+            });
+
+            lanzarNotificacion("🌙 ¡Caja cerrada correctamente!");
+            formCerrar.reset();
+            modalCerrar.classList.remove("active");
+            marcarComoLeida();
+        });
+    }
+
+    // C) GENERAR REPORTE DETALLADO (CUESTIONARIO)
+    const btnGenerar = document.getElementById("btn-generar-reporte");
+    const modalCuestionario = document.getElementById("modal-cuestionario-caja");
+    const formCuestionario = document.getElementById("form-cuestionario-caja");
+
+    if (btnGenerar && modalCuestionario) {
+        btnGenerar.addEventListener("click", () => {
+            modalCuestionario.classList.add("active");
+            document.getElementById("caja-inicio").focus();
+        });
+    }
+
+    if (formCuestionario) {
+        formCuestionario.addEventListener("submit", (e) => {
+            e.preventDefault();
 
             const inicioCaja = document.getElementById("caja-inicio").value.trim() || "$ 0.00";
             const efectivoActual = document.getElementById("caja-actual").value.trim() || "$ 0.00";
@@ -153,35 +154,57 @@ function configurarModalReporte() {
             const apartadosWeb = document.getElementById("apartados-web").value || "0";
             let mermas = document.getElementById("mermas-monto").value.trim() || "$ 0.00";
 
-            if (!mermas.startsWith("-")) {
+            if (!mermas.startsWith("-") && mermas !== "$ 0.00") {
                 mermas = "-" + mermas;
             }
 
-            const nuevoReporte = {
-                fechaHora: fechaStr,
+            guardarRegistroEnBD({
                 inicioCaja,
                 ventaPie,
                 ventaCamara,
                 apartadosWeb,
                 mermas,
                 efectivoActual
-            };
+            });
 
-            const reportes = JSON.parse(localStorage.getItem("reportes_caja_db")) || [];
-            reportes.push(nuevoReporte);
-            localStorage.setItem("reportes_caja_db", JSON.stringify(reportes));
-
-            inicializarVistaPreviaCaja();
-            lanzarNotificacion("📋 ¡Reporte completo guardado!");
-            
-            form.reset();
-            cerrar();
+            lanzarNotificacion("📋 ¡Reporte completo registrado!");
+            formCuestionario.reset();
+            modalCuestionario.classList.remove("active");
             marcarComoLeida();
         });
     }
 }
 
-// 4. NOTIFICACIONES Y MÁSCARAS
+// FUNCION AUXILIAR PARA GUARDAR EN LOCALSTORAGE
+function guardarRegistroEnBD(datos) {
+    const ahora = new Date();
+    const fechaStr = `${String(ahora.getDate()).padStart(2, '0')}/${String(ahora.getMonth()+1).padStart(2, '0')}/${ahora.getFullYear()} ${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
+
+    const registro = {
+        fechaHora: fechaStr,
+        ...datos
+    };
+
+    const reportes = JSON.parse(localStorage.getItem("reportes_caja_db")) || [];
+    reportes.push(registro);
+    localStorage.setItem("reportes_caja_db", JSON.stringify(reportes));
+
+    inicializarVistaPreviaCaja();
+}
+
+// 3. MANEJO DE BOTONES DE CIERRE DE CUALQUIER MODAL
+function configurarCierresGenericosModal() {
+    const botonesCerrar = document.querySelectorAll(".btn-cerrar-modal-gen");
+    botonesCerrar.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const targetId = btn.getAttribute("data-target");
+            const modal = document.getElementById(targetId);
+            if (modal) modal.classList.remove("active");
+        });
+    });
+}
+
+// 4. MÁSCARAS DE ENTRADA Y NOTIFICACIONES
 window.toggleNotificacionesMenu = function(event) {
     if (event) event.stopPropagation();
     const dropdown = document.getElementById('dropdown-notificaciones');
