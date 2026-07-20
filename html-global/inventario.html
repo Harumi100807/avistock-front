@@ -7,102 +7,141 @@
     <link rel="stylesheet" href="../css-global/admi.css">
 </head>
 <body class="app-body">
-
     <div class="app-container">
         
         <aside class="sidebar">
             <div class="brand">
-                <img src="../assets-global/LogoAvi 1.png" alt="Avistock" class="brand-logo" onerror="this.src='https://placehold.co/100x100?text=Avistock';">
+                <img src="../assets-global/LogoAvi 1.png" alt="Avistock" class="brand-logo">
             </div>
-            
             <nav class="nav-menu">
                 <a href="ventas.html" class="nav-item">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/carrito-de-compras.png" alt="Ventas" class="icon-nav">
-                    </div> 
-                    Ventas
+                        <img src="../assets-global/carrito-de-compras.png" alt="Ventas">
+                    </div>
+                    <span>Ventas</span>
                 </a>
                 <a href="pedidos.html" class="nav-item">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/acuerdo-de-contrato.png" alt="Pedidos" class="icon-nav">
-                    </div> 
-                    Pedidos
+                        <img src="../assets-global/acuerdo-de-contrato.png" alt="Pedidos">
+                    </div>
+                    <span>Pedidos</span>
                 </a>
                 <a href="historial.html" class="nav-item">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/historial-de-pedidos.png" alt="Historial" class="icon-nav">
-                    </div> 
-                    Historial
+                        <span class="nav-icon">📋</span>
+                    </div>
+                    <span>Historial</span>
                 </a>
                 <a href="inventario.html" class="nav-item active">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/lista-de-verificacion.png" alt="Inventario" class="icon-nav">
-                    </div> 
-                    Inventario
+                        <span class="nav-icon">📦</span>
+                    </div>
+                    <span>Inventario</span>
                 </a>
                 <a href="cierre_caja.html" class="nav-item">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/caja-registradora.png" alt="Cierre de caja" class="icon-nav">
-                    </div> 
-                    Cierre de caja
+                        <span class="nav-icon">🚪</span>
+                    </div>
+                    <span>Cierre de caja</span>
                 </a>
             </nav>
-
-            <a href="#" onclick="cerrarSesion(event)" class="logout-btn">
-                <div class="nav-icon-wrapper">
-                    <img src="../assets-global/salida.png" alt="Cerrar sesión" class="icon-nav">
-                </div> 
-                Cerrar sesión
-            </a>
+            <div class="sidebar-footer">
+                <a href="#" onclick="cerrarSesion(event)" class="nav-item logout-item">
+                    <div class="nav-icon-wrapper">
+                        <span class="nav-icon">↪</span>
+                    </div>
+                    <span>Cerrar sesión</span>
+                </a>
+            </div>
         </aside>
 
         <main class="main-content">
-            <header class="content-header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px;">
+            <div class="page-header">
                 <div class="header-titles">
-                    <p class="breadcrumbs" style="font-size: 0.85rem; color: #64748b; margin-bottom: 4px;">Administrador > Inventario</p>
-                    <h1 style="font-size: 1.8rem; font-weight: 700; color: #1e293b; margin: 0;">Inventario</h1>
-                    <p class="subtitle" style="font-size: 0.95rem; color: #64748b; margin-top: 4px;">Stock actual y registro de mermas</p>
+                    <div class="breadcrumb">Administrador &gt; Inventario</div>
+                    <h1 class="page-title">Inventario</h1>
+                    <p class="page-subtitle">Stock actual y registro de mermas</p>
                 </div>
-                <button class="btn-primary" onclick="abrirModalNuevoProducto()" style="width: auto; padding: 12px 24px;">+ Nuevo Producto</button>
-            </header>
-
-            <div class="inventario-section-title" style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 12px; margin-top: 16px;">
-                Stock
+                <button type="button" class="btn-primary btn-header" onclick="abrirModal('modal-nuevo-producto')">
+                    + Nuevo Producto
+                </button>
             </div>
-            <div class="ventas-card" style="margin-bottom: 32px;">
-                <div class="table-wrapper">
-                    <table style="width: 100%; border-collapse: collapse;">
+
+            <div class="content-section">
+                <h2 class="section-title">Stock</h2>
+                <div class="ventas-card">
+                    <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Producto</th>
-                                <th>Stock</th>
-                                <th>Mín.</th>
-                                <th>Precio</th>
-                                <th style="text-align: right; padding-right: 32px; width: 150px;">Acción</th>
+                                <th>PRODUCTO</th>
+                                <th>STOCK</th>
+                                <th>MÍN.</th>
+                                <th>PRECIO</th>
+                                <th class="text-right">ACCIÓN</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-stock-rows">
-                            </tbody>
+                        <tbody>
+                            <tr>
+                                <td><strong>Pollo en pie</strong></td>
+                                <td>285 ud</td>
+                                <td>30 ud</td>
+                                <td>$135</td>
+                                <td class="text-right">
+                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModal('modal-stock')">
+                                        ✏️ Actualizar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pollo en cámara</strong></td>
+                                <td>5 ud</td>
+                                <td>20 ud</td>
+                                <td>$171</td>
+                                <td class="text-right">
+                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModal('modal-stock')">
+                                        ✏️ Actualizar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="inventario-section-title" style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin-bottom: 12px;">
-                Mermas
-            </div>
-            <div class="ventas-card">
-                <div class="table-wrapper">
-                    <table style="width: 100%; border-collapse: collapse;">
+            <div class="content-section">
+                <h2 class="section-title">Mermas</h2>
+                <div class="ventas-card">
+                    <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Producto</th>
-                                <th>Cantidad / UD</th>
-                                <th>$ Perdido</th>
-                                <th style="text-align: right; padding-right: 32px; width: 180px;">Acción</th>
+                                <th>PRODUCTO</th>
+                                <th>CANTIDAD / UD</th>
+                                <th>$ PERDIDO</th>
+                                <th class="text-right">ACCIÓN</th>
                             </tr>
                         </thead>
-                        <tbody id="tabla-mermas-rows">
-                            </tbody>
+                        <tbody>
+                            <tr>
+                                <td><strong>Pollo en pie</strong></td>
+                                <td class="text-danger">-13 ud</td>
+                                <td class="text-danger">$1755</td>
+                                <td class="text-right">
+                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModal('modal-merma')">
+                                        ⚠️ Actualizar
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Pollo en cámara</strong></td>
+                                <td class="text-danger">-25 ud</td>
+                                <td class="text-danger">$4275</td>
+                                <td class="text-right">
+                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModal('modal-merma')">
+                                        ⚠️ Actualizar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -111,100 +150,122 @@
 
     <div id="modal-nuevo-producto" class="modal-overlay" style="display: none;">
         <div class="modal-container">
-            <h2 class="modal-title"><span class="text-orange">+</span> Agregar Nuevo Producto</h2>
-            
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>NOMBRE DEL PRODUCTO</label>
-                    <input type="text" id="modal-nuevo-nombre" class="form-control" placeholder="Ej: Pechuga de pollo">
-                </div>
-
-                <div class="form-row-2">
-                    <div class="form-group">
-                        <label>STOCK INICIAL (UD)</label>
-                        <input type="number" id="modal-nuevo-stock" class="form-control" placeholder="Ej: 50" min="0">
-                    </div>
-                    <div class="form-group">
-                        <label>STOCK MÍNIMO (UD)</label>
-                        <input type="number" id="modal-nuevo-min" class="form-control" placeholder="Ej: 10" min="0">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>PRECIO UNITARIO ($)</label>
-                    <input type="number" id="modal-nuevo-precio" class="form-control" placeholder="Ej: 85.00" step="0.01" min="0">
-                </div>
+            <div class="modal-header">
+                <h2><span class="plus-orange">+</span> Agregar Recepción de Producto</h2>
             </div>
+            <form id="form-nuevo-producto">
+                <div class="modal-body">
+                    
+                    <div class="form-group">
+                        <label for="recepcion-producto">PRODUCTO</label>
+                        <select id="recepcion-producto" class="form-control" required>
+                            <option value="" disabled selected>Selecciona el producto recibido</option>
+                            <option value="Pollo en pie">Pollo en pie</option>
+                            <option value="Pollo en cámara">Pollo en cámara</option>
+                            <option value="Pollo procesado">Pollo procesado</option>
+                        </select>
+                    </div>
 
-            <div class="modal-footer">
-                <button class="btn-primary" onclick="guardarNuevoProductoModal()">Guardar Producto</button>
-                <button class="btn-secondary" onclick="cerrarModal('modal-nuevo-producto')">Cancelar</button>
-            </div>
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="recepcion-cantidad">POLLOS ENTREGADOS (UD)</label>
+                            <input type="number" id="recepcion-cantidad" class="form-control" placeholder="Ej: 150" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recepcion-peso">PESO APROX. POR POLLO (KG)</label>
+                            <input type="number" step="0.01" id="recepcion-peso" class="form-control" placeholder="Ej: 2.50" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="recepcion-fecha">FECHA DE RECEPCIÓN</label>
+                            <input type="date" id="recepcion-fecha" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recepcion-hora">HORA</label>
+                            <input type="time" id="recepcion-hora" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label for="recepcion-mermas">¿HUBO MERMAS? (CANTIDAD)</label>
+                            <input type="number" id="recepcion-mermas" class="form-control" placeholder="0 si no hubo" min="0" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="recepcion-camara">POLLOS A CÁMARA (CONGELACIÓN)</label>
+                            <input type="number" id="recepcion-camara" class="form-control" placeholder="Ej: 50" min="0" value="0">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn-primary">Guardar Recepción</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModal('modal-nuevo-producto')">Cancelar</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <div id="modal-stock" class="modal-overlay" style="display: none;">
         <div class="modal-container">
-            <h2 class="modal-title"><span class="text-orange">+</span> Actualizar Stock</h2>
-            
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>PRODUCTO</label>
-                    <input type="text" id="modal-stock-producto" class="form-control" readonly disabled>
-                </div>
-                
-                <div class="form-row-2">
+            <div class="modal-header">
+                <h2><span class="plus-orange">+</span> Actualizar Stock</h2>
+            </div>
+            <form id="form-modal-stock">
+                <div class="modal-body">
                     <div class="form-group">
-                        <label>STOCK ACTUAL (UD)</label>
-                        <input type="text" id="modal-stock-actual" class="form-control" readonly disabled>
+                        <label>PRODUCTO</label>
+                        <input type="text" id="modal-stock-producto" class="form-control" value="Pollo en pie" readonly disabled>
+                    </div>
+                    <div class="form-row-2">
+                        <div class="form-group">
+                            <label>STOCK ACTUAL (UD)</label>
+                            <input type="text" id="modal-stock-actual" class="form-control" value="285" readonly disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>STOCK MÍNIMO (UD)</label>
+                            <input type="text" id="modal-stock-minimo" class="form-control" value="30" readonly disabled>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label>STOCK MÍNIMO (UD)</label>
-                        <input type="text" id="modal-stock-minimo" class="form-control" readonly disabled>
+                        <label for="modal-stock-nuevo">NUEVA CANTIDAD DE STOCK TOTAL</label>
+                        <input type="number" id="modal-stock-nuevo" class="form-control" placeholder="Ej: 150" min="0" required>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label>NUEVA CANTIDAD DE STOCK TOTAL</label>
-                    <input type="number" id="modal-stock-nuevo" class="form-control" placeholder="Ej: 150" min="0">
+                <div class="modal-footer">
+                    <button type="button" class="btn-primary" onclick="guardarStockModal()">Actualizar Inventario</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModal('modal-stock')">Cancelar</button>
                 </div>
-                
-                <input type="hidden" id="modal-stock-index">
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn-primary" onclick="guardarStockModal()">Actualizar inventario</button>
-                <button class="btn-secondary" onclick="cerrarModal('modal-stock')">Cancelar</button>
-            </div>
+            </form>
         </div>
     </div>
 
     <div id="modal-merma" class="modal-overlay" style="display: none;">
         <div class="modal-container">
-            <h2 class="modal-title"><span class="text-orange">+</span> Registrar Merma</h2>
-            
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>PRODUCTO</label>
-                    <input type="text" id="modal-merma-producto" class="form-control" readonly disabled>
-                </div>
-
-                <div class="form-group">
-                    <label>CANTIDAD A AJUSTAR (UD)</label>
-                    <input type="number" id="modal-merma-cant" class="form-control" placeholder="Ej: 5">
-                    <p style="font-size: 0.75rem; color: #64748b; margin-top: 4px; line-height: 1.2;">
-                        * Escribe un número normal (ej: 3) para registrar pérdida.<br>
-                        * Escribe un número negativo (ej: -3) para corregir y devolver al stock.
-                    </p>
-                </div>
-
-                <input type="hidden" id="modal-merma-index">
+            <div class="modal-header">
+                <h2><span class="plus-orange">+</span> Registrar Merma / Actualizar</h2>
             </div>
-
-            <div class="modal-footer">
-                <button class="btn-primary" onclick="guardarMermaModal()">Guardar ajuste</button>
-                <button class="btn-secondary" onclick="cerrarModal('modal-merma')">Cancelar</button>
-            </div>
+            <form id="form-modal-merma">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>PRODUCTO</label>
+                        <input type="text" id="modal-merma-producto" class="form-control" value="Pollo en pie" readonly disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-merma-cant">CANTIDAD A AJUSTAR (UD)</label>
+                        <input type="number" id="modal-merma-cant" class="form-control" placeholder="Ej: 5" required>
+                        <small class="help-text">* Escribe un número normal (ej: 3) para registrar pérdida.</small>
+                        <small class="help-text">* Escribe un número negativo (ej: -3) para corregir y devolver al stock.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-primary" onclick="guardarMermaModal()">Guardar ajuste</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModal('modal-merma')">Cancelar</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -212,57 +273,20 @@
 
     <script src="../js-global/admi.js"></script>
     <script>
-        // Función para cerrar sesión
+        function abrirModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.style.display = 'flex';
+        }
+
+        function cerrarModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.style.display = 'none';
+        }
+
         function cerrarSesion(event) {
             event.preventDefault();
             if (confirm("¿Estás seguro de que quieres cerrar sesión?")) {
                 window.location.href = "login.html";
-            }
-        }
-
-        // Lógica para el modal de Nuevo Producto
-        function abrirModalNuevoProducto() {
-            document.getElementById('modal-nuevo-nombre').value = '';
-            document.getElementById('modal-nuevo-stock').value = '';
-            document.getElementById('modal-nuevo-min').value = '';
-            document.getElementById('modal-nuevo-precio').value = '';
-            document.getElementById('modal-nuevo-producto').style.display = 'flex';
-            document.getElementById('modal-nuevo-nombre').focus();
-        }
-
-        function guardarNuevoProductoModal() {
-            const nombre = document.getElementById('modal-nuevo-nombre').value.trim();
-            const stock = parseInt(document.getElementById('modal-nuevo-stock').value);
-            const min = parseInt(document.getElementById('modal-nuevo-min').value);
-            const precio = parseFloat(document.getElementById('modal-nuevo-precio').value);
-
-            if (!nombre || isNaN(stock) || isNaN(min) || isNaN(precio)) {
-                if (typeof lanzarNotificacion === 'function') {
-                    lanzarNotificacion("❌ Por favor completa todos los campos requeridos.");
-                } else {
-                    alert("Por favor completa todos los campos requeridos.");
-                }
-                return;
-            }
-
-            const stockData = JSON.parse(localStorage.getItem("stock_db")) || [];
-            const mermasData = JSON.parse(localStorage.getItem("mermas_db")) || [];
-
-            // Agregar al stock
-            stockData.push({ producto: nombre, stock: stock, min: min, precio: precio });
-            // Agregar registro inicial a mermas
-            mermasData.push({ producto: nombre, cant: 0, perdido: 0 });
-
-            localStorage.setItem("stock_db", JSON.stringify(stockData));
-            localStorage.setItem("mermas_db", JSON.stringify(mermasData));
-
-            if (typeof lanzarNotificacion === 'function') {
-                lanzarNotificacion(`📦 ¡Producto "${nombre}" registrado con éxito!`);
-            }
-
-            cerrarModal('modal-nuevo-producto');
-            if (typeof renderizarInventario === 'function') {
-                renderizarInventario();
             }
         }
     </script>
