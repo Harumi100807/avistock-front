@@ -310,7 +310,7 @@ window.buscarEnHistorial = function() {
 };
 
 // ==========================================================================
-// 🐔 MÓDULO 4: INVENTARIO Y MERMAS
+// 🐔 MÓDULO 4: INVENTARIO Y MERMAS (CON VENTANAS FLOTANTES)
 // ==========================================================================
 function inicializarInventario() {
     const tablaStock = document.getElementById("tabla-stock-rows");
@@ -326,16 +326,17 @@ function renderizarInventario() {
     const stockData = JSON.parse(localStorage.getItem("stock_db"));
     const mermasData = JSON.parse(localStorage.getItem("mermas_db"));
 
+    // Renderizar Tabla Stock
     let htmlStock = "";
     stockData.forEach((item, index) => {
         htmlStock += `
             <tr>
                 <td style="font-weight: 700; color: #1e293b; padding: 20px 24px;">${item.producto}</td>
-                <td style="color: #1e293b;" id="stock-val-${index}">${item.stock} ud</td>
+                <td style="color: #1e293b;">${item.stock} ud</td>
                 <td style="color: #64748b;">${item.min} ud</td>
                 <td style="font-weight: 600; color: #1e293b;">$${item.precio}</td>
-                <td style="text-align: right; padding-right: 32px;" id="stock-action-${index}">
-                    <button class="btn-action-outline" onclick="editarStock(${index})">
+                <td style="text-align: right; padding-right: 32px;">
+                    <button class="btn-action-outline" onclick="abrirModalStock(${index})">
                         ✏ Editar
                     </button>
                 </td>
@@ -344,15 +345,16 @@ function renderizarInventario() {
     });
     tablaStock.innerHTML = htmlStock;
 
+    // Renderizar Tabla Mermas
     let htmlMermas = "";
     mermasData.forEach((item, index) => {
         htmlMermas += `
             <tr>
                 <td style="font-weight: 700; color: #1e293b; padding: 20px 24px;">${item.producto}</td>
-                <td class="merma-qty-negative" id="merma-val-${index}">${item.cant} ud</td>
+                <td class="merma-qty-negative">${item.cant} ud</td>
                 <td class="merma-loss-value">$${item.perdido}</td>
-                <td style="text-align: right; padding-right: 32px;" id="merma-action-${index}">
-                    <button class="btn-action-outline" onclick="agregarMerma(${index})">
+                <td style="text-align: right; padding-right: 32px;">
+                    <button class="btn-action-outline" onclick="abrirModalMerma(${index})">
                         ⚠️ Ajustar
                     </button>
                 </td>
@@ -362,139 +364,102 @@ function renderizarInventario() {
     tablaMermas.innerHTML = htmlMermas;
 }
 
-window.editarStock = function(index) {
-    const celdaVal = document.getElementById(`stock-val-${index}`);
-    const celdaAccion = document.getElementById(`stock-action-${index}`);
-    if (!celdaVal || celdaVal.querySelector('input')) return;
+// LÓGICA DE VENTANAS FLOTANTES (MODALES)
+window.cerrarModal = function(id) {
+    document.getElementById(id).style.display = 'none';
+};
 
+// 1. Funciones para STOCK
+window.abrirModalStock = function(index) {
     const stockData = JSON.parse(localStorage.getItem("stock_db"));
     const actual = stockData[index];
 
-    // Crear input estilizado
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.value = actual.stock;
-    input.min = '0';
-    input.style.width = '70px';
-    input.style.padding = '4px';
-    input.style.border = '2px solid #ff7e00'; // Naranja Avistock
-    input.style.borderRadius = '6px';
-    input.style.outline = 'none';
-    input.style.textAlign = 'center';
-    input.style.fontWeight = 'bold';
-    input.style.fontSize = '14px';
+    // Rellenar datos en la ventana
+    document.getElementById('modal-stock-producto').value = actual.producto;
+    document.getElementById('modal-stock-actual').value = actual.stock;
+    document.getElementById('modal-stock-minimo').value = actual.min;
+    document.getElementById('modal-stock-nuevo').value = ''; 
+    document.getElementById('modal-stock-index').value = index;
 
-    celdaVal.textContent = '';
-    celdaVal.appendChild(input);
-    input.focus();
-    input.select();
-
-    // Cambiar el botón temporalmente
-    celdaAccion.innerHTML = `<span style="font-size: 0.8rem; color: #ff7e00; font-weight: 600;">Enter ↵ para guardar</span>`;
-
-    let guardando = false;
-    const guardar = () => {
-        if (guardando) return;
-        guardando = true;
-
-        let nuevoStock = parseInt(input.value);
-        if (!isNaN(nuevoStock) && nuevoStock >= 0) {
-            stockData[index].stock = nuevoStock;
-            localStorage.setItem("stock_db", JSON.stringify(stockData));
-            lanzarNotificacion(`📦 Stock de ${actual.producto} actualizado a ${nuevoStock} ud`);
-        } else {
-            lanzarNotificacion("❌ Cantidad inválida. Se restauró el valor.");
-        }
-        renderizarInventario(); 
-    };
-
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') guardar();
-        if (e.key === 'Escape') renderizarInventario();
-    });
-    input.addEventListener('blur', guardar);
+    // Mostrar ventana
+    document.getElementById('modal-stock').style.display = 'flex';
+    document.getElementById('modal-stock-nuevo').focus();
 };
 
-window.agregarMerma = function(index) {
-    const celdaVal = document.getElementById(`merma-val-${index}`);
-    const celdaAccion = document.getElementById(`merma-action-${index}`);
-    if (!celdaVal || celdaVal.querySelector('input')) return;
+window.guardarStockModal = function() {
+    const index = document.getElementById('modal-stock-index').value;
+    const nuevoStock = parseInt(document.getElementById('modal-stock-nuevo').value);
+    
+    if (isNaN(nuevoStock) || nuevoStock < 0) {
+        lanzarNotificacion("❌ Ingresa una cantidad válida mayor o igual a cero.");
+        return;
+    }
+
+    const stockData = JSON.parse(localStorage.getItem("stock_db"));
+    stockData[index].stock = nuevoStock;
+    localStorage.setItem("stock_db", JSON.stringify(stockData));
+    
+    lanzarNotificacion(`📦 Stock de ${stockData[index].producto} actualizado a ${nuevoStock} ud`);
+    cerrarModal('modal-stock');
+    renderizarInventario();
+};
+
+// 2. Funciones para MERMAS
+window.abrirModalMerma = function(index) {
+    const mermasData = JSON.parse(localStorage.getItem("mermas_db"));
+    const actual = mermasData[index];
+
+    // Rellenar datos en la ventana
+    document.getElementById('modal-merma-producto').value = actual.producto;
+    document.getElementById('modal-merma-cant').value = '';
+    document.getElementById('modal-merma-index').value = index;
+
+    // Mostrar ventana
+    document.getElementById('modal-merma').style.display = 'flex';
+    document.getElementById('modal-merma-cant').focus();
+};
+
+window.guardarMermaModal = function() {
+    const index = document.getElementById('modal-merma-index').value;
+    const uds = parseInt(document.getElementById('modal-merma-cant').value);
+
+    if (isNaN(uds) || uds === 0) {
+        cerrarModal('modal-merma');
+        return;
+    }
 
     const mermasData = JSON.parse(localStorage.getItem("mermas_db"));
     const stockData = JSON.parse(localStorage.getItem("stock_db"));
     const actual = mermasData[index];
 
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.placeholder = '+/- ud';
-    input.title = "Usa números positivos para añadir merma o negativos para restar/corregir.";
-    input.style.width = '70px';
-    input.style.padding = '4px';
-    input.style.border = '2px solid #ef4444'; // Rojo para indicar merma
-    input.style.borderRadius = '6px';
-    input.style.outline = 'none';
-    input.style.textAlign = 'center';
-    input.style.fontWeight = 'bold';
-    input.style.fontSize = '14px';
+    const prodStock = stockData.find(s => s.producto === actual.producto);
+    const precioUnitario = prodStock ? prodStock.precio : 135;
 
-    celdaVal.textContent = '';
-    celdaVal.appendChild(input);
-    input.focus();
+    // Validar correcciones (no pueden devolver más de lo que mermó)
+    if (uds < 0 && Math.abs(uds) > Math.abs(actual.cant)) {
+        lanzarNotificacion("❌ No puedes corregir más mermas de las registradas.");
+        return;
+    }
 
-    celdaAccion.innerHTML = `<span style="font-size: 0.8rem; color: #ef4444; font-weight: 600;">Enter ↵ para guardar</span>`;
+    // Aplicar lógica
+    mermasData[index].cant -= uds; 
+    mermasData[index].perdido += (uds * precioUnitario); 
 
-    let guardando = false;
-    const guardar = () => {
-        if (guardando) return;
-        guardando = true;
+    if (prodStock) {
+        prodStock.stock = Math.max(0, prodStock.stock - uds);
+        localStorage.setItem("stock_db", JSON.stringify(stockData));
+    }
 
-        if (input.value.trim() === "") {
-            renderizarInventario();
-            return;
-        }
+    localStorage.setItem("mermas_db", JSON.stringify(mermasData));
+    
+    if (uds > 0) {
+        lanzarNotificacion(`⚠️ Registrada merma de -${uds} ud en ${actual.producto}`);
+    } else {
+        lanzarNotificacion(`✅ Restauradas ${Math.abs(uds)} ud a stock de ${actual.producto}`);
+    }
 
-        let uds = parseInt(input.value);
-        
-        if (!isNaN(uds) && uds !== 0) {
-            const prodStock = stockData.find(s => s.producto === actual.producto);
-            const precioUnitario = prodStock ? prodStock.precio : 135;
-
-            // Evitar restar más mermas de las que existen (ej. si hay -5, no puedes meter -6)
-            if (uds < 0 && Math.abs(uds) > Math.abs(actual.cant)) {
-                lanzarNotificacion("❌ No puedes corregir más mermas de las registradas.");
-                renderizarInventario();
-                return;
-            }
-
-            // Cálculos lógicos (si uds es positivo = resta a stock y aumenta pérdida)
-            // (Si uds es negativo = suma a stock y disminuye pérdida)
-            mermasData[index].cant -= uds; 
-            mermasData[index].perdido += (uds * precioUnitario); 
-
-            if (prodStock) {
-                prodStock.stock = Math.max(0, prodStock.stock - uds);
-                localStorage.setItem("stock_db", JSON.stringify(stockData));
-            }
-
-            localStorage.setItem("mermas_db", JSON.stringify(mermasData));
-            
-            if (uds > 0) {
-                lanzarNotificacion(`⚠️ Registrada merma de -${uds} ud en ${actual.producto}`);
-            } else {
-                lanzarNotificacion(`✅ Restauradas ${Math.abs(uds)} ud a stock de ${actual.producto}`);
-            }
-        } else if (uds !== 0) {
-            lanzarNotificacion("❌ Cantidad inválida.");
-        }
-        
-        renderizarInventario();
-    };
-
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') guardar();
-        if (e.key === 'Escape') renderizarInventario();
-    });
-    input.addEventListener('blur', guardar);
+    cerrarModal('modal-merma');
+    renderizarInventario();
 };
 
 // ==========================================================================
