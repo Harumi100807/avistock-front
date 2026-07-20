@@ -10,7 +10,7 @@
     <div class="app-container">
         
         <!-- =========================================
-             BARRA LATERAL (SIDEBAR) CON ICONOS PNG
+             BARRA LATERAL (SIDEBAR CORREGIDA)
              ========================================= -->
         <aside class="sidebar">
             <div class="brand">
@@ -31,19 +31,19 @@
                 </a>
                 <a href="historial.html" class="nav-item">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/historial.png" alt="Historial">
+                        <span class="nav-icon">📋</span>
                     </div>
                     <span>Historial</span>
                 </a>
                 <a href="inventario.html" class="nav-item active">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/inventario.png" alt="Inventario">
+                        <span class="nav-icon">📦</span>
                     </div>
                     <span>Inventario</span>
                 </a>
                 <a href="cierre_caja.html" class="nav-item">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/cierre-de-caja.png" alt="Cierre de caja">
+                        <span class="nav-icon">🚪</span>
                     </div>
                     <span>Cierre de caja</span>
                 </a>
@@ -51,7 +51,7 @@
             <div class="sidebar-footer">
                 <a href="#" onclick="cerrarSesion(event)" class="nav-item logout-item">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/cerrar-sesion.png" alt="Cerrar sesión">
+                        <span class="nav-icon">↪</span>
                     </div>
                     <span>Cerrar sesión</span>
                 </a>
@@ -62,15 +62,23 @@
              CONTENIDO PRINCIPAL
              ========================================= -->
         <main class="main-content">
+            <!-- Encabezado con botones separados por producto -->
             <div class="page-header">
                 <div class="header-titles">
                     <div class="breadcrumb">Administrador &gt; Inventario</div>
                     <h1 class="page-title">Inventario</h1>
                     <p class="page-subtitle">Stock actual y registro de mermas</p>
                 </div>
-                <button type="button" class="btn-primary btn-header" onclick="abrirModal('modal-nuevo-producto')">
-                    + Nuevo Producto
-                </button>
+                
+                <!-- BOTONES INDEPENDIENTES PARA CADA RECEPCIÓN -->
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn-primary btn-header" onclick="abrirModal('modal-recepcion-pie')">
+                        + Entrada Pollo en Pie
+                    </button>
+                    <button type="button" class="btn-secondary btn-header" onclick="abrirModal('modal-recepcion-camara')">
+                        + Entrada Pollo en Cámara
+                    </button>
+                </div>
             </div>
 
             <!-- TABLA DE STOCK -->
@@ -157,68 +165,93 @@
     </div>
 
     <!-- =========================================
-         MODAL: RECEPCIÓN DE PRODUCTO (VERTICAL Y SEPARADO)
+         1. MODAL EXCLUSIVO: RECEPCIÓN POLLO EN PIE
          ========================================= -->
-    <div id="modal-nuevo-producto" class="modal-overlay" style="display: none;">
+    <div id="modal-recepcion-pie" class="modal-overlay" style="display: none;">
         <div class="modal-container">
             <div class="modal-header">
-                <h2><span class="plus-orange">+</span> Agregar Recepción de Producto</h2>
+                <h2><span class="plus-orange">+</span> Entrada: Pollo en Pie</h2>
             </div>
-            <form id="form-nuevo-producto">
+            <form id="form-recepcion-pie">
                 <div class="modal-body">
-                    
-                    <!-- 1. Producto -->
                     <div class="form-group">
-                        <label for="recepcion-producto">PRODUCTO A RECIBIR</label>
-                        <select id="recepcion-producto" class="form-control" onchange="cambiarTipoProducto(this.value)" required>
-                            <option value="" disabled selected>Selecciona el producto recibido</option>
-                            <option value="Pollo en pie">Pollo en pie</option>
-                            <option value="Pollo en cámara">Pollo en cámara</option>
-                        </select>
+                        <label for="pie-cantidad">CANTIDAD ENTREGADA (UD)</label>
+                        <input type="number" id="pie-cantidad" class="form-control" placeholder="Ej: 150" min="1" required>
                     </div>
 
-                    <!-- 2. Cantidad entregada -->
                     <div class="form-group">
-                        <label for="recepcion-cantidad" id="lbl-cantidad">POLLOS ENTREGADOS (UD)</label>
-                        <input type="number" id="recepcion-cantidad" class="form-control" placeholder="Ej: 150" min="1" required>
+                        <label for="pie-peso">PESO APROX. POR POLLO (KG)</label>
+                        <input type="number" step="0.01" id="pie-peso" class="form-control" placeholder="Ej: 2.50" required>
                     </div>
 
-                    <!-- 3. Peso aprox por pollo -->
                     <div class="form-group">
-                        <label for="recepcion-peso">PESO APROX. POR POLLO (KG)</label>
-                        <input type="number" step="0.01" id="recepcion-peso" class="form-control" placeholder="Ej: 2.50" required>
+                        <label for="pie-fecha">FECHA DE RECEPCIÓN</label>
+                        <input type="date" id="pie-fecha" class="form-control" required>
                     </div>
 
-                    <!-- 4. Fecha de recepción -->
                     <div class="form-group">
-                        <label for="recepcion-fecha">FECHA DE RECEPCIÓN</label>
-                        <input type="date" id="recepcion-fecha" class="form-control" required>
+                        <label for="pie-hora">HORA</label>
+                        <input type="time" id="pie-hora" class="form-control" required>
                     </div>
 
-                    <!-- 5. Hora -->
                     <div class="form-group">
-                        <label for="recepcion-hora">HORA</label>
-                        <input type="time" id="recepcion-hora" class="form-control" required>
+                        <label for="pie-mermas">¿HUBO MERMAS? (CANTIDAD)</label>
+                        <input type="number" id="pie-mermas" class="form-control" placeholder="0 si no hubo" min="0" value="0">
                     </div>
 
-                    <!-- 6. Mermas -->
                     <div class="form-group">
-                        <label for="recepcion-mermas">¿HUBO MERMAS? (CANTIDAD)</label>
-                        <input type="number" id="recepcion-mermas" class="form-control" placeholder="0 si no hubo" min="0" value="0">
+                        <label for="pie-camara">POLLOS A CÁMARA (CONGELACIÓN)</label>
+                        <input type="number" id="pie-camara" class="form-control" placeholder="Ej: 50" min="0" value="0">
                     </div>
-
-                    <!-- 7. Pollos a cámara (Exclusivo para Pollo en Pie) -->
-                    <div class="form-group" id="grupo-camara">
-                        <label for="recepcion-camara">POLLOS QUE PASAN A CÁMARA (CONGELACIÓN)</label>
-                        <input type="number" id="recepcion-camara" class="form-control" placeholder="0 si ninguno pasa a cámara" min="0" value="0">
-                        <small class="help-text">* Válido únicamente para recepción de Pollo en pie.</small>
-                    </div>
-
                 </div>
 
                 <div class="modal-footer">
                     <button type="submit" class="btn-primary">Guardar Recepción</button>
-                    <button type="button" class="btn-secondary" onclick="cerrarModal('modal-nuevo-producto')">Cancelar</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModal('modal-recepcion-pie')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================
+         2. MODAL EXCLUSIVO: RECEPCIÓN POLLO EN CÁMARA
+         ========================================= -->
+    <div id="modal-recepcion-camara" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><span class="plus-orange">+</span> Entrada: Pollo en Cámara</h2>
+            </div>
+            <form id="form-recepcion-camara">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="camara-cantidad">CANTIDAD INGRESADA A CÁMARA (UD)</label>
+                        <input type="number" id="camara-cantidad" class="form-control" placeholder="Ej: 80" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="camara-peso">PESO APROX. POR POLLO (KG)</label>
+                        <input type="number" step="0.01" id="camara-peso" class="form-control" placeholder="Ej: 2.30" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="camara-fecha">FECHA DE INGRESO</label>
+                        <input type="date" id="camara-fecha" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="camara-hora">HORA</label>
+                        <input type="time" id="camara-hora" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="camara-mermas">¿HUBO MERMAS EN CÁMARA? (CANTIDAD)</label>
+                        <input type="number" id="camara-mermas" class="form-control" placeholder="0 si no hubo" min="0" value="0">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn-primary">Guardar Recepción</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModal('modal-recepcion-camara')">Cancelar</button>
                 </div>
             </form>
         </div>
@@ -300,19 +333,6 @@
         function cerrarModal(id) {
             const modal = document.getElementById(id);
             if (modal) modal.style.display = 'none';
-        }
-
-        function cambiarTipoProducto(tipo) {
-            const grupoCamara = document.getElementById('grupo-camara');
-            const lblCantidad = document.getElementById('lbl-cantidad');
-
-            if (tipo === 'Pollo en cámara') {
-                grupoCamara.style.display = 'none';
-                lblCantidad.textContent = 'CANTIDAD DE POLLO EN CÁMARA (UD)';
-            } else {
-                grupoCamara.style.display = 'flex';
-                lblCantidad.textContent = 'POLLOS EN PIE ENTREGADOS (UD)';
-            }
         }
 
         function cerrarSesion(event) {
