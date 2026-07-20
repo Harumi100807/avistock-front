@@ -74,7 +74,7 @@
                 </button>
             </header>
 
-            <!-- TABLA DE STOCK -->
+            <!-- TABLA DE STOCK (SIN COLUMNA DE ACCIÓN) -->
             <div class="content-section">
                 <h2 class="section-title">Stock</h2>
                 <div class="ventas-card">
@@ -85,7 +85,6 @@
                                 <th>STOCK</th>
                                 <th>MÍN.</th>
                                 <th>PRECIO</th>
-                                <th class="text-right">ACCIÓN</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -94,22 +93,12 @@
                                 <td>285 ud</td>
                                 <td>30 ud</td>
                                 <td>$135</td>
-                                <td class="text-right">
-                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModalStock('Pollo en pie', '285')">
-                                        ✏️ Actualizar
-                                    </button>
-                                </td>
                             </tr>
                             <tr>
                                 <td><strong>Pollo en cámara</strong></td>
                                 <td>5 ud</td>
                                 <td>20 ud</td>
                                 <td>$171</td>
-                                <td class="text-right">
-                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModalStock('Pollo en cámara', '5')">
-                                        ✏️ Actualizar
-                                    </button>
-                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -136,7 +125,7 @@
                                 <td class="text-danger">$1755</td>
                                 <td class="text-right">
                                     <button type="button" class="btn-secondary btn-sm" onclick="abrirModalMerma('Pollo en pie')">
-                                        ⚠️ Actualizar
+                                        ⚠️ Merma de corte
                                     </button>
                                 </td>
                             </tr>
@@ -146,7 +135,7 @@
                                 <td class="text-danger">$4275</td>
                                 <td class="text-right">
                                     <button type="button" class="btn-secondary btn-sm" onclick="abrirModalMerma('Pollo en cámara')">
-                                        ⚠️ Actualizar
+                                        ⚠️ Merma de corte
                                     </button>
                                 </td>
                             </tr>
@@ -158,7 +147,7 @@
     </div>
 
     <!-- =========================================
-         MODAL: RECEPCIÓN DE PRODUCTO (VERTICAL)
+         MODAL: RECEPCIÓN DE PRODUCTO
          ========================================= -->
     <div id="modal-nuevo-producto" class="modal-overlay" style="display: none;">
         <div class="modal-container">
@@ -193,8 +182,9 @@
                         <input type="time" id="recepcion-hora" class="form-control" required>
                     </div>
 
+                    <!-- ETIQUETA EDITADA: MERMA EN TRANSPORTE -->
                     <div class="form-group">
-                        <label for="recepcion-mermas">¿HUBO MERMAS? (CANTIDAD)</label>
+                        <label for="recepcion-mermas">MERMA EN TRANSPORTE (CANTIDAD)</label>
                         <input type="number" id="recepcion-mermas" class="form-control" placeholder="0" min="0" value="0">
                     </div>
 
@@ -209,43 +199,12 @@
     </div>
 
     <!-- =========================================
-         MODAL: ACTUALIZAR STOCK (SIN STOCK MÍNIMO)
-         ========================================= -->
-    <div id="modal-stock" class="modal-overlay" style="display: none;">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h2><span class="plus-orange">+</span> Actualizar Stock</h2>
-            </div>
-            <form id="form-modal-stock">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>PRODUCTO</label>
-                        <input type="text" id="modal-stock-producto" class="form-control" value="" readonly disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>STOCK ACTUAL (UD)</label>
-                        <input type="text" id="modal-stock-actual" class="form-control" value="" readonly disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="modal-stock-nuevo">NUEVA CANTIDAD DE STOCK TOTAL</label>
-                        <input type="number" id="modal-stock-nuevo" class="form-control" placeholder="Ej: 150" min="0" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-primary" onclick="guardarStockModal()">Actualizar Inventario</button>
-                    <button type="button" class="btn-secondary" onclick="cerrarModal('modal-stock')">Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- =========================================
-         MODAL: REGISTRAR MERMA
+         MODAL: REGISTRAR MERMA DE CORTE (FIN DEL DÍA)
          ========================================= -->
     <div id="modal-merma" class="modal-overlay" style="display: none;">
         <div class="modal-container">
             <div class="modal-header">
-                <h2><span class="plus-orange">+</span> Registrar Merma / Actualizar</h2>
+                <h2><span class="plus-orange">+</span> Registrar Merma de Corte (Fin del Día)</h2>
             </div>
             <form id="form-modal-merma">
                 <div class="modal-body">
@@ -258,6 +217,12 @@
                         <input type="number" id="modal-merma-cant" class="form-control" placeholder="Ej: 5" required>
                         <small class="help-text">* Escribe un número normal (ej: 3) para registrar pérdida.</small>
                         <small class="help-text">* Escribe un número negativo (ej: -3) para corregir y devolver al stock.</small>
+                    </div>
+
+                    <!-- NUEVO CAMPO: MOTIVO DE LA MERMA -->
+                    <div class="form-group">
+                        <label for="modal-merma-motivo">MOTIVO DE LA MERMA</label>
+                        <textarea id="modal-merma-motivo" class="form-control" rows="3" placeholder="Escribe el motivo de la merma (ej: producto dañado, merma en corte, etc.)" required></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -275,12 +240,6 @@
         function abrirModal(id) {
             const modal = document.getElementById(id);
             if (modal) modal.style.display = 'flex';
-        }
-
-        function abrirModalStock(nombreProducto, stockActual) {
-            document.getElementById('modal-stock-producto').value = nombreProducto;
-            document.getElementById('modal-stock-actual').value = stockActual;
-            abrirModal('modal-stock');
         }
 
         function abrirModalMerma(nombreProducto) {
