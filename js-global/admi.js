@@ -89,13 +89,16 @@ function inicializarModuloVentas() {
             }
 
             const total = peso * precio;
-            const ventas = JSON.parse(localStorage.getItem("ventas_db"));
+            const ventas = JSON.parse(localStorage.getItem("ventas_db")) || [];
             ventas.push({ cliente, fecha, hora, producto, cant, peso, precio, total });
             localStorage.setItem("ventas_db", JSON.stringify(ventas));
 
             renderizarVentas();
             formVenta.reset();
-            if (typeof cerrarModalVenta === "function") cerrarModalVenta(false);
+
+            const modalVenta = document.getElementById("modal-registrar-venta");
+            if (modalVenta) modalVenta.style.display = "none";
+
             lanzarNotificacion("🛒 Venta añadida al registro del día");
         });
     }
@@ -107,7 +110,7 @@ function renderizarVentas() {
     const montoTotalTexto = document.getElementById("total-ventas-monto");
     if (!tablaRows) return;
 
-    const ventas = JSON.parse(localStorage.getItem("ventas_db"));
+    const ventas = JSON.parse(localStorage.getItem("ventas_db")) || [];
     let fragmentoHtml = "";
     let acumuladoTotal = 0;
 
@@ -153,7 +156,7 @@ function renderizarPedidosFigma() {
     const feed = document.getElementById("pedidos-feed");
     if (!feed) return;
 
-    const pedidos = JSON.parse(localStorage.getItem("pedidos_figma_db"));
+    const pedidos = JSON.parse(localStorage.getItem("pedidos_figma_db")) || [];
     let htmlResultado = "";
 
     const totalTodos = pedidos.length;
@@ -226,7 +229,7 @@ function renderizarPedidosFigma() {
 }
 
 window.cambiarEstadoPedido = function(id, nuevoEstado) {
-    const pedidos = JSON.parse(localStorage.getItem("pedidos_figma_db"));
+    const pedidos = JSON.parse(localStorage.getItem("pedidos_figma_db")) || [];
     const objetivoIdx = pedidos.findIndex(p => p.id === id);
     
     if (objetivoIdx !== -1) {
@@ -259,7 +262,7 @@ function renderizarHistorial(busqueda = "") {
     const labelTotal = document.getElementById("total-historial-monto");
     if (!tabla) return;
 
-    const datos = JSON.parse(localStorage.getItem("historial_db"));
+    const datos = JSON.parse(localStorage.getItem("historial_db")) || [];
     
     const totalMostrador = datos.filter(d => d.tipo === "mostrador").length;
     const totalWeb = datos.filter(d => d.tipo === "pedidos-web").length;
@@ -323,8 +326,8 @@ function renderizarInventario() {
     const tablaMermas = document.getElementById("tabla-mermas-rows");
     if (!tablaStock || !tablaMermas) return;
 
-    const stockData = JSON.parse(localStorage.getItem("stock_db"));
-    const mermasData = JSON.parse(localStorage.getItem("mermas_db"));
+    const stockData = JSON.parse(localStorage.getItem("stock_db")) || [];
+    const mermasData = JSON.parse(localStorage.getItem("mermas_db")) || [];
 
     // Renderizar Tabla Stock
     let htmlStock = "";
@@ -343,7 +346,7 @@ function renderizarInventario() {
             </tr>
         `;
     });
-    tablaStock.innerHTML = htmlStock;
+    tablaStock.innerHTML = htmlStock || '<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:20px;">No hay productos en inventario.</td></tr>';
 
     // Renderizar Tabla Mermas
     let htmlMermas = "";
@@ -361,18 +364,60 @@ function renderizarInventario() {
             </tr>
         `;
     });
-    tablaMermas.innerHTML = htmlMermas;
+    tablaMermas.innerHTML = htmlMermas || '<tr><td colspan="4" style="text-align:center; color:#94a3b8; padding:20px;">No hay registros de mermas.</td></tr>';
 }
 
 // LÓGICA DE VENTANAS FLOTANTES (MODALES)
 window.cerrarModal = function(id) {
-    document.getElementById(id).style.display = 'none';
+    const modal = document.getElementById(id);
+    if (modal) modal.style.display = 'none';
 };
 
-// 1. Funciones para STOCK
+// 1. Funciones para NUEVO PRODUCTO
+window.abrirModalNuevoProducto = function() {
+    const modal = document.getElementById('modal-nuevo-producto');
+    if (!modal) return;
+    
+    document.getElementById('modal-nuevo-nombre').value = '';
+    document.getElementById('modal-nuevo-stock').value = '';
+    document.getElementById('modal-nuevo-min').value = '';
+    document.getElementById('modal-nuevo-precio').value = '';
+
+    modal.style.display = 'flex';
+    document.getElementById('modal-nuevo-nombre').focus();
+};
+
+window.guardarNuevoProductoModal = function() {
+    const nombre = document.getElementById('modal-nuevo-nombre').value.trim();
+    const stock = parseInt(document.getElementById('modal-nuevo-stock').value);
+    const min = parseInt(document.getElementById('modal-nuevo-min').value);
+    const precio = parseFloat(document.getElementById('modal-nuevo-precio').value);
+
+    if (!nombre || isNaN(stock) || isNaN(min) || isNaN(precio)) {
+        lanzarNotificacion("❌ Por favor completa todos los campos requeridos.");
+        return;
+    }
+
+    const stockData = JSON.parse(localStorage.getItem("stock_db")) || [];
+    const mermasData = JSON.parse(localStorage.getItem("mermas_db")) || [];
+
+    // Agregar al stock y crear registro base de merma
+    stockData.push({ producto: nombre, stock: stock, min: min, precio: precio });
+    mermasData.push({ producto: nombre, cant: 0, perdido: 0 });
+
+    localStorage.setItem("stock_db", JSON.stringify(stockData));
+    localStorage.setItem("mermas_db", JSON.stringify(mermasData));
+
+    lanzarNotificacion(`📦 ¡Producto "${nombre}" registrado con éxito!`);
+    cerrarModal('modal-nuevo-producto');
+    renderizarInventario();
+};
+
+// 2. Funciones para STOCK
 window.abrirModalStock = function(index) {
-    const stockData = JSON.parse(localStorage.getItem("stock_db"));
+    const stockData = JSON.parse(localStorage.getItem("stock_db")) || [];
     const actual = stockData[index];
+    if (!actual) return;
 
     // Rellenar datos en la ventana
     document.getElementById('modal-stock-producto').value = actual.producto;
@@ -382,8 +427,11 @@ window.abrirModalStock = function(index) {
     document.getElementById('modal-stock-index').value = index;
 
     // Mostrar ventana
-    document.getElementById('modal-stock').style.display = 'flex';
-    document.getElementById('modal-stock-nuevo').focus();
+    const modal = document.getElementById('modal-stock');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.getElementById('modal-stock-nuevo').focus();
+    }
 };
 
 window.guardarStockModal = function() {
@@ -395,7 +443,7 @@ window.guardarStockModal = function() {
         return;
     }
 
-    const stockData = JSON.parse(localStorage.getItem("stock_db"));
+    const stockData = JSON.parse(localStorage.getItem("stock_db")) || [];
     stockData[index].stock = nuevoStock;
     localStorage.setItem("stock_db", JSON.stringify(stockData));
     
@@ -404,10 +452,11 @@ window.guardarStockModal = function() {
     renderizarInventario();
 };
 
-// 2. Funciones para MERMAS
+// 3. Funciones para MERMAS
 window.abrirModalMerma = function(index) {
-    const mermasData = JSON.parse(localStorage.getItem("mermas_db"));
+    const mermasData = JSON.parse(localStorage.getItem("mermas_db")) || [];
     const actual = mermasData[index];
+    if (!actual) return;
 
     // Rellenar datos en la ventana
     document.getElementById('modal-merma-producto').value = actual.producto;
@@ -415,8 +464,11 @@ window.abrirModalMerma = function(index) {
     document.getElementById('modal-merma-index').value = index;
 
     // Mostrar ventana
-    document.getElementById('modal-merma').style.display = 'flex';
-    document.getElementById('modal-merma-cant').focus();
+    const modal = document.getElementById('modal-merma');
+    if (modal) {
+        modal.style.display = 'flex';
+        document.getElementById('modal-merma-cant').focus();
+    }
 };
 
 window.guardarMermaModal = function() {
@@ -428,8 +480,8 @@ window.guardarMermaModal = function() {
         return;
     }
 
-    const mermasData = JSON.parse(localStorage.getItem("mermas_db"));
-    const stockData = JSON.parse(localStorage.getItem("stock_db"));
+    const mermasData = JSON.parse(localStorage.getItem("mermas_db")) || [];
+    const stockData = JSON.parse(localStorage.getItem("stock_db")) || [];
     const actual = mermasData[index];
 
     const prodStock = stockData.find(s => s.producto === actual.producto);
@@ -478,10 +530,12 @@ function inicializarCierreCaja() {
     if (inputEf && inputTr) {
         const evaluarInputs = () => {
             const btn = document.getElementById("btn-submit-cierre");
-            if (inputEf.value.trim() !== "" || inputTr.value.trim() !== "") {
-                btn.classList.add("active");
-            } else {
-                btn.classList.remove("active");
+            if (btn) {
+                if (inputEf.value.trim() !== "" || inputTr.value.trim() !== "") {
+                    btn.classList.add("active");
+                } else {
+                    btn.classList.remove("active");
+                }
             }
         };
         inputEf.addEventListener("input", evaluarInputs);
@@ -494,13 +548,12 @@ function renderizarCierreDeCaja() {
     if (!contenedorResumen) return;
 
     // Cargar datos reales del historial para simular el cierre del día
-    const historial = JSON.parse(localStorage.getItem("historial_db"));
-    const mermas = JSON.parse(localStorage.getItem("mermas_db"));
+    const historial = JSON.parse(localStorage.getItem("historial_db")) || [];
+    const mermas = JSON.parse(localStorage.getItem("mermas_db")) || [];
 
     let html = "";
     let totalVentasAcumuladas = 0;
 
-    // Dibujar los primeros 6 elementos exactamente con el estilo limpio de Figma
     historial.forEach(item => {
         totalVentasAcumuladas += item.total;
         html += `
@@ -519,13 +572,17 @@ function renderizarCierreDeCaja() {
     const mermasPerdidaTotal = mermas.reduce((acc, curr) => acc + curr.perdido, 0);
 
     // Sincronizar los campos inferiores de la tarjeta de resumen
-    document.getElementById("cierre-total-ventas").textContent = `$ ${totalVentasAcumuladas.toLocaleString()}`;
-    document.getElementById("cierre-total-mermas").textContent = `-$ ${mermasPerdidaTotal.toLocaleString()}`;
+    const elVentas = document.getElementById("cierre-total-ventas");
+    const elMermas = document.getElementById("cierre-total-mermas");
+    const elPedidos = document.getElementById("cierre-total-pedidos");
+
+    if (elVentas) elVentas.textContent = `$ ${totalVentasAcumuladas.toLocaleString()}`;
+    if (elMermas) elMermas.textContent = `-$ ${mermasPerdidaTotal.toLocaleString()}`;
     
     // Contar el número de pedidos en estado listo o entregado
-    const pedidos = JSON.parse(localStorage.getItem("pedidos_figma_db"));
+    const pedidos = JSON.parse(localStorage.getItem("pedidos_figma_db")) || [];
     const totalEntregados = pedidos.filter(p => p.estado === "listo").length;
-    document.getElementById("cierre-total-pedidos").textContent = `${totalEntregados} entregados`;
+    if (elPedidos) elPedidos.textContent = `${totalEntregados} entregados`;
 }
 
 // Formateador automático de moneda mientras el usuario escribe
@@ -557,7 +614,6 @@ window.procesarCierreCaja = function(event) {
     if (confirm("¿Confirmas que deseas realizar el cierre definitivo de caja para esta jornada?")) {
         lanzarNotificacion("🔒 ¡Caja cerrada con éxito! Generando reporte...");
         
-        // Limpiar o resetear variables si fuera necesario para una nueva jornada
         setTimeout(() => {
             window.location.href = "historial.html";
         }, 1500);

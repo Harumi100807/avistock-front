@@ -1,5 +1,5 @@
 /* ==========================================================================
-   VARIABLES Y CONFIGURACIÓN GLOBAL
+   1. VARIABLES Y CONFIGURACIÓN GLOBAL
    ========================================================================== */
 :root {
     --primary: #f97316;          /* Naranja principal */
@@ -13,7 +13,11 @@
     
     --text-main: #1e293b;        /* Texto oscuro principal */
     --text-sub: #64748b;         /* Texto gris secundario */
+    --text-muted: #94a3b8;       /* Texto gris suave / deshabilitado */
     --text-success: #10b981;     /* Verde para estados positivos/anticipos */
+    --text-danger: #ef4444;      /* Rojo para errores/mermas */
+    
+    --sidebar-width: 250px;      /* Ancho estándar del menú lateral */
 }
 
 * {
@@ -29,7 +33,9 @@ body.app-body {
     min-height: 100vh;
 }
 
-/* Contenedor con Sidebar Fijo a la izquierda */
+/* ==========================================================================
+   2. ESTRUCTURA Y LAYOUT PRINCIPAL
+   ========================================================================== */
 .app-container {
     display: flex;
     min-height: 100vh;
@@ -37,16 +43,14 @@ body.app-body {
 
 .main-content {
     flex-grow: 1;
-    margin-left: 250px; /* Deja espacio exacto para la sidebar fija */
+    margin-left: var(--sidebar-width);
     padding: 40px;
     background-color: var(--bg-app);
 }
 
-/* ==========================================================================
-   BARRA LATERAL (SIDEBAR) UNIFICADA
-   ========================================================================== */
+/* Barra Lateral (Sidebar) */
 .sidebar {
-    width: 250px;
+    width: var(--sidebar-width);
     background-color: var(--bg-card);
     border-right: 1px solid var(--border-color);
     display: flex;
@@ -106,7 +110,6 @@ body.app-body {
     color: var(--primary-hover);
 }
 
-/* Contenedor estricto para iconos (previene que el menú brinque) */
 .nav-icon-wrapper {
     display: inline-flex;
     align-items: center;
@@ -122,14 +125,13 @@ body.app-body {
     object-fit: contain;
 }
 
-/* Botón Cerrar Sesión fijo al fondo */
 .logout-btn {
     margin-top: auto;
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px 16px;
-    color: #ea580c;
+    color: var(--primary-hover);
     background-color: var(--primary-light);
     border-radius: 12px;
     text-decoration: none;
@@ -146,7 +148,7 @@ body.app-body {
 }
 
 /* ==========================================================================
-   TARJETAS, TABLAS Y PIES DE PÁGINA (FONDOS DE MARCO)
+   3. TARJETAS, TABLAS Y PIES DE PÁGINA
    ========================================================================== */
 .card, .ventas-card {
     background-color: var(--bg-card);
@@ -156,7 +158,6 @@ body.app-body {
     overflow: hidden;
 }
 
-/* Estilo estándar para todas las tablas */
 .table-wrapper, .table-container {
     width: 100%;
     overflow-x: auto;
@@ -190,7 +191,6 @@ tr:hover td {
     background-color: #f8fafc;
 }
 
-/* Pie de página unificado estilo Figma (Franja Naranja) */
 .card-footer, .resumen-ventas-footer {
     background-color: var(--primary-muted);
     border-top: 1px solid #ffedd5;
@@ -214,172 +214,12 @@ tr:hover td {
 }
 
 /* ==========================================================================
-   DISEÑO DE MODALES (FIGMA STYLE)
+   4. TABS, NAVEGACIÓN Y FILTROS
    ========================================================================== */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(15, 23, 42, 0.4); /* Backdrop oscurecido */
-    display: none; /* Controlado dinámicamente */
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-}
-
-.modal-content-figma, .modal-content {
-    background-color: var(--bg-card);
-    width: 100%;
-    max-width: 440px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    animation: scaleUp 0.25s ease-out;
-}
-
-@keyframes scaleUp {
-    from { transform: scale(0.95); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
-.modal-header-figma, .modal-header {
-    background-color: #fafafa;
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.modal-header-figma h3, .modal-header h3 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--text-main);
-}
-
-.plus-orange {
-    color: var(--primary);
-    font-size: 1.4rem;
-    font-weight: 700;
-}
-
-.modal-form-figma, .modal-form {
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-}
-
-.form-group-figma, .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.form-group-figma label, .form-group label {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--text-sub);
-    text-transform: uppercase;
-}
-
-.form-group-figma input, .form-group input,
-.form-group-figma select, .form-group select {
-    width: 100%;
-    padding: 10px 14px;
-    border: 1.5px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 0.9rem;
-    color: var(--text-main);
-    transition: border-color 0.15s ease;
-}
-
-.form-group-figma input:focus, .form-group select:focus {
-    outline: none;
-    border-color: var(--primary);
-}
-
-/* Botones de acción del Formulario */
-.form-actions-figma, .form-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 8px;
-}
-
-.btn-agregar, .btn-submit {
-    flex: 1;
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background 0.15s ease;
-}
-
-.btn-agregar:hover, .btn-submit:hover {
-    background-color: var(--primary-hover);
-}
-
-.btn-cancelar, .btn-cancel {
-    flex: 1;
-    background-color: #f1f5f9;
-    color: var(--text-sub);
-    border: none;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background 0.15s ease;
-}
-
-.btn-cancelar:hover, .btn-cancel:hover {
-    background-color: #e2e8f0;
-    color: var(--text-main);
-}
-
-/* ==========================================================================
-   NOTIFICACIONES FLOTANTES (TOASTS)
-   ========================================================================== */
-.notification-container {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 1000;
-}
-
-.toast {
-    background-color: #0f172a;
-    color: #ffffff;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    animation: slideIn 0.2s ease-out;
-}
-
-@keyframes slideIn {
-    from { transform: translateY(100%); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-/* ==========================================================================
-   ESTILOS DE TABS Y TARJETAS DE PEDIDO (FIGMA STYLE)
-   ========================================================================== */
-
-/* Contenedor de Pestañas */
 .tabs-container {
     display: flex;
     gap: 28px;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid var(--border-color);
     margin-bottom: 28px;
     padding-bottom: 2px;
 }
@@ -390,7 +230,7 @@ tr:hover td {
     padding: 8px 4px;
     font-size: 0.95rem;
     font-weight: 600;
-    color: #64748b;
+    color: var(--text-sub);
     cursor: pointer;
     position: relative;
     display: flex;
@@ -401,7 +241,7 @@ tr:hover td {
 }
 
 .tab-btn.active {
-    color: #ea580c;
+    color: var(--primary-hover);
 }
 
 .tab-btn.active::after {
@@ -411,20 +251,22 @@ tr:hover td {
     left: 0;
     width: 100%;
     height: 3px;
-    background-color: #ea580c;
+    background-color: var(--primary-hover);
     border-radius: 2px;
 }
 
 .tab-badge {
     background-color: #ffedd5;
-    color: #ea580c;
+    color: var(--primary-hover);
     font-size: 0.75rem;
     padding: 1px 8px;
     border-radius: 12px;
     font-weight: 700;
 }
 
-/* Alimentador de Tarjetas */
+/* ==========================================================================
+   5. FEED Y TARJETAS DE PEDIDOS
+   ========================================================================== */
 .pedidos-feed {
     display: flex;
     flex-direction: column;
@@ -432,24 +274,22 @@ tr:hover td {
     max-width: 1100px;
 }
 
-/* Tarjeta de Pedido Individual */
 .pedido-card {
-    background: #ffffff;
+    background: var(--bg-card);
     border-radius: 12px;
     padding: 20px 24px;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.01);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
     display: flex;
     flex-direction: column;
     gap: 14px;
 }
 
-/* Encabezado de la Tarjeta */
 .pedido-card-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px dashed #e2e8f0;
+    border-bottom: 1px dashed var(--border-color);
     padding-bottom: 12px;
 }
 
@@ -461,28 +301,27 @@ tr:hover td {
 
 .pedido-id {
     font-weight: 700;
-    color: #64748b;
+    color: var(--text-sub);
     font-size: 0.9rem;
 }
 
 .cliente-nombre {
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-main);
     font-size: 1rem;
 }
 
 .cliente-tel {
-    color: #94a3b8;
+    color: var(--text-muted);
     font-size: 0.85rem;
 }
 
 .pedido-time {
-    color: #64748b;
+    color: var(--text-sub);
     font-size: 0.85rem;
     font-weight: 500;
 }
 
-/* Cuerpo del Pedido (Items de compra) */
 .pedido-card-body {
     display: flex;
     justify-content: space-between;
@@ -505,22 +344,21 @@ tr:hover td {
 
 .item-qty {
     font-weight: 800;
-    color: #f97316;
+    color: var(--primary);
     margin-right: 8px;
 }
 
 .item-name {
-    color: #1e293b;
+    color: var(--text-main);
     font-weight: 500;
     flex-grow: 1;
 }
 
 .item-price {
-    color: #64748b;
+    color: var(--text-sub);
     font-weight: 500;
 }
 
-/* Lado Derecho: Totales y Acciones */
 .pedido-card-action {
     display: flex;
     flex-direction: column;
@@ -532,10 +370,10 @@ tr:hover td {
 .pedido-total-val {
     font-size: 1.2rem;
     font-weight: 800;
-    color: #1e293b;
+    color: var(--text-main);
 }
 
-/* Estilos de botones de estado exactos de Figma */
+/* Botones de acción según estado */
 .btn-status-action {
     padding: 6px 20px;
     border-radius: 20px;
@@ -546,74 +384,68 @@ tr:hover td {
     text-align: center;
 }
 
-/* Estado 1: Botón Aceptar (Naranja con borde/sutil) */
 .status-aceptar {
-    background-color: #ffffff;
-    color: #ea580c;
-    border: 1px solid #ea580c;
+    background-color: var(--bg-card);
+    color: var(--primary-hover);
+    border: 1px solid var(--primary-hover);
 }
 
 .status-aceptar:hover {
-    background-color: #fff7ed;
+    background-color: var(--primary-muted);
 }
 
-/* Estado 2: Botón Procesando (Naranja Sólido) */
 .status-procesando {
-    background-color: #f97316;
+    background-color: var(--primary);
     color: #ffffff;
     border: none;
 }
 
 .status-procesando:hover {
-    background-color: #ea580c;
+    background-color: var(--primary-hover);
 }
 
-/* Estado 3: Badge Listo (Verde sutil) */
 .status-listo {
     background-color: #ecfdf5;
-    color: #10b981;
+    color: var(--text-success);
     border: 1.5px solid #a7f3d0;
     cursor: default;
     display: inline-flex;
     align-items: center;
     gap: 4px;
 }
-/* ==========================================================================
-   AJUSTES EXCLUSIVOS DE HISTORIAL (FIGMA STYLE)
-   ========================================================================== */
 
-/* Contenedor que alinea pestañas a la izq y buscador a la der en una sola fila */
+/* ==========================================================================
+   6. HISTORIAL Y BÚSQUEDA
+   ========================================================================== */
 .historial-controls-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid var(--border-color);
     padding-bottom: 0px;
     margin-bottom: 16px;
     width: 100%;
 }
 
-/* Buscador alineado en la cabecera */
 .search-box-wrapper input {
-    background-color: #ffffff;
+    background-color: var(--bg-card);
     border: 1px solid #cbd5e1;
     padding: 8px 16px;
     border-radius: 8px;
     font-size: 0.85rem;
-    color: #1e293b;
+    color: var(--text-main);
     width: 240px;
     outline: none;
     transition: border-color 0.2s;
 }
 
 .search-box-wrapper input:focus {
-    border-color: #ea580c;
+    border-color: var(--primary-hover);
 }
 
-/* Badge de Estado Pagado */
 .badge-pagado {
     background-color: #ecfdf5;
-    color: #10b981;
+    color: var(--text-success);
     font-size: 0.75rem;
     font-weight: 700;
     padding: 4px 12px;
@@ -622,7 +454,6 @@ tr:hover td {
     text-align: center;
 }
 
-/* Estructura Ticket / Hora apilados */
 .ticket-time-stack {
     display: flex;
     flex-direction: column;
@@ -630,30 +461,23 @@ tr:hover td {
 
 .ticket-id {
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-main);
     font-size: 0.9rem;
 }
 
 .ticket-hour {
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: var(--text-muted);
     margin-top: 2px;
 }
+
 /* ==========================================================================
-   ESTILOS DE INVENTARIO Y MERMAS (FIGMA STYLE)
+   7. INVENTARIO Y MERMAS
    ========================================================================== */
-
-/* Asegurar que no haya imágenes flotantes extrañas o desbordadas */
-.app-container::after, .main-content::after {
-    content: none !important;
-    display: none !important;
-}
-
-/* Botones de acción dentro de las tablas */
 .btn-action-outline {
-    background-color: #ffffff;
+    background-color: var(--bg-card);
     border: 1.5px solid #cbd5e1;
-    color: #64748b;
+    color: var(--text-sub);
     font-size: 0.8rem;
     font-weight: 700;
     padding: 6px 16px;
@@ -666,37 +490,21 @@ tr:hover td {
 }
 
 .btn-action-outline:hover {
-    border-color: #ea580c;
-    color: #ea580c;
-    background-color: #fff7ed;
+    border-color: var(--primary-hover);
+    color: var(--primary-hover);
+    background-color: var(--primary-muted);
 }
 
-/* Badge de merma negativa (Rojo sutil) */
-.merma-qty-negative {
-    color: #ef4444;
-    font-weight: 700;
-    font-size: 0.9rem;
-}
-
+.merma-qty-negative, 
 .merma-loss-value {
-    color: #ef4444;
+    color: var(--text-danger);
     font-weight: 700;
     font-size: 0.9rem;
 }
+
 /* ==========================================================================
-   ESTILOS DE CIERRE DE CAJA (FIGMA STYLE)
+   8. CIERRE DE CAJA
    ========================================================================== */
-
-/* Bloquear cualquier fuga visual de carritos u otros elementos absolutos */
-.app-container::before, 
-.app-container::after,
-.main-content::before,
-.main-content::after {
-    display: none !important;
-    content: none !important;
-}
-
-/* Layout vertical de las dos tarjetas */
 .cierre-layout-vertical {
     display: flex;
     flex-direction: column;
@@ -705,7 +513,6 @@ tr:hover td {
     width: 100%;
 }
 
-/* Lista de transacciones en el resumen */
 .resumen-items-container {
     padding: 16px 32px;
     display: flex;
@@ -727,21 +534,20 @@ tr:hover td {
 
 .cierre-item-ticket {
     font-weight: 700;
-    color: #94a3b8;
+    color: var(--text-muted);
     width: 60px;
 }
 
 .cierre-item-cliente {
     font-weight: 600;
-    color: #64748b;
+    color: var(--text-sub);
 }
 
 .cierre-item-monto {
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-main);
 }
 
-/* Footer del Resumen de Caja */
 .resumen-totales-footer {
     background-color: #fafafa;
     border-top: 1px solid #f1f5f9;
@@ -758,13 +564,13 @@ tr:hover td {
 
 .totales-row-main .lbl-main {
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-main);
     font-size: 1rem;
 }
 
 .totales-row-main .val-main {
     font-weight: 800;
-    color: #ea580c;
+    color: var(--primary-hover);
     font-size: 1.25rem;
 }
 
@@ -776,21 +582,20 @@ tr:hover td {
     font-size: 0.9rem;
 }
 
-.totales-row-sub .lbl-sub {
-    color: #64748b;
+.totales-row-sub .lbl-sub,
+.totales-row-sub .val-sub {
+    color: var(--text-sub);
     font-weight: 500;
 }
 
 .totales-row-sub .val-sub {
     font-weight: 700;
-    color: #64748b;
 }
 
 .color-danger {
-    color: #ef4444 !important;
+    color: var(--text-danger) !important;
 }
 
-/* Formulario de Declarar Efectivo */
 .cierre-form-row {
     display: flex;
     gap: 24px;
@@ -806,17 +611,17 @@ tr:hover td {
 .form-group-cierre label {
     font-size: 0.9rem;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-main);
 }
 
 .form-group-cierre input,
 .form-group-cierre textarea {
     background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border-color);
     border-radius: 8px;
     padding: 12px 16px;
     font-size: 0.95rem;
-    color: #1e293b;
+    color: var(--text-main);
     outline: none;
     transition: all 0.2s;
     width: 100%;
@@ -825,15 +630,14 @@ tr:hover td {
 
 .form-group-cierre input:focus,
 .form-group-cierre textarea:focus {
-    border-color: #ea580c;
-    background-color: #ffffff;
+    border-color: var(--primary-hover);
+    background-color: var(--bg-card);
     box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.08);
 }
 
-/* Botón "Cerrar caja" estilo Figma */
 .btn-cierre-submit {
     width: 100%;
-    background-color: #fdba74; /* Tonalidad deshabilitada clara inicial */
+    background-color: #fdba74;
     color: #ffffff;
     border: none;
     padding: 14px;
@@ -845,64 +649,94 @@ tr:hover td {
 }
 
 .btn-cierre-submit.active {
-    background-color: #ea580c;
+    background-color: var(--primary-hover);
 }
 
 .btn-cierre-submit.active:hover {
     background-color: #c2410c;
 }
-/* ==========================================
-   ESTILOS DE VENTANAS FLOTANTES (MODALES)
-   ========================================== */
+
+/* ==========================================================================
+   9. MODALES Y VENTANAS EMERGENTES (UNIFICADO)
+   ========================================================================== */
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(15, 23, 42, 0.4); 
-    display: flex;
+    background-color: rgba(15, 23, 42, 0.4);
+    display: none; /* Controlado dinámicamente */
     justify-content: center;
     align-items: center;
     z-index: 9999;
+    padding: 16px;
 }
 
-.modal-container {
-    background-color: #ffffff;
+.modal-overlay.active,
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-container,
+.modal-content-figma,
+.modal-content {
+    background-color: var(--bg-card);
     width: 100%;
     max-width: 450px;
     border-radius: 16px;
-    padding: 32px;
+    padding: 24px;
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    animation: scaleUp 0.25s ease-out;
 }
 
+@keyframes scaleUp {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.modal-header-figma,
+.modal-header,
 .modal-title {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text-main);
     margin-top: 0;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
+.modal-header-figma h3,
+.modal-header h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.plus-orange,
 .text-orange {
-    color: #f97316;
+    color: var(--primary);
+    font-size: 1.3rem;
+    font-weight: 700;
 }
 
+.modal-form-figma,
+.modal-form,
 .modal-body {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-bottom: 24px;
 }
 
+.form-group-figma,
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .form-row-2 {
@@ -911,72 +745,134 @@ tr:hover td {
     gap: 16px;
 }
 
+.form-group-figma label,
 .form-group label {
     font-size: 0.75rem;
-    font-weight: 600;
-    color: #64748b;
+    font-weight: 700;
+    color: var(--text-sub);
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
+.form-group-figma input,
+.form-group input,
+.form-group-figma select,
+.form-group select,
 .form-control {
     width: 100%;
-    padding: 12px 16px;
-    border: 1px solid #e2e8f0;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border-color);
     border-radius: 8px;
-    font-size: 0.95rem;
-    color: #1e293b;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    background-color: var(--bg-card);
     outline: none;
-    transition: all 0.2s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
     box-sizing: border-box;
 }
 
+.form-group-figma input:focus,
+.form-group select:focus,
 .form-control:focus {
-    border-color: #f97316;
+    border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
 }
 
 .form-control:disabled {
     background-color: #f8fafc;
-    color: #94a3b8;
+    color: var(--text-muted);
     cursor: not-allowed;
 }
 
+.form-actions-figma,
+.form-actions,
 .modal-footer {
     display: flex;
     gap: 12px;
+    margin-top: 8px;
 }
 
-.btn-primary {
-    background-color: #f97316;
-    color: white;
+.btn-primary,
+.btn-agregar,
+.btn-submit {
+    flex: 1;
+    background-color: var(--primary);
+    color: #ffffff;
     border: none;
     padding: 12px 20px;
     border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 0.9rem;
     cursor: pointer;
+    transition: background-color 0.15s ease;
+    text-align: center;
+}
+
+.btn-primary:hover,
+.btn-agregar:hover,
+.btn-submit:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn-secondary,
+.btn-cancelar,
+.btn-cancel {
     flex: 1;
-    transition: background-color 0.2s;
-}
-
-.btn-primary:hover {
-    background-color: #ea580c;
-}
-
-.btn-secondary {
     background-color: #f1f5f9;
-    color: #475569;
+    color: var(--text-sub);
     border: none;
     padding: 12px 20px;
     border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 0.9rem;
     cursor: pointer;
-    flex: 1;
-    transition: background-color 0.2s;
+    transition: background-color 0.15s ease;
+    text-align: center;
 }
 
-.btn-secondary:hover {
+.btn-secondary:hover,
+.btn-cancelar:hover,
+.btn-cancel:hover {
     background-color: #e2e8f0;
+    color: var(--text-main);
+}
+
+/* ==========================================================================
+   10. NOTIFICACIONES FLOTANTES (TOASTS)
+   ========================================================================== */
+.notification-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10000;
+}
+
+.toast {
+    background-color: #0f172a;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* ==========================================================================
+   11. PREVENCIÓN DE FUGAS VISUALES Y RESETS
+   ========================================================================== */
+.app-container::before, 
+.app-container::after,
+.main-content::before,
+.main-content::after {
+    display: none !important;
+    content: none !important;
 }
