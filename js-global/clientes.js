@@ -32,7 +32,20 @@ if (valPie) {
 // ----------------------------------------------
 
 if (plusPie && valPie) {
-// (Aquí sigue tu código normal...)
+    plusPie.addEventListener('click', () => { 
+        cantPie++; 
+        valPie.textContent = `${cantPie} ud`; 
+    });
+}
+
+if (minusPie && valPie) {
+    minusPie.addEventListener('click', () => { 
+        if (cantPie > 0) { 
+            cantPie--; 
+            valPie.textContent = `${cantPie} ud`; 
+        } 
+    });
+}
 
 // ==========================================================
 // 3. CONTADORES - POLLO EN CÁMARA
@@ -57,6 +70,23 @@ if (valCamara) {
                 alert("Por favor, ingresa un número válido.");
             }
         }
+    });
+}
+// ----------------------------------------------
+
+if (plusCamara && valCamara) {
+    plusCamara.addEventListener('click', () => { 
+        cantCamara++; 
+        valCamara.textContent = `${cantCamara} ud`; 
+    });
+}
+
+if (minusCamara && valCamara) {
+    minusCamara.addEventListener('click', () => { 
+        if (cantCamara > 0) { 
+            cantCamara--; 
+            valCamara.textContent = `${cantCamara} ud`; 
+        } 
     });
 }
 // ----------------------------------------------
