@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avistock - Cierre de Caja</title>
+    <title>Avistock - Cierre y Corte Parcial de Caja</title>
     <link rel="stylesheet" href="../css-global/admi.css">
 </head>
 <body class="app-body">
@@ -60,87 +60,101 @@
             
             <header class="content-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
                 <div class="header-titles">
-                    <p class="breadcrumbs" style="font-size: 0.85rem; color: #64748b; margin-bottom: 4px;">Administrador &gt; Cierre de caja</p>
-                    <h1 style="font-size: 1.8rem; font-weight: 700; color: #1e293b; margin: 0;">Cierre de caja</h1>
-                    <p class="subtitle" style="font-size: 0.95rem; color: #64748b; margin-top: 4px;">Resumen del día y corte final</p>
+                    <p class="breadcrumbs" style="font-size: 0.85rem; color: #64748b; margin-bottom: 4px;">Dueño / Administrador &gt; Cierre de caja</p>
+                    <h1 style="font-size: 1.8rem; font-weight: 700; color: #1e293b; margin: 0;">Cierre y Corte de Caja</h1>
+                    <p class="subtitle" style="font-size: 0.95rem; color: #64748b; margin-top: 4px;">Resumen del día, cortes parciales para el dueño y corte final</p>
                 </div>
 
-                <div class="header-actions" style="display: flex; align-items: center; gap: 16px;">
+                <div class="header-actions" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                     
+                    <button type="button" class="btn-secondary" onclick="abrirModalCorteParcial()" style="background-color: #0f172a; color: #ffffff; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <span>💵</span>
+                        <span>Declarar efectivo parcial (Dueño)</span>
+                    </button>
+
                     <div class="notification-bell-wrapper" style="position: relative; cursor: pointer;" onclick="toggleNotificacionesMenu()">
                         <div style="background: #ffffff; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                             <span style="font-size: 1.2rem;">🔔</span>
                             <span id="badge-notificacion" style="position: absolute; top: -4px; right: -4px; background-color: #ef4444; color: white; font-size: 0.7rem; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #ffffff;">1</span>
                         </div>
                         
-                        <div id="dropdown-notificaciones" style="display: none; position: absolute; right: 0; top: 48px; width: 280px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1000; padding: 16px;">
+                        <div id="dropdown-notificaciones" style="display: none; position: absolute; right: 0; top: 48px; width: 290px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1000; padding: 16px;">
                             <div style="font-weight: 700; font-size: 0.9rem; color: #1e293b; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
-                                <span>Notificaciones</span>
+                                <span>Solicitudes del Dueño</span>
                                 <span style="font-size: 0.75rem; color: #2563eb; cursor: pointer;" onclick="marcarComoLeida(event)">Marcar leída</span>
                             </div>
                             <div id="lista-notificaciones">
                                 <div style="background: #fff7ed; padding: 10px; border-radius: 8px; border-left: 4px solid #f97316;">
-                                    <p style="margin: 0; font-size: 0.85rem; font-weight: 600; color: #1e293b;">📌 Solicitud de Reporte</p>
-                                    <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #64748b;">El administrador solicitó el reporte con las cuentas del día.</p>
-                                    <span style="font-size: 0.7rem; color: #94a3b8; display: block; margin-top: 4px;">Hace 5 min</span>
+                                    <p style="margin: 0; font-size: 0.85rem; font-weight: 600; color: #1e293b;">📌 Solicitud de Reporte Parcial</p>
+                                    <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #64748b;">El dueño solicitó declarar el efectivo actual acumulado en caja.</p>
+                                    <span style="font-size: 0.7rem; color: #94a3b8; display: block; margin-top: 4px;">Solicitado recientemente</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <button type="button" class="btn-primary" onclick="enviarReporteDia()" style="display: flex; align-items: center; gap: 8px;">
-                        <img src="../assets-global/historial-de-pedidos.png" alt="Enviar Reporte" style="width: 18px; height: 18px; filter: brightness(0) invert(1);" onerror="this.style.display='none'">
-                        <span>Enviar Reporte del Día</span>
+                    <button type="button" class="btn-primary" onclick="enviarReporteDia()" style="display: flex; align-items: center; gap: 8px; background-color: #2563eb; color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                        <span>📊</span>
+                        <span>Enviar Reporte Completo</span>
                     </button>
                 </div>
             </header>
 
             <div class="cierre-layout-vertical">
                 
-                <div class="ventas-card" style="margin-bottom: 24px;">
+                <div class="ventas-card" style="margin-bottom: 24px; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden;">
+                    <div style="padding: 20px 32px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0;">Cortes Parciales Solicitados por el Dueño</h2>
+                        <span style="font-size: 0.85rem; background-color: #f1f5f9; color: #475569; padding: 4px 12px; border-radius: 20px; font-weight: 600;" id="contador-cortes-parciales">0 cortes hoy</span>
+                    </div>
+                    <div id="contenedor-cortes-parciales" style="padding: 16px 32px;">
+                        </div>
+                </div>
+
+                <div class="ventas-card" style="margin-bottom: 24px; background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden;">
                     <div style="padding: 24px 32px 12px 32px; border-bottom: 1px solid #f1f5f9;">
-                        <h2 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0;">Resumen del día</h2>
+                        <h2 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0;">Resumen general de ventas del día</h2>
                     </div>
                     
                     <div class="resumen-items-container" id="resumen-cierre-items">
                         </div>
 
-                    <div class="resumen-totales-footer">
-                        <div class="totales-row-main">
-                            <span class="lbl-main">Total ventas</span>
+                    <div class="resumen-totales-footer" style="padding: 20px 32px; background-color: #f8fafc; border-top: 1px solid #e2e8f0;">
+                        <div class="totales-row-main" style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 700; margin-bottom: 8px;">
+                            <span class="lbl-main">Total ventas acumuladas</span>
                             <span class="val-main" id="cierre-total-ventas">$ 0.00</span>
                         </div>
-                        <div class="totales-row-sub">
-                            <span class="lbl-sub">Mermas</span>
+                        <div class="totales-row-sub" style="display: flex; justify-content: space-between; color: #ef4444; font-size: 0.95rem; margin-bottom: 4px;">
+                            <span class="lbl-sub">Mermas del día</span>
                             <span class="val-sub color-danger" id="cierre-total-mermas">-$ 0.00</span>
                         </div>
-                        <div class="totales-row-sub">
+                        <div class="totales-row-sub" style="display: flex; justify-content: space-between; color: #64748b; font-size: 0.95rem;">
                             <span class="lbl-sub">Pedidos web</span>
                             <span class="val-sub" id="cierre-total-pedidos">4 entregados</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="ventas-card">
+                <div class="ventas-card" style="background: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden;">
                     <div style="padding: 24px 32px 12px 32px;">
-                        <h2 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0;">Declarar efectivo</h2>
+                        <h2 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0;">Declarar efectivo final (Cierre de jornada)</h2>
                     </div>
                     
                     <form id="form-cierre-caja" style="padding: 0 32px 32px 32px;" onsubmit="procesarCierreCaja(event)">
                         <div class="cierre-form-row" style="display: block;">
                             <div class="form-group-cierre" style="width: 100%;">
-                                <label for="cierre-efectivo">Efectivo</label>
-                                <input type="text" id="cierre-efectivo" placeholder="$ 0.00" oninput="formatearMonedaInput(this)">
+                                <label for="cierre-efectivo" style="display: block; font-weight: 600; color: #334155; margin-bottom: 8px;">Efectivo total en caja al cierre</label>
+                                <input type="text" id="cierre-efectivo" placeholder="$ 0.00" oninput="formatearMonedaInput(this)" style="width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem;">
                             </div>
                         </div>
 
                         <div class="form-group-cierre" style="margin-top: 20px;">
-                            <label for="cierre-notas">Notas del cierre</label>
-                            <textarea id="cierre-notas" rows="4" placeholder="Observaciones opcionales..."></textarea>
+                            <label for="cierre-notas" style="display: block; font-weight: 600; color: #334155; margin-bottom: 8px;">Notas del cierre final</label>
+                            <textarea id="cierre-notas" rows="4" placeholder="Observaciones opcionales para el cierre definitivo..."></textarea>
                         </div>
 
                         <div style="margin-top: 28px;">
-                            <button type="submit" class="btn-cierre-submit" id="btn-submit-cierre">Cerrar caja</button>
+                            <button type="submit" class="btn-cierre-submit" id="btn-submit-cierre">Cerrar caja definitivamente</button>
                         </div>
                     </form>
                 </div>
@@ -149,7 +163,41 @@
         </main>
     </div>
 
-    <div class="notification-container" id="notification-container"></div>
+    <div id="modal-corte-parcial" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center;">
+        <div style="background: #ffffff; border-radius: 16px; width: 90%; max-width: 480px; padding: 28px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+                <div>
+                    <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #0f172a;">Declaración de Efectivo Parcial</h3>
+                    <p style="margin: 4px 0 0 0; font-size: 0.85rem; color: #64748b;">Corte solicitado por el <strong>Dueño</strong> a mitad de jornada</p>
+                </div>
+                <button onclick="cerrarModal('modal-corte-parcial')" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8;">&times;</button>
+            </div>
+
+            <form onsubmit="guardarCorteParcial(event)">
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px;">Hora del reporte</label>
+                    <input type="time" id="corte-parcial-hora" required style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;">
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px;">Efectivo contado en caja ($)</label>
+                    <input type="text" id="corte-parcial-monto" placeholder="$ 0.00" oninput="formatearMonedaInput(this)" required style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; font-weight: 700; color: #0f172a;">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 6px;">Observaciones para el dueño</label>
+                    <textarea id="corte-parcial-notas" rows="3" placeholder="Ej. Fondo de caja completo, efectivo retirado parcial..." style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem;"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" onclick="cerrarModal('modal-corte-parcial')" style="padding: 10px 18px; background: #f1f5f9; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 10px 20px; background: #0f172a; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Enviar reporte al Dueño</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="notification-container" id="notification-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 3000;"></div>
 
     <script src="../js-global/admi.js"></script>
     <script>
