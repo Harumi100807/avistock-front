@@ -1,9 +1,10 @@
 /**
- * Avistock - admi.js (Actualizado Cierre de Caja Vertical)
+ * Avistock - admi.js
  */
 
 document.addEventListener("DOMContentLoaded", () => {
     inicializarVistaPreviaCaja();
+    configurarModalInicioCierre();
     configurarModalReporte();
 });
 
@@ -58,7 +59,64 @@ function inicializarVistaPreviaCaja() {
     }
 }
 
-// 2. CONFIGURACIÓN DEL MODAL VERTICAL
+// 2. CONFIGURACIÓN MODAL 1: INICIO Y CIERRE RAPIDO
+function configurarModalInicioCierre() {
+    const btnAbrir = document.getElementById("btn-inicio-cierre");
+    const modal = document.getElementById("modal-inicio-cierre-caja");
+    const btnCerrar = document.getElementById("btn-cerrar-inicio-cierre");
+    const btnCancelar = document.getElementById("btn-cancelar-inicio-cierre");
+    const form = document.getElementById("form-inicio-cierre");
+
+    if (!modal) return;
+
+    if (btnAbrir) {
+        btnAbrir.addEventListener("click", () => {
+            modal.classList.add("active");
+            const inInicio = document.getElementById("reg-monto-inicio");
+            if (inInicio) inInicio.focus();
+        });
+    }
+
+    const cerrar = () => modal.classList.remove("active");
+
+    if (btnCerrar) btnCerrar.addEventListener("click", cerrar);
+    if (btnCancelar) btnCancelar.addEventListener("click", cerrar);
+
+    if (form) {
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            const ahora = new Date();
+            const fechaStr = `${String(ahora.getDate()).padStart(2, '0')}/${String(ahora.getMonth()+1).padStart(2, '0')}/${ahora.getFullYear()} ${String(ahora.getHours()).padStart(2, '0')}:${String(ahora.getMinutes()).padStart(2, '0')}`;
+
+            const inicioCaja = document.getElementById("reg-monto-inicio").value.trim() || "$ 0.00";
+            const efectivoActual = document.getElementById("reg-monto-cierre").value.trim() || "$ 0.00";
+
+            const nuevoRegistro = {
+                fechaHora: fechaStr,
+                inicioCaja,
+                ventaPie: "$ 0.00",
+                ventaCamara: "$ 0.00",
+                apartadosWeb: 0,
+                mermas: "$ 0.00",
+                efectivoActual
+            };
+
+            const reportes = JSON.parse(localStorage.getItem("reportes_caja_db")) || [];
+            reportes.push(nuevoRegistro);
+            localStorage.setItem("reportes_caja_db", JSON.stringify(reportes));
+
+            inicializarVistaPreviaCaja();
+            lanzarNotificacion("💵 ¡Inicio y Cierre de caja guardados!");
+            
+            form.reset();
+            cerrar();
+            marcarComoLeida();
+        });
+    }
+}
+
+// 3. CONFIGURACIÓN MODAL 2: CUESTIONARIO COMPLETO
 function configurarModalReporte() {
     const btnGenerar = document.getElementById("btn-generar-reporte");
     const modal = document.getElementById("modal-cuestionario-caja");
@@ -68,20 +126,19 @@ function configurarModalReporte() {
 
     if (!modal) return;
 
-    const abrirModal = () => {
-        modal.classList.add("active");
-        const inputInicio = document.getElementById("caja-inicio");
-        if (inputInicio) inputInicio.focus();
-    };
-
-    if (btnGenerar) btnGenerar.addEventListener("click", abrirModal);
+    if (btnGenerar) {
+        btnGenerar.addEventListener("click", () => {
+            modal.classList.add("active");
+            const inputInicio = document.getElementById("caja-inicio");
+            if (inputInicio) inputInicio.focus();
+        });
+    }
 
     const cerrar = () => modal.classList.remove("active");
 
     if (btnCerrar) btnCerrar.addEventListener("click", cerrar);
     if (btnCancelar) btnCancelar.addEventListener("click", cerrar);
 
-    // Guardar Reporte Manual
     if (form) {
         form.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -115,7 +172,7 @@ function configurarModalReporte() {
             localStorage.setItem("reportes_caja_db", JSON.stringify(reportes));
 
             inicializarVistaPreviaCaja();
-            lanzarNotificacion("📋 ¡Reporte de caja registrado correctamente!");
+            lanzarNotificacion("📋 ¡Reporte completo guardado!");
             
             form.reset();
             cerrar();
@@ -124,7 +181,7 @@ function configurarModalReporte() {
     }
 }
 
-// 3. NOTIFICACIONES Y MÁSCARAS
+// 4. NOTIFICACIONES Y MÁSCARAS
 window.toggleNotificacionesMenu = function(event) {
     if (event) event.stopPropagation();
     const dropdown = document.getElementById('dropdown-notificaciones');

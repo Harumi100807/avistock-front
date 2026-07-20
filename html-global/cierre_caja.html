@@ -6,7 +6,7 @@
     <title>Avistock - Cierre de Caja</title>
     <link rel="stylesheet" href="../css-global/admi.css">
     <style>
-        /* Modal Cuestionario Reporte (100% Vertical) */
+        /* Modales Flotantes */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -68,6 +68,45 @@
             outline: none;
             border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Botones de acción en Header */
+        .btn-header-secundario {
+            background-color: #ffffff;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+        .btn-header-secundario:hover {
+            background-color: #f8fafc;
+            border-color: #94a3b8;
+        }
+        .btn-header-primario {
+            background-color: #0f172a;
+            color: #ffffff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+        .btn-header-primario:hover {
+            background-color: #1e293b;
         }
         
         /* Estilos Tabla Estilo Ventas */
@@ -187,8 +226,14 @@
                 </div>
 
                 <div class="header-actions" style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                    <!-- BOTÓN PRINCIPAL GENERAR REPORTE -->
-                    <button type="button" id="btn-generar-reporte" style="background-color: #0f172a; color: #ffffff; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <!-- BOTÓN 1: INICIO Y CIERRE DE CAJA -->
+                    <button type="button" id="btn-inicio-cierre" class="btn-header-secundario">
+                        <span>💵</span>
+                        <span>Inicio y Cierre de caja</span>
+                    </button>
+
+                    <!-- BOTÓN 2: GENERAR REPORTE -->
+                    <button type="button" id="btn-generar-reporte" class="btn-header-primario">
                         <span>📋</span>
                         <span>Generar reporte</span>
                     </button>
@@ -254,7 +299,44 @@
         </main>
     </div>
 
-    <!-- CUESTIONARIO MODAL EN VERTICAL -->
+    <!-- MODAL 1: REGISTRO DE INICIO Y CIERRE DE CAJA -->
+    <div id="modal-inicio-cierre-caja" class="modal-overlay">
+        <div class="modal-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
+                <div>
+                    <h3 style="margin: 0; font-size: 1.2rem; font-weight: 700; color: #0f172a;">Inicio y Cierre de Caja</h3>
+                    <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #64748b;">Registre con cuánto dinero inició y cerró el día</p>
+                </div>
+                <button type="button" id="btn-cerrar-inicio-cierre" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8;">&times;</button>
+            </div>
+
+            <form id="form-inicio-cierre">
+                <div class="form-vertical-stack">
+                    <div class="form-question">
+                        <label for="reg-monto-inicio">Dinero inicial del día ($)</label>
+                        <input type="text" id="reg-monto-inicio" placeholder="$ 0.00" required oninput="formatearMonedaInput(this)">
+                    </div>
+
+                    <div class="form-question">
+                        <label for="reg-monto-cierre">Dinero al cierre del día ($)</label>
+                        <input type="text" id="reg-monto-cierre" placeholder="$ 0.00" required oninput="formatearMonedaInput(this)">
+                    </div>
+
+                    <div class="form-question">
+                        <label for="reg-notas-cierre">Notas de apertura / cierre</label>
+                        <textarea id="reg-notas-cierre" rows="2" placeholder="Observaciones sobre los montos de inicio o cierre..."></textarea>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px;">
+                    <button type="button" id="btn-cancelar-inicio-cierre" style="padding: 10px 18px; background: #f1f5f9; color: #475569; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancelar</button>
+                    <button type="submit" style="padding: 10px 20px; background: #0f172a; color: #ffffff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Guardar registro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 2: CUESTIONARIO COMPLETO (REPORTE GENERAL) -->
     <div id="modal-cuestionario-caja" class="modal-overlay">
         <div class="modal-box">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px;">
@@ -267,43 +349,36 @@
 
             <form id="form-cuestionario-caja">
                 <div class="form-vertical-stack">
-                    <!-- 1. Dinero inicial con el que inició -->
                     <div class="form-question">
                         <label for="caja-inicio">1. Dinero inicial con el que se inició ($)</label>
                         <input type="text" id="caja-inicio" placeholder="$ 0.00" required oninput="formatearMonedaInput(this)">
                     </div>
 
-                    <!-- 2. Dinero final con el que cerró -->
                     <div class="form-question">
                         <label for="caja-actual">2. Dinero final con el que se cerró ($)</label>
                         <input type="text" id="caja-actual" placeholder="$ 0.00" required oninput="formatearMonedaInput(this)">
                     </div>
 
-                    <!-- 3. Ventas pollo en pie -->
                     <div class="form-question">
                         <label for="ventas-pie">3. Ventas pollo en pie ($)</label>
                         <input type="text" id="ventas-pie" placeholder="$ 0.00" required oninput="formatearMonedaInput(this)">
                     </div>
 
-                    <!-- 4. Ventas pollo en cámara -->
                     <div class="form-question">
                         <label for="ventas-camara">4. Ventas pollo en cámara ($)</label>
                         <input type="text" id="ventas-camara" placeholder="$ 0.00" required oninput="formatearMonedaInput(this)">
                     </div>
 
-                    <!-- 5. Apartados web -->
                     <div class="form-question">
                         <label for="apartados-web">5. Apartados en página web (Cant.)</label>
                         <input type="number" id="apartados-web" min="0" placeholder="Ej. 4" required>
                     </div>
 
-                    <!-- 6. Mermas -->
                     <div class="form-question">
                         <label for="mermas-monto">6. Mermas ($)</label>
                         <input type="text" id="mermas-monto" placeholder="$ 0.00" required oninput="formatearMonedaInput(this)">
                     </div>
 
-                    <!-- 7. Observaciones -->
                     <div class="form-question">
                         <label for="reporte-notas">7. Observaciones adicionales</label>
                         <textarea id="reporte-notas" rows="2" placeholder="Observaciones o notas del turno..."></textarea>
