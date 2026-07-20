@@ -168,50 +168,40 @@
             <form id="form-nuevo-producto">
                 <div class="modal-body">
                     
-                    <!-- 1. Producto -->
+                    <!-- 1. Pollos a cámara (AL INICIO) -->
                     <div class="form-group">
-                        <label for="recepcion-producto">PRODUCTO</label>
-                        <select id="recepcion-producto" class="form-control" required>
-                            <option value="" disabled selected>Selecciona el producto recibido</option>
-                            <option value="Pollo en pie">Pollo en pie</option>
-                            <option value="Pollo en cámara">Pollo en cámara</option>
-                        </select>
+                        <label for="recepcion-camara">POLLOS A CÁMARA (CONGELACIÓN)</label>
+                        <input type="number" id="recepcion-camara" class="form-control" placeholder="0" min="0" value="0">
                     </div>
 
-                    <!-- 2. Peso aprox por pollo -->
+                    <!-- 2. Pollos en pie (AL INICIO) -->
+                    <div class="form-group">
+                        <label for="recepcion-pie">POLLOS EN PIE (CANTIDAD / UD)</label>
+                        <input type="number" id="recepcion-pie" class="form-control" placeholder="0" min="0" value="0">
+                    </div>
+
+                    <!-- 3. Peso aprox por pollo -->
                     <div class="form-group">
                         <label for="recepcion-peso">PESO APROX. POR POLLO (KG)</label>
                         <input type="number" step="0.01" id="recepcion-peso" class="form-control" placeholder="Ej: 2.50" required>
                     </div>
 
-                    <!-- 3. Fecha de recepción -->
+                    <!-- 4. Fecha de recepción -->
                     <div class="form-group">
                         <label for="recepcion-fecha">FECHA DE RECEPCIÓN</label>
                         <input type="date" id="recepcion-fecha" class="form-control" required>
                     </div>
 
-                    <!-- 4. Hora -->
+                    <!-- 5. Hora -->
                     <div class="form-group">
                         <label for="recepcion-hora">HORA</label>
                         <input type="time" id="recepcion-hora" class="form-control" required>
                     </div>
 
-                    <!-- 5. Mermas -->
+                    <!-- 6. Mermas -->
                     <div class="form-group">
                         <label for="recepcion-mermas">¿HUBO MERMAS? (CANTIDAD)</label>
                         <input type="number" id="recepcion-mermas" class="form-control" placeholder="0" min="0" value="0">
-                    </div>
-
-                    <!-- 6. Pollos a cámara -->
-                    <div class="form-group">
-                        <label for="recepcion-camara">POLLOS A CÁMARA (CONGELACIÓN)</label>
-                        <input type="number" id="recepcion-camara" class="form-control" placeholder="Ej: 50" min="0" value="0">
-                    </div>
-
-                    <!-- 7. Pollos en pie (Ubicado justo abajo de Pollos a cámara) -->
-                    <div class="form-group">
-                        <label for="recepcion-pie">POLLOS EN PIE (CANTIDAD / UD)</label>
-                        <input type="number" id="recepcion-pie" class="form-control" placeholder="Ej: 100" min="0" value="0">
                     </div>
 
                 </div>
