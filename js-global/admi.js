@@ -313,7 +313,7 @@ window.buscarEnHistorial = function() {
 };
 
 // ==========================================================================
-// 🐔 MÓDULO 4: INVENTARIO Y MERMAS (CON VENTANAS FLOTANTES)
+// 🐔 MÓDULO 4: INVENTARIO Y MERMAS
 // ==========================================================================
 function inicializarInventario() {
     const tablaStock = document.getElementById("tabla-stock-rows");
@@ -329,7 +329,6 @@ function renderizarInventario() {
     const stockData = JSON.parse(localStorage.getItem("stock_db")) || [];
     const mermasData = JSON.parse(localStorage.getItem("mermas_db")) || [];
 
-    // Renderizar Tabla Stock
     let htmlStock = "";
     stockData.forEach((item, index) => {
         htmlStock += `
@@ -339,16 +338,13 @@ function renderizarInventario() {
                 <td style="color: #64748b;">${item.min} ud</td>
                 <td style="font-weight: 600; color: #1e293b;">$${item.precio}</td>
                 <td style="text-align: right; padding-right: 32px;">
-                    <button class="btn-action-outline" onclick="abrirModalStock(${index})">
-                        ✏ Editar
-                    </button>
+                    <button class="btn-action-outline" onclick="abrirModalStock(${index})">✏ Editar</button>
                 </td>
             </tr>
         `;
     });
     tablaStock.innerHTML = htmlStock || '<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:20px;">No hay productos en inventario.</td></tr>';
 
-    // Renderizar Tabla Mermas
     let htmlMermas = "";
     mermasData.forEach((item, index) => {
         htmlMermas += `
@@ -357,9 +353,7 @@ function renderizarInventario() {
                 <td class="merma-qty-negative">${item.cant} ud</td>
                 <td class="merma-loss-value">$${item.perdido}</td>
                 <td style="text-align: right; padding-right: 32px;">
-                    <button class="btn-action-outline" onclick="abrirModalMerma(${index})">
-                        ⚠️ Ajustar
-                    </button>
+                    <button class="btn-action-outline" onclick="abrirModalMerma(${index})">⚠️ Ajustar</button>
                 </td>
             </tr>
         `;
@@ -367,179 +361,27 @@ function renderizarInventario() {
     tablaMermas.innerHTML = htmlMermas || '<tr><td colspan="4" style="text-align:center; color:#94a3b8; padding:20px;">No hay registros de mermas.</td></tr>';
 }
 
-// LÓGICA DE VENTANAS FLOTANTES (MODALES)
-window.cerrarModal = function(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.style.display = 'none';
-};
-
-// 1. Funciones para NUEVO PRODUCTO
-window.abrirModalNuevoProducto = function() {
-    const modal = document.getElementById('modal-nuevo-producto');
-    if (!modal) return;
-    
-    document.getElementById('modal-nuevo-nombre').value = '';
-    document.getElementById('modal-nuevo-stock').value = '';
-    document.getElementById('modal-nuevo-min').value = '';
-    document.getElementById('modal-nuevo-precio').value = '';
-
-    modal.style.display = 'flex';
-    document.getElementById('modal-nuevo-nombre').focus();
-};
-
-window.guardarNuevoProductoModal = function() {
-    const nombre = document.getElementById('modal-nuevo-nombre').value.trim();
-    const stock = parseInt(document.getElementById('modal-nuevo-stock').value);
-    const min = parseInt(document.getElementById('modal-nuevo-min').value);
-    const precio = parseFloat(document.getElementById('modal-nuevo-precio').value);
-
-    if (!nombre || isNaN(stock) || isNaN(min) || isNaN(precio)) {
-        lanzarNotificacion("❌ Por favor completa todos los campos requeridos.");
-        return;
-    }
-
-    const stockData = JSON.parse(localStorage.getItem("stock_db")) || [];
-    const mermasData = JSON.parse(localStorage.getItem("mermas_db")) || [];
-
-    // Agregar al stock y crear registro base de merma
-    stockData.push({ producto: nombre, stock: stock, min: min, precio: precio });
-    mermasData.push({ producto: nombre, cant: 0, perdido: 0 });
-
-    localStorage.setItem("stock_db", JSON.stringify(stockData));
-    localStorage.setItem("mermas_db", JSON.stringify(mermasData));
-
-    lanzarNotificacion(`📦 ¡Producto "${nombre}" registrado con éxito!`);
-    cerrarModal('modal-nuevo-producto');
-    renderizarInventario();
-};
-
-// 2. Funciones para STOCK
-window.abrirModalStock = function(index) {
-    const stockData = JSON.parse(localStorage.getItem("stock_db")) || [];
-    const actual = stockData[index];
-    if (!actual) return;
-
-    // Rellenar datos en la ventana
-    document.getElementById('modal-stock-producto').value = actual.producto;
-    document.getElementById('modal-stock-actual').value = actual.stock;
-    document.getElementById('modal-stock-minimo').value = actual.min;
-    document.getElementById('modal-stock-nuevo').value = ''; 
-    document.getElementById('modal-stock-index').value = index;
-
-    // Mostrar ventana
-    const modal = document.getElementById('modal-stock');
-    if (modal) {
-        modal.style.display = 'flex';
-        document.getElementById('modal-stock-nuevo').focus();
-    }
-};
-
-window.guardarStockModal = function() {
-    const index = document.getElementById('modal-stock-index').value;
-    const nuevoStock = parseInt(document.getElementById('modal-stock-nuevo').value);
-    
-    if (isNaN(nuevoStock) || nuevoStock < 0) {
-        lanzarNotificacion("❌ Ingresa una cantidad válida mayor o igual a cero.");
-        return;
-    }
-
-    const stockData = JSON.parse(localStorage.getItem("stock_db")) || [];
-    stockData[index].stock = nuevoStock;
-    localStorage.setItem("stock_db", JSON.stringify(stockData));
-    
-    lanzarNotificacion(`📦 Stock de ${stockData[index].producto} actualizado a ${nuevoStock} ud`);
-    cerrarModal('modal-stock');
-    renderizarInventario();
-};
-
-// 3. Funciones para MERMAS
-window.abrirModalMerma = function(index) {
-    const mermasData = JSON.parse(localStorage.getItem("mermas_db")) || [];
-    const actual = mermasData[index];
-    if (!actual) return;
-
-    // Rellenar datos en la ventana
-    document.getElementById('modal-merma-producto').value = actual.producto;
-    document.getElementById('modal-merma-cant').value = '';
-    document.getElementById('modal-merma-index').value = index;
-
-    // Mostrar ventana
-    const modal = document.getElementById('modal-merma');
-    if (modal) {
-        modal.style.display = 'flex';
-        document.getElementById('modal-merma-cant').focus();
-    }
-};
-
-window.guardarMermaModal = function() {
-    const index = document.getElementById('modal-merma-index').value;
-    const uds = parseInt(document.getElementById('modal-merma-cant').value);
-
-    if (isNaN(uds) || uds === 0) {
-        cerrarModal('modal-merma');
-        return;
-    }
-
-    const mermasData = JSON.parse(localStorage.getItem("mermas_db")) || [];
-    const stockData = JSON.parse(localStorage.getItem("stock_db")) || [];
-    const actual = mermasData[index];
-
-    const prodStock = stockData.find(s => s.producto === actual.producto);
-    const precioUnitario = prodStock ? prodStock.precio : 135;
-
-    // Validar correcciones (no pueden devolver más de lo que mermó)
-    if (uds < 0 && Math.abs(uds) > Math.abs(actual.cant)) {
-        lanzarNotificacion("❌ No puedes corregir más mermas de las registradas.");
-        return;
-    }
-
-    // Aplicar lógica
-    mermasData[index].cant -= uds; 
-    mermasData[index].perdido += (uds * precioUnitario); 
-
-    if (prodStock) {
-        prodStock.stock = Math.max(0, prodStock.stock - uds);
-        localStorage.setItem("stock_db", JSON.stringify(stockData));
-    }
-
-    localStorage.setItem("mermas_db", JSON.stringify(mermasData));
-    
-    if (uds > 0) {
-        lanzarNotificacion(`⚠️ Registrada merma de -${uds} ud en ${actual.producto}`);
-    } else {
-        lanzarNotificacion(`✅ Restauradas ${Math.abs(uds)} ud a stock de ${actual.producto}`);
-    }
-
-    cerrarModal('modal-merma');
-    renderizarInventario();
-};
-
 // ==========================================================================
-// 💰 MÓDULO 5: CIERRE DE CAJA (DYNAMICO FIGMA)
+// 💰 MÓDULO 5: CIERRE DE CAJA Y NOTIFICACIONES
 // ==========================================================================
 function inicializarCierreCaja() {
     const contenedorResumen = document.getElementById("resumen-cierre-items");
-    if (!contenedorResumen) return; // No estamos en cierre_caja.html
+    if (!contenedorResumen) return;
 
     renderizarCierreDeCaja();
 
-    // Habilitar la escucha dinámica de inputs para colorear el botón "Cerrar caja"
     const inputEf = document.getElementById("cierre-efectivo");
-    const inputTr = document.getElementById("cierre-transferencias");
-    
-    if (inputEf && inputTr) {
-        const evaluarInputs = () => {
+    if (inputEf) {
+        inputEf.addEventListener("input", () => {
             const btn = document.getElementById("btn-submit-cierre");
             if (btn) {
-                if (inputEf.value.trim() !== "" || inputTr.value.trim() !== "") {
+                if (inputEf.value.trim() !== "") {
                     btn.classList.add("active");
                 } else {
                     btn.classList.remove("active");
                 }
             }
-        };
-        inputEf.addEventListener("input", evaluarInputs);
-        inputTr.addEventListener("input", evaluarInputs);
+        });
     }
 }
 
@@ -547,7 +389,6 @@ function renderizarCierreDeCaja() {
     const contenedorResumen = document.getElementById("resumen-cierre-items");
     if (!contenedorResumen) return;
 
-    // Cargar datos reales del historial para simular el cierre del día
     const historial = JSON.parse(localStorage.getItem("historial_db")) || [];
     const mermas = JSON.parse(localStorage.getItem("mermas_db")) || [];
 
@@ -557,90 +398,81 @@ function renderizarCierreDeCaja() {
     historial.forEach(item => {
         totalVentasAcumuladas += item.total;
         html += `
-            <div class="cierre-item-row">
+            <div class="cierre-item-row" style="display: flex; justify-content: space-between; padding: 12px 32px; border-bottom: 1px solid #f8fafc;">
                 <div class="cierre-item-left">
-                    <span class="cierre-item-ticket">${item.ticket}</span>
-                    <span class="cierre-item-cliente">${item.cliente}</span>
+                    <span class="cierre-item-ticket" style="font-weight: 700; color: #1e293b; margin-right: 12px;">${item.ticket}</span>
+                    <span class="cierre-item-cliente" style="color: #64748b;">${item.cliente}</span>
                 </div>
-                <span class="cierre-item-monto">$ ${item.total.toLocaleString()}</span>
+                <span class="cierre-item-monto" style="font-weight: 700; color: #1e293b;">$ ${item.total.toLocaleString()}</span>
             </div>
         `;
     });
     contenedorResumen.innerHTML = html;
 
-    // Calcular la sumatoria de mermas registradas
     const mermasPerdidaTotal = mermas.reduce((acc, curr) => acc + curr.perdido, 0);
 
-    // Sincronizar los campos inferiores de la tarjeta de resumen
-    const elVentas = document.getElementById("cierre-total-ventas");
-    const elMermas = document.getElementById("cierre-total-mermas");
-    const elPedidos = document.getElementById("cierre-total-pedidos");
+    const elemVentas = document.getElementById("cierre-total-ventas");
+    const elemMermas = document.getElementById("cierre-total-mermas");
 
-    if (elVentas) elVentas.textContent = `$ ${totalVentasAcumuladas.toLocaleString()}`;
-    if (elMermas) elMermas.textContent = `-$ ${mermasPerdidaTotal.toLocaleString()}`;
-    
-    // Contar el número de pedidos en estado listo o entregado
-    const pedidos = JSON.parse(localStorage.getItem("pedidos_figma_db")) || [];
-    const totalEntregados = pedidos.filter(p => p.estado === "listo").length;
-    if (elPedidos) elPedidos.textContent = `${totalEntregados} entregados`;
+    if (elemVentas) elemVentas.textContent = `$ ${totalVentasAcumuladas.toLocaleString('es-MX')}`;
+    if (elemMermas) elemMermas.textContent = `-$ ${mermasPerdidaTotal.toLocaleString('es-MX')}`;
 }
 
-// Formateador automático de moneda mientras el usuario escribe
-window.formatearMonedaInput = function(input) {
-    let valor = input.value.replace(/\D/g, ""); // Remover no numéricos
-    if (valor === "") {
-        input.value = "";
-        return;
+// FUNCIONES DE NOTIFICACIONES Y REPORTE DEL DÍA
+window.toggleNotificacionesMenu = function() {
+    const dropdown = document.getElementById('dropdown-notificaciones');
+    if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'none' || dropdown.style.display === '' ? 'block' : 'none';
     }
-    let numero = parseFloat(valor) / 100;
-    input.value = numero.toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD"
-    });
 };
 
-// Procesamiento de cierre final del día
+window.marcarComoLeida = function(event) {
+    if (event) event.stopPropagation();
+    const badge = document.getElementById('badge-notificacion');
+    if (badge) badge.style.display = 'none';
+    
+    const dropdown = document.getElementById('dropdown-notificaciones');
+    if (dropdown) dropdown.style.display = 'none';
+};
+
+window.enviarReporteDia = function() {
+    if (confirm("¿Deseas generar y enviar el reporte del día con las ventas, mermas y cuentas al administrador?")) {
+        lanzarNotificacion("📊 ¡Reporte del día generado y enviado con éxito!");
+        window.marcarComoLeida();
+    }
+};
+
+// UTILIDADES GENERALES
+window.formatearMonedaInput = function(input) {
+    let val = input.value.replace(/[^0-9.]/g, '');
+    if (val) {
+        input.value = '$ ' + val;
+    } else {
+        input.value = '';
+    }
+};
+
 window.procesarCierreCaja = function(event) {
     event.preventDefault();
-
-    const inputEf = document.getElementById("cierre-efectivo").value.trim();
-    const inputTr = document.getElementById("cierre-transferencias").value.trim();
-
-    if (inputEf === "" && inputTr === "") {
-        alert("Por favor, declare al menos una cantidad en efectivo o transferencia para realizar el cierre.");
+    const efectivo = document.getElementById("cierre-efectivo").value;
+    if (!efectivo || efectivo === "$ ") {
+        lanzarNotificacion("⚠️ Ingresa el monto en efectivo para declarar el cierre.");
         return;
     }
-
-    if (confirm("¿Confirmas que deseas realizar el cierre definitivo de caja para esta jornada?")) {
-        lanzarNotificacion("🔒 ¡Caja cerrada con éxito! Generando reporte...");
-        
-        setTimeout(() => {
-            window.location.href = "historial.html";
-        }, 1500);
-    }
+    lanzarNotificacion("🔒 ¡Cierre de caja registrado exitosamente!");
+    document.getElementById("form-cierre-caja").reset();
 };
 
-// ==========================================================================
-// 📣 NOTIFICACIONES GLOBALES (TOASTS)
-// ==========================================================================
-function lanzarNotificacion(mensaje) {
-    let contenedorAlertas = document.getElementById("notification-container");
-    if (!contenedorAlertas) {
-        contenedorAlertas = document.createElement("div");
-        contenedorAlertas.id = "notification-container";
-        contenedorAlertas.className = "notification-container";
-        document.body.appendChild(contenedorAlertas);
+window.lanzarNotificacion = function(mensaje) {
+    const container = document.getElementById("notification-container");
+    if (!container) {
+        alert(mensaje);
+        return;
     }
-
-    const toastElemento = document.createElement("div");
-    toastElemento.className = "toast";
-    toastElemento.textContent = mensaje;
-
-    contenedorAlertas.appendChild(toastElemento);
-
-    setTimeout(() => {
-        toastElemento.style.transition = "opacity 0.2s ease";
-        toastElemento.style.opacity = "0";
-        setTimeout(() => toastElemento.remove(), 200);
-    }, 2800);
-}
+    const toast = document.createElement("div");
+    toast.className = "toast-notification";
+    toast.style.cssText = "background: #1e293b; color: white; padding: 12px 20px; border-radius: 8px; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 0.9rem;";
+    toast.textContent = mensaje;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3500);
+};

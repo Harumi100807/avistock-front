@@ -10,9 +10,6 @@
 
     <div class="app-container">
         
-        <!-- ==========================================
-             BARRA LATERAL (SIDEBAR) UNIFICADA
-             ========================================== -->
         <aside class="sidebar">
             <div class="brand">
                 <img src="../assets-global/LogoAvi 1.png" alt="Avistock" class="brand-logo" onerror="this.src='https://placehold.co/100x100?text=Avistock';">
@@ -59,39 +56,63 @@
             </a>
         </aside>
 
-        <!-- ==========================================
-             CONTENIDO PRINCIPAL: CIERRE DE CAJA
-             ========================================== -->
         <main class="main-content">
-            <header class="content-header" style="margin-bottom: 24px;">
+            
+            <header class="content-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
                 <div class="header-titles">
                     <p class="breadcrumbs" style="font-size: 0.85rem; color: #64748b; margin-bottom: 4px;">Administrador &gt; Cierre de caja</p>
                     <h1 style="font-size: 1.8rem; font-weight: 700; color: #1e293b; margin: 0;">Cierre de caja</h1>
                     <p class="subtitle" style="font-size: 0.95rem; color: #64748b; margin-top: 4px;">Resumen del día y corte final</p>
                 </div>
+
+                <div class="header-actions" style="display: flex; align-items: center; gap: 16px;">
+                    
+                    <div class="notification-bell-wrapper" style="position: relative; cursor: pointer;" onclick="toggleNotificacionesMenu()">
+                        <div style="background: #ffffff; padding: 10px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                            <span style="font-size: 1.2rem;">🔔</span>
+                            <span id="badge-notificacion" style="position: absolute; top: -4px; right: -4px; background-color: #ef4444; color: white; font-size: 0.7rem; font-weight: bold; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #ffffff;">1</span>
+                        </div>
+                        
+                        <div id="dropdown-notificaciones" style="display: none; position: absolute; right: 0; top: 48px; width: 280px; background: white; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1000; padding: 16px;">
+                            <div style="font-weight: 700; font-size: 0.9rem; color: #1e293b; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                <span>Notificaciones</span>
+                                <span style="font-size: 0.75rem; color: #2563eb; cursor: pointer;" onclick="marcarComoLeida(event)">Marcar leída</span>
+                            </div>
+                            <div id="lista-notificaciones">
+                                <div style="background: #fff7ed; padding: 10px; border-radius: 8px; border-left: 4px solid #f97316;">
+                                    <p style="margin: 0; font-size: 0.85rem; font-weight: 600; color: #1e293b;">📌 Solicitud de Reporte</p>
+                                    <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #64748b;">El administrador solicitó el reporte con las cuentas del día.</p>
+                                    <span style="font-size: 0.7rem; color: #94a3b8; display: block; margin-top: 4px;">Hace 5 min</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-primary" onclick="enviarReporteDia()" style="display: flex; align-items: center; gap: 8px;">
+                        <img src="../assets-global/historial-de-pedidos.png" alt="Enviar Reporte" style="width: 18px; height: 18px; filter: brightness(0) invert(1);" onerror="this.style.display='none'">
+                        <span>Enviar Reporte del Día</span>
+                    </button>
+                </div>
             </header>
 
             <div class="cierre-layout-vertical">
                 
-                <!-- TARJETA 1: RESUMEN DEL DÍA -->
                 <div class="ventas-card" style="margin-bottom: 24px;">
                     <div style="padding: 24px 32px 12px 32px; border-bottom: 1px solid #f1f5f9;">
                         <h2 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0;">Resumen del día</h2>
                     </div>
                     
                     <div class="resumen-items-container" id="resumen-cierre-items">
-                        <!-- Se inyecta dinámicamente con los tickets del día -->
-                    </div>
+                        </div>
 
-                    <!-- Totales del resumen -->
                     <div class="resumen-totales-footer">
                         <div class="totales-row-main">
                             <span class="lbl-main">Total ventas</span>
-                            <span class="val-main" id="cierre-total-ventas">$ 4,290</span>
+                            <span class="val-main" id="cierre-total-ventas">$ 0.00</span>
                         </div>
                         <div class="totales-row-sub">
                             <span class="lbl-sub">Mermas</span>
-                            <span class="val-sub color-danger" id="cierre-total-mermas">-$ 112</span>
+                            <span class="val-sub color-danger" id="cierre-total-mermas">-$ 0.00</span>
                         </div>
                         <div class="totales-row-sub">
                             <span class="lbl-sub">Pedidos web</span>
@@ -100,15 +121,14 @@
                     </div>
                 </div>
 
-                <!-- TARJETA 2: DECLARAR EFECTIVO -->
                 <div class="ventas-card">
                     <div style="padding: 24px 32px 12px 32px;">
                         <h2 style="font-size: 1.1rem; font-weight: 700; color: #1e293b; margin: 0;">Declarar efectivo</h2>
                     </div>
                     
                     <form id="form-cierre-caja" style="padding: 0 32px 32px 32px;" onsubmit="procesarCierreCaja(event)">
-                        <div class="cierre-form-row">
-                            <div class="form-group-cierre">
+                        <div class="cierre-form-row" style="display: block;">
+                            <div class="form-group-cierre" style="width: 100%;">
                                 <label for="cierre-efectivo">Efectivo</label>
                                 <input type="text" id="cierre-efectivo" placeholder="$ 0.00" oninput="formatearMonedaInput(this)">
                             </div>
@@ -129,7 +149,6 @@
         </main>
     </div>
 
-    <!-- Contenedor de notificaciones toast -->
     <div class="notification-container" id="notification-container"></div>
 
     <script src="../js-global/admi.js"></script>
