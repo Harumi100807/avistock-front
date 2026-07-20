@@ -129,8 +129,13 @@ const lblReservaHorario = document.getElementById('lbl-reserva-horario');
 if (btnSubmit) {
     btnSubmit.addEventListener('click', () => {
         let formularioValido = true;
+
+        // ---> NUEVO: VALIDACIÓN DE CARRITO VACÍO <---
+        if (apartadosPieConfirmados === 0 && apartadosCamaraConfirmados === 0) {
+            alert("¡Tu carrito está vacío! Por favor, dale clic al botón naranja 'Agregar' en los productos que deseas antes de generar la reserva.");
+            return; // Esto detiene el proceso inmediatamente
+        }
         
-        // Expresiones regulares para validar al hacer clic
         const regexLetras = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/; // Solo letras, espacios y acentos
         const regexTelefono = /^[0-9]{10}$/; // Exactamente 10 números
 
