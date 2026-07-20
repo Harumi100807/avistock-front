@@ -1,6 +1,6 @@
 /**
- * Avistock - admi.js
- * Sistema de Control Unificado: Ventas, Pedidos, Historial, Inventario, Cierre de Caja y Corte Parcial
+ * Avistock - admi.js (COMPLETO Y UNIFICADO)
+ * Incluye: Ventas, Pedidos, Historial, Inventario, Cierre de Caja y Cuestionario Parcial del Dueño
  */
 
 // ==========================================================================
@@ -39,24 +39,19 @@ const MERMAS_SEMILLA = [
     { producto: "Pollo en camara", cant: -3, perdido: 513 }
 ];
 
-const CORTES_PARCIALES_INICIALES = [
-    { hora: "13:00", monto: "$ 2,150.00", notas: "Corte parcial solicitado por el dueño", fecha: "Hoy" }
-];
-
-// Inyección inicial segura en LocalStorage
+// Inicialización LocalStorage
 if (!localStorage.getItem("ventas_db")) localStorage.setItem("ventas_db", JSON.stringify(VENTAS_INICIALES));
 if (!localStorage.getItem("pedidos_figma_db")) localStorage.setItem("pedidos_figma_db", JSON.stringify(PEDIDOS_INICIALES));
 if (!localStorage.getItem("historial_db")) localStorage.setItem("historial_db", JSON.stringify(HISTORIAL_SEMILLA));
 if (!localStorage.getItem("stock_db")) localStorage.setItem("stock_db", JSON.stringify(STOCK_SEMILLA));
 if (!localStorage.getItem("mermas_db")) localStorage.setItem("mermas_db", JSON.stringify(MERMAS_SEMILLA));
-if (!localStorage.getItem("cortes_parciales_db")) localStorage.setItem("cortes_parciales_db", JSON.stringify(CORTES_PARCIALES_INICIALES));
 
-// Variables de estado
+// Variables globales de estado
 let filtroPedidoActual = "todos";
 let filtroHistorialActual = "mostrador";
 
 // ==========================================================================
-// 🚀 CARGA DE MÓDULOS (DOM READY)
+// 🚀 INICIALIZACIÓN GENERAL (DOM READY)
 // ==========================================================================
 document.addEventListener("DOMContentLoaded", () => {
     inicializarModuloVentas();
@@ -64,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
     inicializarHistorial();
     inicializarInventario();
     inicializarCierreCaja();
+    configurarBotonCuestionario();
 });
 
 // ==========================================================================
@@ -152,7 +148,7 @@ window.filtrarPedidos = function(filtro, elementoBoton) {
     filtroPedidoActual = filtro;
     const botonesPestana = document.querySelectorAll(".tab-btn");
     botonesPestana.forEach(btn => btn.classList.remove("active"));
-    elementoBoton.classList.add("active");
+    if (elementoBoton) elementoBoton.classList.add("active");
     renderizarPedidosFigma();
 };
 
@@ -257,7 +253,7 @@ window.filtrarHistorial = function(filtro, boton) {
     filtroHistorialActual = filtro;
     const btns = document.querySelectorAll(".tabs-container .tab-btn");
     btns.forEach(b => b.classList.remove("active"));
-    boton.classList.add("active");
+    if (boton) boton.classList.add("active");
     renderizarHistorial();
 };
 
@@ -342,7 +338,7 @@ function renderizarInventario() {
                 <td style="color: #64748b;">${item.min} ud</td>
                 <td style="font-weight: 600; color: #1e293b;">$${item.precio}</td>
                 <td style="text-align: right; padding-right: 32px;">
-                    <button class="btn-action-outline" onclick="abrirModalStock(${index})">✏ Editar</button>
+                    <button class="btn-action-outline">✏ Editar</button>
                 </td>
             </tr>
         `;
@@ -357,7 +353,7 @@ function renderizarInventario() {
                 <td class="merma-qty-negative">${item.cant} ud</td>
                 <td class="merma-loss-value">$${item.perdido}</td>
                 <td style="text-align: right; padding-right: 32px;">
-                    <button class="btn-action-outline" onclick="abrirModalMerma(${index})">⚠️ Ajustar</button>
+                    <button class="btn-action-outline">⚠️ Ajustar</button>
                 </td>
             </tr>
         `;
@@ -366,31 +362,9 @@ function renderizarInventario() {
 }
 
 // ==========================================================================
-// 💰 MÓDULO 5: CIERRE DE CAJA & CORTES PARCIALES (SOLICITADOS POR EL DUEÑO)
+// 💰 MÓDULO 5: CIERRE DE CAJA Y CUESTIONARIO PARCIAL DEL DUEÑO
 // ==========================================================================
 function inicializarCierreCaja() {
-    const contenedorResumen = document.getElementById("resumen-cierre-items");
-    if (!contenedorResumen) return;
-
-    renderizarCierreDeCaja();
-    renderizarCortesParciales();
-
-    const inputEf = document.getElementById("cierre-efectivo");
-    if (inputEf) {
-        inputEf.addEventListener("input", () => {
-            const btn = document.getElementById("btn-submit-cierre");
-            if (btn) {
-                if (inputEf.value.trim() !== "") {
-                    btn.classList.add("active");
-                } else {
-                    btn.classList.remove("active");
-                }
-            }
-        });
-    }
-}
-
-function renderizarCierreDeCaja() {
     const contenedorResumen = document.getElementById("resumen-cierre-items");
     if (!contenedorResumen) return;
 
@@ -398,117 +372,78 @@ function renderizarCierreDeCaja() {
     const mermas = JSON.parse(localStorage.getItem("mermas_db")) || [];
 
     let html = "";
-    let totalVentasAcumuladas = 0;
+    let totalVentas = 0;
 
     historial.forEach(item => {
-        totalVentasAcumuladas += item.total;
+        totalVentas += item.total;
         html += `
-            <div class="cierre-item-row" style="display: flex; justify-content: space-between; padding: 12px 32px; border-bottom: 1px solid #f8fafc;">
-                <div class="cierre-item-left">
-                    <span class="cierre-item-ticket" style="font-weight: 700; color: #1e293b; margin-right: 12px;">${item.ticket}</span>
-                    <span class="cierre-item-cliente" style="color: #64748b;">${item.cliente}</span>
+            <div style="display: flex; justify-content: space-between; padding: 12px 32px; border-bottom: 1px solid #f8fafc;">
+                <div>
+                    <span style="font-weight: 700; color: #1e293b; margin-right: 12px;">${item.ticket}</span>
+                    <span style="color: #64748b;">${item.cliente}</span>
                 </div>
-                <span class="cierre-item-monto" style="font-weight: 700; color: #1e293b;">$ ${item.total.toLocaleString()}</span>
+                <span style="font-weight: 700; color: #1e293b;">$ ${item.total.toLocaleString()}</span>
             </div>
         `;
     });
-    contenedorResumen.innerHTML = html;
+    contenedorResumen.innerHTML = html || '<div style="padding: 20px; text-align: center; color: #94a3b8;">Sin movimientos hoy</div>';
 
     const mermasPerdidaTotal = mermas.reduce((acc, curr) => acc + curr.perdido, 0);
 
     const elemVentas = document.getElementById("cierre-total-ventas");
     const elemMermas = document.getElementById("cierre-total-mermas");
 
-    if (elemVentas) elemVentas.textContent = `$ ${totalVentasAcumuladas.toLocaleString('es-MX')}`;
+    if (elemVentas) elemVentas.textContent = `$ ${totalVentas.toLocaleString('es-MX')}`;
     if (elemMermas) elemMermas.textContent = `-$ ${mermasPerdidaTotal.toLocaleString('es-MX')}`;
 }
 
-// LÓGICA DE CORTES PARCIALES PARA EL DUEÑO
-window.abrirModalCorteParcial = function() {
-    const modal = document.getElementById('modal-corte-parcial');
-    if (!modal) return;
-    
-    // Asignar hora actual por defecto al input de hora
-    const ahora = new Date();
-    const horas = String(ahora.getHours()).padStart(2, '0');
-    const minutos = String(ahora.getMinutes()).padStart(2, '0');
-    document.getElementById('corte-parcial-hora').value = `${horas}:${minutos}`;
-    
-    document.getElementById('corte-parcial-monto').value = '';
-    document.getElementById('corte-parcial-notas').value = '';
+// LÓGICA DEL CUESTIONARIO MODAL DE CAJA (SOLICITADO POR EL DUEÑO)
+function configurarBotonCuestionario() {
+    const btnAbrir = document.getElementById("btn-declarar-parcial");
+    const modal = document.getElementById("modal-cuestionario-caja");
+    const btnCerrar = document.getElementById("btn-cerrar-cuestionario");
+    const btnCancelar = document.getElementById("btn-cancelar-cuestionario");
+    const form = document.getElementById("form-cuestionario-caja");
 
-    modal.style.display = 'flex';
-    document.getElementById('corte-parcial-monto').focus();
-};
+    if (!btnAbrir || !modal) return;
 
-window.guardarCorteParcial = function(event) {
-    event.preventDefault();
-    const hora = document.getElementById('corte-parcial-hora').value;
-    const monto = document.getElementById('corte-parcial-monto').value.trim();
-    const notas = document.getElementById('corte-parcial-notas').value.trim();
-
-    if (!monto || monto === "$ ") {
-        lanzarNotificacion("⚠️ Por favor ingresa el monto en caja.");
-        return;
-    }
-
-    const cortes = JSON.parse(localStorage.getItem("cortes_parciales_db")) || [];
-    cortes.unshift({
-        hora: hora || "13:00",
-        monto: monto,
-        notas: notas || "Sin observaciones adicionales",
-        fecha: "Hoy"
+    // Abrir Modal al hacer clic en el botón
+    btnAbrir.addEventListener("click", () => {
+        const ahora = new Date();
+        const horaStr = String(ahora.getHours()).padStart(2, '0') + ':' + String(ahora.getMinutes()).padStart(2, '0');
+        
+        const inputHora = document.getElementById("hora-verificacion");
+        if (inputHora) inputHora.value = horaStr;
+        
+        modal.classList.add("active");
+        
+        const inputMonto = document.getElementById("cuanto-dinero-hay");
+        if (inputMonto) inputMonto.focus();
     });
 
-    localStorage.setItem("cortes_parciales_db", JSON.stringify(cortes));
+    const cerrar = () => modal.classList.remove("active");
 
-    lanzarNotificacion(`📩 ¡Corte de la(s) ${hora} (${monto}) enviado exitosamente al dueño!`);
-    cerrarModal('modal-corte-parcial');
-    renderizarCortesParciales();
-    marcarComoLeida();
-};
+    if (btnCerrar) btnCerrar.addEventListener("click", cerrar);
+    if (btnCancelar) btnCancelar.addEventListener("click", cerrar);
 
-function renderizarCortesParciales() {
-    const contenedor = document.getElementById("contenedor-cortes-parciales");
-    const contador = document.getElementById("contador-cortes-parciales");
-    if (!contenedor) return;
+    // Enviar cuestionario
+    if (form) {
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const monto = document.getElementById("cuanto-dinero-hay").value.trim();
+            const hora = document.getElementById("hora-verificacion").value;
 
-    const cortes = JSON.parse(localStorage.getItem("cortes_parciales_db")) || [];
-    if (contador) contador.textContent = `${cortes.length} corte(s) registrado(s) hoy`;
-
-    if (cortes.length === 0) {
-        contenedor.innerHTML = `<div style="text-align: center; color: #94a3b8; padding: 16px;">No se han realizado declaraciones de corte parcial el día de hoy.</div>`;
-        return;
+            lanzarNotificacion(`✅ Cuestionario enviado al dueño: Hay ${monto} en caja (${hora} hrs).`);
+            form.reset();
+            cerrar();
+            marcarComoLeida();
+        });
     }
-
-    let html = "";
-    cortes.forEach((corte, i) => {
-        html += `
-            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 20px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 1.2rem;">🕒</span>
-                    <div>
-                        <div style="font-weight: 700; color: #0f172a; font-size: 0.95rem;">Corte a las ${corte.hora} hrs</div>
-                        <div style="font-size: 0.8rem; color: #64748b;">${corte.notas}</div>
-                    </div>
-                </div>
-                <div style="text-align: right;">
-                    <span style="font-size: 0.75rem; text-transform: uppercase; color: #64748b; display: block; font-weight: 600;">Efectivo Declarado al Dueño</span>
-                    <span style="font-size: 1.1rem; font-weight: 800; color: #16a34a;">${corte.monto}</span>
-                </div>
-            </div>
-        `;
-    });
-
-    contenedor.innerHTML = html;
 }
 
-// FUNCIONES GENERALES Y UTILIDADES
-window.cerrarModal = function(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.style.display = 'none';
-};
-
+// ==========================================================================
+// 🛠️ FUNCIONES GLOBALES Y NOTIFICACIONES
+// ==========================================================================
 window.toggleNotificacionesMenu = function() {
     const dropdown = document.getElementById('dropdown-notificaciones');
     if (dropdown) {
@@ -528,7 +463,7 @@ window.marcarComoLeida = function(event) {
 window.enviarReporteDia = function() {
     if (confirm("¿Deseas enviar el reporte completo del día al dueño?")) {
         lanzarNotificacion("📊 ¡Reporte diario consolidado enviado al dueño!");
-        window.marcarComoLeida();
+        marcarComoLeida();
     }
 };
 
@@ -545,10 +480,10 @@ window.procesarCierreCaja = function(event) {
     event.preventDefault();
     const efectivo = document.getElementById("cierre-efectivo").value;
     if (!efectivo || efectivo === "$ ") {
-        lanzarNotificacion("⚠️ Ingresa el monto en efectivo final.");
+        lanzarNotificacion("⚠️ Por favor ingresa el monto final en efectivo.");
         return;
     }
-    lanzarNotificacion("🔒 ¡Cierre final de jornada registrado exitosamente!");
+    lanzarNotificacion("🔒 ¡Cierre final guardado con éxito!");
     document.getElementById("form-cierre-caja").reset();
 };
 
@@ -559,9 +494,8 @@ window.lanzarNotificacion = function(mensaje) {
         return;
     }
     const toast = document.createElement("div");
-    toast.className = "toast-notification";
     toast.style.cssText = "background: #0f172a; color: white; padding: 12px 20px; border-radius: 10px; margin-top: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 0.9rem; font-weight: 500;";
     toast.textContent = mensaje;
     container.appendChild(toast);
-    setTimeout(() => toast.remove(), 3800);
+    setTimeout(() => toast.remove(), 4000);
 };
