@@ -7,71 +7,72 @@
     <link rel="stylesheet" href="../css-global/admi.css">
 </head>
 <body class="app-body">
+
     <div class="app-container">
         
-        <!-- =========================================
-             BARRA LATERAL (CON TUS IMÁGENES ORIGINALES)
-             ========================================= -->
+        <!-- ==========================================
+             BARRA LATERAL (SIDEBAR) UNIFICADA
+             ========================================== -->
         <aside class="sidebar">
             <div class="brand">
-                <img src="../assets-global/LogoAvi 1.png" alt="Avistock" class="brand-logo">
+                <img src="../assets-global/LogoAvi 1.png" alt="Avistock" class="brand-logo" onerror="this.src='https://placehold.co/100x100?text=Avistock';">
             </div>
+            
             <nav class="nav-menu">
                 <a href="ventas.html" class="nav-item">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/carrito-de-compras.png" alt="Ventas">
-                    </div>
-                    <span>Ventas</span>
+                        <img src="../assets-global/carrito-de-compras.png" alt="Ventas" class="icon-nav">
+                    </div> 
+                    Ventas
                 </a>
                 <a href="pedidos.html" class="nav-item">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/acuerdo-de-contrato.png" alt="Pedidos">
-                    </div>
-                    <span>Pedidos</span>
+                        <img src="../assets-global/acuerdo-de-contrato.png" alt="Pedidos" class="icon-nav">
+                    </div> 
+                    Pedidos
                 </a>
                 <a href="historial.html" class="nav-item">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/historial.png" alt="Historial">
-                    </div>
-                    <span>Historial</span>
+                        <img src="../assets-global/historial-de-pedidos.png" alt="Historial" class="icon-nav">
+                    </div> 
+                    Historial
                 </a>
                 <a href="inventario.html" class="nav-item active">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/inventario.png" alt="Inventario">
-                    </div>
-                    <span>Inventario</span>
+                        <img src="../assets-global/lista-de-verificacion.png" alt="Inventario" class="icon-nav">
+                    </div> 
+                    Inventario
                 </a>
                 <a href="cierre_caja.html" class="nav-item">
                     <div class="nav-icon-wrapper">
-                        <img src="../assets-global/cierre-de-caja.png" alt="Cierre de caja">
-                    </div>
-                    <span>Cierre de caja</span>
+                        <img src="../assets-global/caja-registradora.png" alt="Cierre de caja" class="icon-nav">
+                    </div> 
+                    Cierre de caja
                 </a>
             </nav>
-            <div class="sidebar-footer">
-                <a href="#" onclick="cerrarSesion(event)" class="nav-item logout-item">
-                    <div class="nav-icon-wrapper">
-                        <img src="../assets-global/cerrar-sesion.png" alt="Cerrar sesión">
-                    </div>
-                    <span>Cerrar sesión</span>
-                </a>
-            </div>
+
+            <a href="#" onclick="cerrarSesion(event)" class="logout-btn">
+                <div class="nav-icon-wrapper">
+                    <img src="../assets-global/salida.png" alt="Cerrar sesión" class="icon-nav">
+                </div> 
+                Cerrar sesión
+            </a>
         </aside>
 
-        <!-- =========================================
-             CONTENIDO PRINCIPAL
-             ========================================= -->
+        <!-- ==========================================
+             CONTENIDO PRINCIPAL: INVENTARIO
+             ========================================== -->
         <main class="main-content">
-            <div class="page-header">
+            <header class="content-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start;">
                 <div class="header-titles">
-                    <div class="breadcrumb">Administrador &gt; Inventario</div>
-                    <h1 class="page-title">Inventario</h1>
-                    <p class="page-subtitle">Stock actual y registro de mermas</p>
+                    <p class="breadcrumbs" style="font-size: 0.85rem; color: #64748b; margin-bottom: 4px;">Administrador &gt; Inventario</p>
+                    <h1 style="font-size: 1.8rem; font-weight: 700; color: #1e293b; margin: 0;">Inventario</h1>
+                    <p class="subtitle" style="font-size: 0.95rem; color: #64748b; margin-top: 4px;">Stock actual y registro de mermas</p>
                 </div>
-                <button type="button" class="btn-primary btn-header" onclick="abrirModal('modal-nuevo-producto')">
+                <button type="button" class="btn-primary" onclick="abrirModal('modal-nuevo-producto')">
                     + Nuevo Producto
                 </button>
-            </div>
+            </header>
 
             <!-- TABLA DE STOCK -->
             <div class="content-section">
@@ -116,7 +117,7 @@
             </div>
 
             <!-- TABLA DE MERMAS -->
-            <div class="content-section">
+            <div class="content-section" style="margin-top: 24px;">
                 <h2 class="section-title">Mermas</h2>
                 <div class="ventas-card">
                     <table class="data-table">
@@ -157,7 +158,7 @@
     </div>
 
     <!-- =========================================
-         MODAL: AGREGAR RECEPCIÓN (VERTICAL)
+         MODAL: RECEPCIÓN DE PRODUCTO (VERTICAL)
          ========================================= -->
     <div id="modal-nuevo-producto" class="modal-overlay" style="display: none;">
         <div class="modal-container">
@@ -167,7 +168,7 @@
             <form id="form-nuevo-producto">
                 <div class="modal-body">
                     
-                    <!-- 1. Producto (Solo Pollo en pie y Pollo en cámara) -->
+                    <!-- 1. Producto -->
                     <div class="form-group">
                         <label for="recepcion-producto">PRODUCTO</label>
                         <select id="recepcion-producto" class="form-control" required>
