@@ -331,10 +331,10 @@ function renderizarInventario() {
         htmlStock += `
             <tr>
                 <td style="font-weight: 700; color: #1e293b; padding: 20px 24px;">${item.producto}</td>
-                <td style="color: #1e293b;">${item.stock} ud</td>
+                <td style="color: #1e293b;" id="stock-val-${index}">${item.stock} ud</td>
                 <td style="color: #64748b;">${item.min} ud</td>
                 <td style="font-weight: 600; color: #1e293b;">$${item.precio}</td>
-                <td style="text-align: right; padding-right: 32px;">
+                <td style="text-align: right; padding-right: 32px;" id="stock-action-${index}">
                     <button class="btn-action-outline" onclick="editarStock(${index})">
                         ✏ Editar
                     </button>
@@ -349,11 +349,11 @@ function renderizarInventario() {
         htmlMermas += `
             <tr>
                 <td style="font-weight: 700; color: #1e293b; padding: 20px 24px;">${item.producto}</td>
-                <td class="merma-qty-negative">${item.cant} ud</td>
+                <td class="merma-qty-negative" id="merma-val-${index}">${item.cant} ud</td>
                 <td class="merma-loss-value">$${item.perdido}</td>
-                <td style="text-align: right; padding-right: 32px;">
+                <td style="text-align: right; padding-right: 32px;" id="merma-action-${index}">
                     <button class="btn-action-outline" onclick="agregarMerma(${index})">
-                        ⚠️ Añadir merma
+                        ⚠️ Ajustar
                     </button>
                 </td>
             </tr>
@@ -363,51 +363,138 @@ function renderizarInventario() {
 }
 
 window.editarStock = function(index) {
+    const celdaVal = document.getElementById(`stock-val-${index}`);
+    const celdaAccion = document.getElementById(`stock-action-${index}`);
+    if (!celdaVal || celdaVal.querySelector('input')) return;
+
     const stockData = JSON.parse(localStorage.getItem("stock_db"));
     const actual = stockData[index];
-    const nuevoStock = prompt(`Editar Stock para: ${actual.producto}\nIngrese la nueva cantidad en unidades:`, actual.stock);
 
-    if (nuevoStock !== null) {
-        const parsed = parseInt(nuevoStock);
-        if (!isNaN(parsed) && parsed >= 0) {
-            stockData[index].stock = parsed;
+    // Crear input estilizado
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.value = actual.stock;
+    input.min = '0';
+    input.style.width = '70px';
+    input.style.padding = '4px';
+    input.style.border = '2px solid #ff7e00'; // Naranja Avistock
+    input.style.borderRadius = '6px';
+    input.style.outline = 'none';
+    input.style.textAlign = 'center';
+    input.style.fontWeight = 'bold';
+    input.style.fontSize = '14px';
+
+    celdaVal.textContent = '';
+    celdaVal.appendChild(input);
+    input.focus();
+    input.select();
+
+    // Cambiar el botón temporalmente
+    celdaAccion.innerHTML = `<span style="font-size: 0.8rem; color: #ff7e00; font-weight: 600;">Enter ↵ para guardar</span>`;
+
+    let guardando = false;
+    const guardar = () => {
+        if (guardando) return;
+        guardando = true;
+
+        let nuevoStock = parseInt(input.value);
+        if (!isNaN(nuevoStock) && nuevoStock >= 0) {
+            stockData[index].stock = nuevoStock;
             localStorage.setItem("stock_db", JSON.stringify(stockData));
-            renderizarInventario();
-            lanzarNotificacion(`📦 Stock de ${actual.producto} actualizado a ${parsed} ud`);
+            lanzarNotificacion(`📦 Stock de ${actual.producto} actualizado a ${nuevoStock} ud`);
         } else {
-            alert("Por favor ingrese un número entero válido.");
+            lanzarNotificacion("❌ Cantidad inválida. Se restauró el valor.");
         }
-    }
+        renderizarInventario(); 
+    };
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') guardar();
+        if (e.key === 'Escape') renderizarInventario();
+    });
+    input.addEventListener('blur', guardar);
 };
 
 window.agregarMerma = function(index) {
+    const celdaVal = document.getElementById(`merma-val-${index}`);
+    const celdaAccion = document.getElementById(`merma-action-${index}`);
+    if (!celdaVal || celdaVal.querySelector('input')) return;
+
     const mermasData = JSON.parse(localStorage.getItem("mermas_db"));
     const stockData = JSON.parse(localStorage.getItem("stock_db"));
     const actual = mermasData[index];
-    
-    const cantidadSumar = prompt(`Añadir merma para: ${actual.producto}\nIngrese la cantidad de unidades mermadas:`);
 
-    if (cantidadSumar !== null) {
-        const uds = parseInt(cantidadSumar);
-        if (!isNaN(uds) && uds > 0) {
-            mermasData[index].cant -= uds;
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.placeholder = '+/- ud';
+    input.title = "Usa números positivos para añadir merma o negativos para restar/corregir.";
+    input.style.width = '70px';
+    input.style.padding = '4px';
+    input.style.border = '2px solid #ef4444'; // Rojo para indicar merma
+    input.style.borderRadius = '6px';
+    input.style.outline = 'none';
+    input.style.textAlign = 'center';
+    input.style.fontWeight = 'bold';
+    input.style.fontSize = '14px';
+
+    celdaVal.textContent = '';
+    celdaVal.appendChild(input);
+    input.focus();
+
+    celdaAccion.innerHTML = `<span style="font-size: 0.8rem; color: #ef4444; font-weight: 600;">Enter ↵ para guardar</span>`;
+
+    let guardando = false;
+    const guardar = () => {
+        if (guardando) return;
+        guardando = true;
+
+        if (input.value.trim() === "") {
+            renderizarInventario();
+            return;
+        }
+
+        let uds = parseInt(input.value);
+        
+        if (!isNaN(uds) && uds !== 0) {
             const prodStock = stockData.find(s => s.producto === actual.producto);
             const precioUnitario = prodStock ? prodStock.precio : 135;
-            
-            mermasData[index].perdido += (uds * precioUnitario);
-            
+
+            // Evitar restar más mermas de las que existen (ej. si hay -5, no puedes meter -6)
+            if (uds < 0 && Math.abs(uds) > Math.abs(actual.cant)) {
+                lanzarNotificacion("❌ No puedes corregir más mermas de las registradas.");
+                renderizarInventario();
+                return;
+            }
+
+            // Cálculos lógicos (si uds es positivo = resta a stock y aumenta pérdida)
+            // (Si uds es negativo = suma a stock y disminuye pérdida)
+            mermasData[index].cant -= uds; 
+            mermasData[index].perdido += (uds * precioUnitario); 
+
             if (prodStock) {
                 prodStock.stock = Math.max(0, prodStock.stock - uds);
                 localStorage.setItem("stock_db", JSON.stringify(stockData));
             }
 
             localStorage.setItem("mermas_db", JSON.stringify(mermasData));
-            renderizarInventario();
-            lanzarNotificacion(`⚠️ Registrada merma de -${uds} ud de ${actual.producto}`);
-        } else {
-            alert("Por favor ingrese una cantidad numérica mayor a 0.");
+            
+            if (uds > 0) {
+                lanzarNotificacion(`⚠️ Registrada merma de -${uds} ud en ${actual.producto}`);
+            } else {
+                lanzarNotificacion(`✅ Restauradas ${Math.abs(uds)} ud a stock de ${actual.producto}`);
+            }
+        } else if (uds !== 0) {
+            lanzarNotificacion("❌ Cantidad inválida.");
         }
-    }
+        
+        renderizarInventario();
+    };
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') guardar();
+        if (e.key === 'Escape') renderizarInventario();
+    });
+    input.addEventListener('blur', guardar);
 };
 
 // ==========================================================================
