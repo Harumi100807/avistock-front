@@ -89,10 +89,6 @@ if (minusCamara && valCamara) {
         } 
     });
 }
-// ----------------------------------------------
-
-if (plusCamara && valCamara) {
-// (Aquí sigue tu código normal...)
 
 // ==========================================================
 // 4. CÁLCULOS Y CONTROL DEL CARRITO
@@ -147,7 +143,6 @@ if (btnAddCamara) {
 // Inicialización segura
 actualizarCalculosDeOrden();
 
-// ==========================================================
 // ==========================================================
 // 5. FLUJO DE PANELES Y VALIDACIÓN DE FORMULARIO (AL DAR CLIC)
 // ==========================================================
@@ -225,7 +220,6 @@ if (btnSubmit) {
             }
         }
 
-        // Si todo está correcto, procesar el envío y pasar al estado de éxito
         // Si todo está correcto, procesar el envío y pasar al estado de éxito
         if (formularioValido) {
             if (lblReservaNombre && inputNombre) lblReservaNombre.textContent = inputNombre.value.trim();
