@@ -74,7 +74,7 @@
                 </button>
             </header>
 
-            <!-- TABLA DE STOCK (SIN COLUMNA DE ACCIÓN) -->
+            <!-- TABLA DE STOCK -->
             <div class="content-section">
                 <h2 class="section-title">Stock</h2>
                 <div class="ventas-card">
@@ -85,6 +85,7 @@
                                 <th>STOCK</th>
                                 <th>MÍN.</th>
                                 <th>PRECIO</th>
+                                <th class="text-right">ACCIÓN</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -93,12 +94,22 @@
                                 <td>285 ud</td>
                                 <td>30 ud</td>
                                 <td>$135</td>
+                                <td class="text-right">
+                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModalPrecio('Pollo en pie', '135')">
+                                        ✏️ Actualizar Precio
+                                    </button>
+                                </td>
                             </tr>
                             <tr>
                                 <td><strong>Pollo en cámara</strong></td>
                                 <td>5 ud</td>
                                 <td>20 ud</td>
                                 <td>$171</td>
+                                <td class="text-right">
+                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModalPrecio('Pollo en cámara', '171')">
+                                        ✏️ Actualizar Precio
+                                    </button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -125,7 +136,7 @@
                                 <td class="text-danger">$1755</td>
                                 <td class="text-right">
                                     <button type="button" class="btn-secondary btn-sm" onclick="abrirModalMerma('Pollo en pie')">
-                                        ⚠️ Merma de corte
+                                        ⚠️ Registrar Merma
                                     </button>
                                 </td>
                             </tr>
@@ -135,7 +146,7 @@
                                 <td class="text-danger">$4275</td>
                                 <td class="text-right">
                                     <button type="button" class="btn-secondary btn-sm" onclick="abrirModalMerma('Pollo en cámara')">
-                                        ⚠️ Merma de corte
+                                        ⚠️ Registrar Merma
                                     </button>
                                 </td>
                             </tr>
@@ -147,7 +158,7 @@
     </div>
 
     <!-- =========================================
-         MODAL: RECEPCIÓN DE PRODUCTO
+         MODAL: RECEPCIÓN DE PRODUCTO (AGREGAR STOCK, PRECIO Y MERMAS DE TRANSPORTE)
          ========================================= -->
     <div id="modal-nuevo-producto" class="modal-overlay" style="display: none;">
         <div class="modal-container">
@@ -173,6 +184,11 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="recepcion-precio">PRECIO POR POLLO / UNIDAD ($)</label>
+                        <input type="number" step="0.01" id="recepcion-precio" class="form-control" placeholder="Ej: 135.00" required>
+                    </div>
+
+                    <div class="form-group">
                         <label for="recepcion-fecha">FECHA DE RECEPCIÓN</label>
                         <input type="date" id="recepcion-fecha" class="form-control" required>
                     </div>
@@ -182,9 +198,8 @@
                         <input type="time" id="recepcion-hora" class="form-control" required>
                     </div>
 
-                    <!-- ETIQUETA EDITADA: MERMA EN TRANSPORTE -->
                     <div class="form-group">
-                        <label for="recepcion-mermas">MERMA EN TRANSPORTE (CANTIDAD)</label>
+                        <label for="recepcion-mermas">MERMAS EN TRANSPORTE (CANTIDAD / UD)</label>
                         <input type="number" id="recepcion-mermas" class="form-control" placeholder="0" min="0" value="0">
                     </div>
 
@@ -199,12 +214,43 @@
     </div>
 
     <!-- =========================================
-         MODAL: REGISTRAR MERMA DE CORTE (FIN DEL DÍA)
+         MODAL: ACTUALIZAR PRECIO
+         ========================================= -->
+    <div id="modal-precio" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><span class="plus-orange">+</span> Actualizar Precio del Producto</h2>
+            </div>
+            <form id="form-modal-precio">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>PRODUCTO</label>
+                        <input type="text" id="modal-precio-producto" class="form-control" value="" readonly disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>PRECIO ACTUAL ($)</label>
+                        <input type="text" id="modal-precio-actual" class="form-control" value="" readonly disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-precio-nuevo">NUEVO PRECIO ($)</label>
+                        <input type="number" step="0.01" id="modal-precio-nuevo" class="form-control" placeholder="Ej: 140.00" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-primary" onclick="guardarPrecioModal()">Guardar Nuevo Precio</button>
+                    <button type="button" class="btn-secondary" onclick="cerrarModal('modal-precio')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- =========================================
+         MODAL: REGISTRAR MERMA (CORTE DEL FINAL DEL DÍA)
          ========================================= -->
     <div id="modal-merma" class="modal-overlay" style="display: none;">
         <div class="modal-container">
             <div class="modal-header">
-                <h2><span class="plus-orange">+</span> Registrar Merma de Corte (Fin del Día)</h2>
+                <h2><span class="plus-orange">+</span> Registrar Merma (Corte del Final del Día)</h2>
             </div>
             <form id="form-modal-merma">
                 <div class="modal-body">
@@ -215,14 +261,11 @@
                     <div class="form-group">
                         <label for="modal-merma-cant">CANTIDAD A AJUSTAR (UD)</label>
                         <input type="number" id="modal-merma-cant" class="form-control" placeholder="Ej: 5" required>
-                        <small class="help-text">* Escribe un número normal (ej: 3) para registrar pérdida.</small>
-                        <small class="help-text">* Escribe un número negativo (ej: -3) para corregir y devolver al stock.</small>
+                        <small class="help-text">* Escribe la cantidad de unidades perdidas en el día.</small>
                     </div>
-
-                    <!-- NUEVO CAMPO: MOTIVO DE LA MERMA -->
                     <div class="form-group">
                         <label for="modal-merma-motivo">MOTIVO DE LA MERMA</label>
-                        <textarea id="modal-merma-motivo" class="form-control" rows="3" placeholder="Escribe el motivo de la merma (ej: producto dañado, merma en corte, etc.)" required></textarea>
+                        <textarea id="modal-merma-motivo" class="form-control" rows="3" placeholder="Escribe la razón (ej: producto descompuesto, golpeado, error de conteo...)" required style="width: 100%; box-sizing: border-box;"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -240,6 +283,12 @@
         function abrirModal(id) {
             const modal = document.getElementById(id);
             if (modal) modal.style.display = 'flex';
+        }
+
+        function abrirModalPrecio(nombreProducto, precioActual) {
+            document.getElementById('modal-precio-producto').value = nombreProducto;
+            document.getElementById('modal-precio-actual').value = '$' + precioActual;
+            abrirModal('modal-precio');
         }
 
         function abrirModalMerma(nombreProducto) {
