@@ -12,27 +12,59 @@ const plusPie = document.getElementById('plus-pie');
 const minusPie = document.getElementById('minus-pie');
 let cantPie = 3; 
 
-// ---> NUEVO: Escribir cantidad al dar clic <---
+// ---> MEJORADO: Edición en línea súper estética <---
 if (valPie) {
     valPie.style.cursor = "pointer";
-    valPie.title = "Haz clic para escribir una cantidad";
-    valPie.addEventListener('click', () => {
-        let cantidadManual = prompt("¿Cuántos Pollos en Pie necesitas?", cantPie);
-        if (cantidadManual !== null && cantidadManual.trim() !== "") {
-            let numero = parseInt(cantidadManual);
+    valPie.title = "Haz clic para editar la cantidad";
+    valPie.addEventListener('click', function() {
+        // Si ya se está editando, no hacer nada
+        if (this.querySelector('input')) return;
+
+        const cantidadActual = cantPie;
+        // Creamos un input estilizado dinámicamente
+        const inputEstilizado = document.createElement('input');
+        inputEstilizado.type = 'number';
+        inputEstilizado.value = cantidadActual;
+        inputEstilizado.min = '0';
+        
+        // Estilos CSS directos para que se vea genial y combine
+        inputEstilizado.style.width = '60px';
+        inputEstilizado.style.textAlign = 'center';
+        inputEstilizado.style.border = '2px solid #ff7e00'; // Naranja Avistock
+        inputEstilizado.style.borderRadius = '6px';
+        inputEstilizado.style.padding = '2px';
+        inputEstilizado.style.fontSize = '16px';
+        inputEstilizado.style.outline = 'none';
+        inputEstilizado.style.fontWeight = 'bold';
+
+        // Reemplazamos el texto por el input
+        this.textContent = '';
+        this.appendChild(inputEstilizado);
+        inputEstilizado.focus();
+        inputEstilizado.select();
+
+        // Función para guardar el dato
+        const guardarCantidad = () => {
+            let numero = parseInt(inputEstilizado.value);
             if (!isNaN(numero) && numero >= 0) {
                 cantPie = numero;
-                valPie.textContent = `${cantPie} ud`;
-            } else {
-                alert("Por favor, ingresa un número válido.");
             }
-        }
+            this.textContent = `${cantPie} ud`;
+        };
+
+        // Guardar al presionar Enter o perder el foco
+        inputEstilizado.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') guardarCantidad();
+        });
+        inputEstilizado.addEventListener('blur', guardarCantidad);
     });
 }
 // ----------------------------------------------
 
 if (plusPie && valPie) {
     plusPie.addEventListener('click', () => { 
+        // Evita que interfiera si se está editando
+        if (valPie.querySelector('input')) return;
         cantPie++; 
         valPie.textContent = `${cantPie} ud`; 
     });
@@ -40,6 +72,8 @@ if (plusPie && valPie) {
 
 if (minusPie && valPie) {
     minusPie.addEventListener('click', () => { 
+        // Evita que interfiera si se está editando
+        if (valPie.querySelector('input')) return;
         if (cantPie > 0) { 
             cantPie--; 
             valPie.textContent = `${cantPie} ud`; 
@@ -55,27 +89,53 @@ const plusCamara = document.getElementById('plus-camara');
 const minusCamara = document.getElementById('minus-camara');
 let cantCamara = 2; 
 
-// ---> NUEVO: Escribir cantidad al dar clic <---
+// ---> MEJORADO: Edición en línea súper estética <---
 if (valCamara) {
     valCamara.style.cursor = "pointer";
-    valCamara.title = "Haz clic para escribir una cantidad";
-    valCamara.addEventListener('click', () => {
-        let cantidadManual = prompt("¿Cuántos Pollos en Cámara necesitas?", cantCamara);
-        if (cantidadManual !== null && cantidadManual.trim() !== "") {
-            let numero = parseInt(cantidadManual);
+    valCamara.title = "Haz clic para editar la cantidad";
+    valCamara.addEventListener('click', function() {
+        if (this.querySelector('input')) return;
+
+        const cantidadActual = cantCamara;
+        const inputEstilizado = document.createElement('input');
+        inputEstilizado.type = 'number';
+        inputEstilizado.value = cantidadActual;
+        inputEstilizado.min = '0';
+        
+        // Estilos CSS directos
+        inputEstilizado.style.width = '60px';
+        inputEstilizado.style.textAlign = 'center';
+        inputEstilizado.style.border = '2px solid #ff7e00';
+        inputEstilizado.style.borderRadius = '6px';
+        inputEstilizado.style.padding = '2px';
+        inputEstilizado.style.fontSize = '16px';
+        inputEstilizado.style.outline = 'none';
+        inputEstilizado.style.fontWeight = 'bold';
+
+        this.textContent = '';
+        this.appendChild(inputEstilizado);
+        inputEstilizado.focus();
+        inputEstilizado.select();
+
+        const guardarCantidad = () => {
+            let numero = parseInt(inputEstilizado.value);
             if (!isNaN(numero) && numero >= 0) {
                 cantCamara = numero;
-                valCamara.textContent = `${cantCamara} ud`;
-            } else {
-                alert("Por favor, ingresa un número válido.");
             }
-        }
+            this.textContent = `${cantCamara} ud`;
+        };
+
+        inputEstilizado.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') guardarCantidad();
+        });
+        inputEstilizado.addEventListener('blur', guardarCantidad);
     });
 }
 // ----------------------------------------------
 
 if (plusCamara && valCamara) {
     plusCamara.addEventListener('click', () => { 
+        if (valCamara.querySelector('input')) return;
         cantCamara++; 
         valCamara.textContent = `${cantCamara} ud`; 
     });
@@ -83,6 +143,7 @@ if (plusCamara && valCamara) {
 
 if (minusCamara && valCamara) {
     minusCamara.addEventListener('click', () => { 
+        if (valCamara.querySelector('input')) return;
         if (cantCamara > 0) { 
             cantCamara--; 
             valCamara.textContent = `${cantCamara} ud`; 
