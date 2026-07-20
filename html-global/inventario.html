@@ -95,7 +95,7 @@
                                 <td>30 ud</td>
                                 <td>$135</td>
                                 <td class="text-right">
-                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModal('modal-stock')">
+                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModalStock('Pollo en pie', '285')">
                                         ✏️ Actualizar
                                     </button>
                                 </td>
@@ -106,7 +106,7 @@
                                 <td>20 ud</td>
                                 <td>$171</td>
                                 <td class="text-right">
-                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModal('modal-stock')">
+                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModalStock('Pollo en cámara', '5')">
                                         ✏️ Actualizar
                                     </button>
                                 </td>
@@ -135,7 +135,7 @@
                                 <td class="text-danger">-13 ud</td>
                                 <td class="text-danger">$1755</td>
                                 <td class="text-right">
-                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModal('modal-merma')">
+                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModalMerma('Pollo en pie')">
                                         ⚠️ Actualizar
                                     </button>
                                 </td>
@@ -145,7 +145,7 @@
                                 <td class="text-danger">-25 ud</td>
                                 <td class="text-danger">$4275</td>
                                 <td class="text-right">
-                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModal('modal-merma')">
+                                    <button type="button" class="btn-secondary btn-sm" onclick="abrirModalMerma('Pollo en cámara')">
                                         ⚠️ Actualizar
                                     </button>
                                 </td>
@@ -168,37 +168,31 @@
             <form id="form-nuevo-producto">
                 <div class="modal-body">
                     
-                    <!-- 1. Pollos a cámara (AL INICIO) -->
                     <div class="form-group">
                         <label for="recepcion-camara">POLLOS A CÁMARA (CONGELACIÓN)</label>
                         <input type="number" id="recepcion-camara" class="form-control" placeholder="0" min="0" value="0">
                     </div>
 
-                    <!-- 2. Pollos en pie (AL INICIO) -->
                     <div class="form-group">
                         <label for="recepcion-pie">POLLOS EN PIE (CANTIDAD / UD)</label>
                         <input type="number" id="recepcion-pie" class="form-control" placeholder="0" min="0" value="0">
                     </div>
 
-                    <!-- 3. Peso aprox por pollo -->
                     <div class="form-group">
                         <label for="recepcion-peso">PESO APROX. POR POLLO (KG)</label>
                         <input type="number" step="0.01" id="recepcion-peso" class="form-control" placeholder="Ej: 2.50" required>
                     </div>
 
-                    <!-- 4. Fecha de recepción -->
                     <div class="form-group">
                         <label for="recepcion-fecha">FECHA DE RECEPCIÓN</label>
                         <input type="date" id="recepcion-fecha" class="form-control" required>
                     </div>
 
-                    <!-- 5. Hora -->
                     <div class="form-group">
                         <label for="recepcion-hora">HORA</label>
                         <input type="time" id="recepcion-hora" class="form-control" required>
                     </div>
 
-                    <!-- 6. Mermas -->
                     <div class="form-group">
                         <label for="recepcion-mermas">¿HUBO MERMAS? (CANTIDAD)</label>
                         <input type="number" id="recepcion-mermas" class="form-control" placeholder="0" min="0" value="0">
@@ -215,7 +209,7 @@
     </div>
 
     <!-- =========================================
-         MODAL: ACTUALIZAR STOCK
+         MODAL: ACTUALIZAR STOCK (SIN STOCK MÍNIMO)
          ========================================= -->
     <div id="modal-stock" class="modal-overlay" style="display: none;">
         <div class="modal-container">
@@ -226,15 +220,11 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>PRODUCTO</label>
-                        <input type="text" id="modal-stock-producto" class="form-control" value="Pollo en pie" readonly disabled>
+                        <input type="text" id="modal-stock-producto" class="form-control" value="" readonly disabled>
                     </div>
                     <div class="form-group">
                         <label>STOCK ACTUAL (UD)</label>
-                        <input type="text" id="modal-stock-actual" class="form-control" value="285" readonly disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>STOCK MÍNIMO (UD)</label>
-                        <input type="text" id="modal-stock-minimo" class="form-control" value="30" readonly disabled>
+                        <input type="text" id="modal-stock-actual" class="form-control" value="" readonly disabled>
                     </div>
                     <div class="form-group">
                         <label for="modal-stock-nuevo">NUEVA CANTIDAD DE STOCK TOTAL</label>
@@ -261,7 +251,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label>PRODUCTO</label>
-                        <input type="text" id="modal-merma-producto" class="form-control" value="Pollo en pie" readonly disabled>
+                        <input type="text" id="modal-merma-producto" class="form-control" value="" readonly disabled>
                     </div>
                     <div class="form-group">
                         <label for="modal-merma-cant">CANTIDAD A AJUSTAR (UD)</label>
@@ -285,6 +275,17 @@
         function abrirModal(id) {
             const modal = document.getElementById(id);
             if (modal) modal.style.display = 'flex';
+        }
+
+        function abrirModalStock(nombreProducto, stockActual) {
+            document.getElementById('modal-stock-producto').value = nombreProducto;
+            document.getElementById('modal-stock-actual').value = stockActual;
+            abrirModal('modal-stock');
+        }
+
+        function abrirModalMerma(nombreProducto) {
+            document.getElementById('modal-merma-producto').value = nombreProducto;
+            abrirModal('modal-merma');
         }
 
         function cerrarModal(id) {
